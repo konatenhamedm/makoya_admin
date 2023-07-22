@@ -3,9 +3,7 @@
 namespace App\Controller\Apis;
 
 use App\Controller\ApiInterface;
-use App\Entity\Civilite;
 use App\Entity\Fonction;
-use App\Repository\CiviliteRepository;
 use App\Repository\FonctionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

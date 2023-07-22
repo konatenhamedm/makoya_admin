@@ -63,7 +63,7 @@ class MakeCrudController extends AbstractMaker
 
     public static function getCommandName(): string
     {
-        return 'make:kpl-crud';
+        return 'make:knh-crud';
     }
 
     public static function getCommandDescription(): string

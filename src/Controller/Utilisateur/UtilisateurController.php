@@ -178,13 +178,7 @@ class UtilisateurController extends BaseController
             'permition' => $permission
         ]);
     }
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(UserPasswordHasherInterface $hasher)
-    {
-        $this->hasher = $hasher;
-    }
-
+  
     #[Route('/new', name: 'app_utilisateur_utilisateur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UtilisateurRepository $utilisateurRepository, FormError $formError): Response
     {

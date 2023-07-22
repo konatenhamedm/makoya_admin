@@ -20,53 +20,13 @@ class ParametreController extends BaseController
 
     const INDEX_ROOT_NAME = 'app_config_parametre_index';
 
-
-    #[Route('/api/civilite', name: 'api_civilite_liste', methods: ['GET','POST'])]
-    public function liste1(CiviliteRepository $civiliteRepository){
-        $data = $civiliteRepository->findAll();
-
-        // On spécifie qu'on utilise l'encodeur JSON
-        $encoders = [new JsonEncoder()];
-
-        // On instancie le "normaliseur" pour convertir la collection en tableau
-        $normalizers = [new ObjectNormalizer()];
-
-        // On instancie le convertisseur
-        $serializer = new Serializer($normalizers, $encoders);
-
-        // On convertit en json
-        $jsonContent = $serializer->serialize($data, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
-
-        // On instancie la réponse
-        $response = new Response($jsonContent);
-
-        // On ajoute l'entête HTTP
-        $response->headers->set('Content-Type', 'application/json');
-
-        // On envoie la réponse
-        return $response;
-    }
-
-    /* private $menu;
-     public function __construct(Menu $menu){
-         $this->menu = $menu;
-     }*/
-
     #[Route(path: '/', name: 'app_config_parametre_index', methods: ['GET', 'POST'])]
     public function index(Request $request, Breadcrumb $breadcrumb): Response
     {
 
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
 
-        /* if($this->menu->getPermission()){
-             $redirect = $this->generateUrl('app_default');
-             return $this->redirect($redirect);
-             //dd($this->menu->getPermission());
-         }*/
+      
         $modules = [
             [
                 'label' => 'Général',
@@ -74,8 +34,13 @@ class ParametreController extends BaseController
                 'href' => $this->generateUrl('app_config_parametre_ls', ['module' => 'config'])
             ],
             [
+                'label' => 'Prestation makoya',
+                'icon' => 'bi bi-list',
+                'href' => $this->generateUrl('app_config_parametre_ls', ['module' => 'prestation'])
+            ],
+            [
                 'label' => 'Ressource humaine',
-                'icon' => 'bi bi-truck',
+                'icon' => 'bi bi-people',
                 'href' => $this->generateUrl('app_config_parametre_ls', ['module' => 'rh'])
             ],
             [
@@ -113,6 +78,30 @@ class ParametreController extends BaseController
          */
         $parametres = [
 
+            'prestation'=>[
+
+                [
+                    'label' => 'Catégorie',
+                    'id' => 'param_groupe_m',
+                    'href' => $this->generateUrl('app_parametre_prestation_categorie_index')
+                ],
+                [
+                    'label' => 'Sous categorie',
+                    'id' => 'param_module',
+                    'href' => $this->generateUrl('app_parametre_prestation_sous_categorie_index')
+                ],
+                [
+                    'label' => 'Service',
+                    'id' => 'param_permission',
+                    'href' => $this->generateUrl('app_parametre_prestation_service_prestataire_index')
+                ],
+                [
+                    'label' => 'Proposition service',
+                    'id' => 'param_permission_groupe',
+                    'href' => $this->generateUrl('app_parametre_prestation_proposition_service_index')
+                ]
+
+            ],
             'utilisateur'=>[
 
                 [
@@ -165,7 +154,7 @@ class ParametreController extends BaseController
 
             'config' => [
                 [
-                    'label' => 'Civilité',
+                    'label' => 'Genre',
                     'id' => 'param_article',
                     'href' => $this->generateUrl('app_parametre_civilite_index')
                 ] ,
@@ -178,8 +167,37 @@ class ParametreController extends BaseController
                     'label' => 'Configuration application',
                     'id' => 'param_p',
                     'href' => $this->generateUrl('app_parametre_config_app_index')
-                ]
-
+                ],
+                [
+                    'label' => 'Pays',
+                    'id' => 'param_pays',
+                    'href' => $this->generateUrl('app_parametre_decoupage_pays_index')
+                ],
+                [
+                    'label' => 'Régions',
+                    'id' => 'param_region',
+                    'href' => $this->generateUrl('app_parametre_decoupage_region_index')
+                ],
+                [
+                    'label' => 'Departements',
+                    'id' => 'param_departement',
+                    'href' => $this->generateUrl('app_parametre_decoupage_departement_index')
+                ],
+                [
+                    'label' => 'Sous-prefectures',
+                    'id' => 'param_sp',
+                    'href' => $this->generateUrl('app_parametre_decoupage_sous_prefecture_index')
+                ],
+                [
+                    'label' => 'Communes',
+                    'id' => 'param_commune',
+                    'href' => $this->generateUrl('app_parametre_decoupage_commune_index')
+                ],
+                [
+                    'label' => 'Quartiers',
+                    'id' => 'param_quartier',
+                    'href' => $this->generateUrl('app_parametre_decoupage_quartier_index')
+                ],
 
             ],
 

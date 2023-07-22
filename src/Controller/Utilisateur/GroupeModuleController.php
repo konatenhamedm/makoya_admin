@@ -114,7 +114,7 @@ class GroupeModuleController extends BaseController
                     , 'orderable' => false
                     ,'globalSearchable' => false
                     ,'className' => 'grid_row_actions'
-                    , 'render' => function ($value, Utilisateur $context) use ($renders) {
+                    , 'render' => function ($value, GroupeModule $context) use ($renders) {
                         $options = [
                             'default_class' => 'btn btn-xs btn-clean btn-icon mr-2 ',
                             'target' => '#exampleModalSizeLg2',

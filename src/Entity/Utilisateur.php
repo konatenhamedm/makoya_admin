@@ -6,7 +6,6 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(['username'], message: 'Ce pseudo est déjà utilisé')]
 #[ORM\Table(name:'user_utilisateur')]
-class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface,TwoFactorInterface
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,9 +25,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: 'Veuillez renseigner un pseudo')]
     private ?string $username = null;
-
+/* 
     #[ORM\Column(length: 180,nullable:true)]
-    private ?string $authCode = null;
+    private ?string $authCode = null; */
 
 
     #[ORM\Column]
@@ -364,7 +363,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     }
 
 
-    public function isEmailAuthEnabled(): bool
+    /* public function isEmailAuthEnabled(): bool
     {
         // TODO: Implement isEmailAuthEnabled() method.
         return true;
@@ -390,5 +389,5 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         // TODO: Implement setEmailAuthCode() method.
         $this->authCode = $authCode;
 
-    }
+    } */
 }

@@ -138,7 +138,7 @@
                 // On ajoute au prototype un lien pour pouvoir supprimer la prestation
                 addDeleteLink($prototype, name);
                 // On ajoute le prototype modifié à la fin de la balise <div>
-                $container.append($prototype);
+                $container.prepend($prototype);
 
                 index++;
             }

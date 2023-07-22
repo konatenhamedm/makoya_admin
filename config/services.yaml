@@ -31,7 +31,10 @@ services:
             $formTypeRenderer: '@maker.renderer.form_type_renderer'
         tags: ['maker.command']
 
-    
+    App\Events\AuthenticationSuccessListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
     App\Service\FormErrorsSerializer:
         public: true
 

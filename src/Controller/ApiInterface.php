@@ -1,9 +1,13 @@
 <?php
 namespace App\Controller;
 
+use App\Service\Menu;
+use App\Service\Utils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -11,6 +15,22 @@ use Symfony\Component\Serializer\Serializer;
 
 class ApiInterface extends AbstractController
 {
+    use FileTrait;
+
+    protected const UPLOAD_PATH = 'media';
+    protected $security;
+    protected  $hasher;
+    protected  $utils;
+
+    public function __construct(Security $security,UserPasswordHasherInterface $hasher,Utils $utils)
+    {
+
+        $this->security = $security;
+        $this->hasher = $hasher;
+        $this->utils = $utils;
+
+    }
+
 
     /**
      * @var integer HTTP status code - 200 (OK) by default

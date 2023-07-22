@@ -85,7 +85,7 @@ class ModuleGroupePermitionRepository extends ServiceEntityRepository
             INNER JOIN user_groupe as gu on gu.id=m.groupe_user_id
             INNER JOIN icon as i on g.icon_id = i.id
           /*   group by m.groupe_module_id*/
-          where gu.id = $params 
+          where gu.id = $params and m.menu_principal =1
              order by m.ordre_groupe ASC
            
             ";
