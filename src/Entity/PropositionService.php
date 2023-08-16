@@ -27,6 +27,15 @@ class PropositionService
     #[ORM\ManyToOne(inversedBy: 'propositionServices')]
     private ?Prestataire $prestataire = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $messageRejeter = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateValidation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'propositionServices')]
+    private ?Categorie $categorie = null;
+
     public function __construct()
     {
         $this->dateCreation = new DateTime();
@@ -81,6 +90,42 @@ class PropositionService
     public function setPrestataire(?Prestataire $prestataire): static
     {
         $this->prestataire = $prestataire;
+
+        return $this;
+    }
+
+    public function getMessageRejeter(): ?string
+    {
+        return $this->messageRejeter;
+    }
+
+    public function setMessageRejeter(string $messageRejeter): static
+    {
+        $this->messageRejeter = $messageRejeter;
+
+        return $this;
+    }
+
+    public function getDateValidation(): ?\DateTimeInterface
+    {
+        return $this->dateValidation;
+    }
+
+    public function setDateValidation(\DateTimeInterface $dateValidation): static
+    {
+        $this->dateValidation = $dateValidation;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }

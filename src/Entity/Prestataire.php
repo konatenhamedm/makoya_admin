@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PrestataireRepository::class)]
-#[ORM\Table(name:'user_front_prestataire')]
+#[ORM\Table(name: 'user_front_prestataire')]
 class Prestataire extends UserFront
 {
     #[ORM\Id]
@@ -20,15 +20,15 @@ class Prestataire extends UserFront
     private ?string $denominationSociale = null;
 
 
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $logo= null;
+    private ?Fichier $logo = null;
 
 
     #[ORM\Column(length: 255)]
     private ?string $contactPrincipal = null;
 
-    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PrestataireService::class,orphanRemoval: true, cascade:['persist'])]
+    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PrestataireService::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $prestataireServices;
 
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PropositionService::class)]
@@ -37,11 +37,28 @@ class Prestataire extends UserFront
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: NumeroPrestataire::class)]
     private Collection $numeroPrestataires;
 
+    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: WorkflowServicePrestataire::class)]
+    private Collection $workflowServicePrestataires;
+
+
+    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PubliciteDemande::class)]
+    private Collection $publiciteDemandes;
+
+    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: NotificationPrestataire::class)]
+    private Collection $notificationPrestataires;
+
+    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Signaler::class)]
+    private Collection $signalers;
+
     public function __construct()
     {
         $this->prestataireServices = new ArrayCollection();
         $this->propositionServices = new ArrayCollection();
         $this->numeroPrestataires = new ArrayCollection();
+        $this->workflowServicePrestataires = new ArrayCollection();
+        $this->publiciteDemandes = new ArrayCollection();
+        $this->notificationPrestataires = new ArrayCollection();
+        $this->signalers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +186,128 @@ class Prestataire extends UserFront
             // set the owning side to null (unless already changed)
             if ($numeroPrestataire->getPrestataire() === $this) {
                 $numeroPrestataire->setPrestataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkflowServicePrestataire>
+     */
+    public function getWorkflowServicePrestataires(): Collection
+    {
+        return $this->workflowServicePrestataires;
+    }
+
+    public function addWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if (!$this->workflowServicePrestataires->contains($workflowServicePrestataire)) {
+            $this->workflowServicePrestataires->add($workflowServicePrestataire);
+            $workflowServicePrestataire->setPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if ($this->workflowServicePrestataires->removeElement($workflowServicePrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($workflowServicePrestataire->getPrestataire() === $this) {
+                $workflowServicePrestataire->setPrestataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, PubliciteDemande>
+     */
+    public function getPubliciteDemandes(): Collection
+    {
+        return $this->publiciteDemandes;
+    }
+
+    public function addPubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if (!$this->publiciteDemandes->contains($publiciteDemande)) {
+            $this->publiciteDemandes->add($publiciteDemande);
+            $publiciteDemande->setPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removePubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if ($this->publiciteDemandes->removeElement($publiciteDemande)) {
+            // set the owning side to null (unless already changed)
+            if ($publiciteDemande->getPrestataire() === $this) {
+                $publiciteDemande->setPrestataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NotificationPrestataire>
+     */
+    public function getNotificationPrestataires(): Collection
+    {
+        return $this->notificationPrestataires;
+    }
+
+    public function addNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
+    {
+        if (!$this->notificationPrestataires->contains($notificationPrestataire)) {
+            $this->notificationPrestataires->add($notificationPrestataire);
+            $notificationPrestataire->setPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
+    {
+        if ($this->notificationPrestataires->removeElement($notificationPrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($notificationPrestataire->getPrestataire() === $this) {
+                $notificationPrestataire->setPrestataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Signaler>
+     */
+    public function getSignalers(): Collection
+    {
+        return $this->signalers;
+    }
+
+    public function addSignaler(Signaler $signaler): static
+    {
+        if (!$this->signalers->contains($signaler)) {
+            $this->signalers->add($signaler);
+            $signaler->setPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignaler(Signaler $signaler): static
+    {
+        if ($this->signalers->removeElement($signaler)) {
+            // set the owning side to null (unless already changed)
+            if ($signaler->getPrestataire() === $this) {
+                $signaler->setPrestataire(null);
             }
         }
 

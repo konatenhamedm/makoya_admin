@@ -28,9 +28,13 @@ class SousCategorie
     #[ORM\OneToMany(mappedBy: 'sousCategorie', targetEntity: PrestataireService::class)]
     private Collection $prestataireServices;
 
+    #[ORM\OneToMany(mappedBy: 'sousCategorie', targetEntity: WorkflowServicePrestataire::class)]
+    private Collection $workflowServicePrestataires;
+
     public function __construct()
     {
         $this->prestataireServices = new ArrayCollection();
+        $this->workflowServicePrestataires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +102,36 @@ class SousCategorie
             // set the owning side to null (unless already changed)
             if ($prestataireService->getSousCategorie() === $this) {
                 $prestataireService->setSousCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkflowServicePrestataire>
+     */
+    public function getWorkflowServicePrestataires(): Collection
+    {
+        return $this->workflowServicePrestataires;
+    }
+
+    public function addWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if (!$this->workflowServicePrestataires->contains($workflowServicePrestataire)) {
+            $this->workflowServicePrestataires->add($workflowServicePrestataire);
+            $workflowServicePrestataire->setSousCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if ($this->workflowServicePrestataires->removeElement($workflowServicePrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($workflowServicePrestataire->getSousCategorie() === $this) {
+                $workflowServicePrestataire->setSousCategorie(null);
             }
         }
 

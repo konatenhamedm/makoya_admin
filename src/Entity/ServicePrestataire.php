@@ -28,9 +28,13 @@ class ServicePrestataire
     #[ORM\ManyToOne(inversedBy: 'servicePrestataires')]
     private ?Categorie $categorie = null;
 
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: WorkflowServicePrestataire::class)]
+    private Collection $workflowServicePrestataires;
+
     public function __construct()
     {
         $this->prestataireServices = new ArrayCollection();
+        $this->workflowServicePrestataires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +104,36 @@ class ServicePrestataire
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkflowServicePrestataire>
+     */
+    public function getWorkflowServicePrestataires(): Collection
+    {
+        return $this->workflowServicePrestataires;
+    }
+
+    public function addWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if (!$this->workflowServicePrestataires->contains($workflowServicePrestataire)) {
+            $this->workflowServicePrestataires->add($workflowServicePrestataire);
+            $workflowServicePrestataire->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkflowServicePrestataire(WorkflowServicePrestataire $workflowServicePrestataire): static
+    {
+        if ($this->workflowServicePrestataires->removeElement($workflowServicePrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($workflowServicePrestataire->getService() === $this) {
+                $workflowServicePrestataire->setService(null);
+            }
+        }
 
         return $this;
     }

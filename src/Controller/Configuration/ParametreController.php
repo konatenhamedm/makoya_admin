@@ -24,9 +24,9 @@ class ParametreController extends BaseController
     public function index(Request $request, Breadcrumb $breadcrumb): Response
     {
 
-        $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
+        $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
 
-      
+
         $modules = [
             [
                 'label' => 'Général',
@@ -78,7 +78,7 @@ class ParametreController extends BaseController
          */
         $parametres = [
 
-            'prestation'=>[
+            'prestation' => [
 
                 [
                     'label' => 'Catégorie',
@@ -94,15 +94,15 @@ class ParametreController extends BaseController
                     'label' => 'Service',
                     'id' => 'param_permission',
                     'href' => $this->generateUrl('app_parametre_prestation_service_prestataire_index')
-                ],
+                ]/* ,
                 [
                     'label' => 'Proposition service',
                     'id' => 'param_permission_groupe',
                     'href' => $this->generateUrl('app_parametre_prestation_proposition_service_index')
-                ]
+                ] */
 
             ],
-            'utilisateur'=>[
+            'utilisateur' => [
 
                 [
                     'label' => 'Groupes modules',
@@ -126,7 +126,7 @@ class ParametreController extends BaseController
                 ]
 
             ],
-            'rh'=>[
+            'rh' => [
                 [
                     'label' => 'Fonction',
                     'id' => 'param_categorie',
@@ -143,7 +143,7 @@ class ParametreController extends BaseController
                     'id' => 'param_client',
                     'href' => $this->generateUrl('app_utilisateur_employe_index')
                 ],
-              /*  [
+                /*  [
                     'label' => 'Fournisseur',
                     'id' => 'param_fournisseur',
                     'href' => $this->generateUrl('app_rh_fournisseur_index')
@@ -157,7 +157,7 @@ class ParametreController extends BaseController
                     'label' => 'Genre',
                     'id' => 'param_article',
                     'href' => $this->generateUrl('app_parametre_civilite_index')
-                ] ,
+                ],
                 [
                     'label' => 'Icons',
                     'id' => 'param_cm',

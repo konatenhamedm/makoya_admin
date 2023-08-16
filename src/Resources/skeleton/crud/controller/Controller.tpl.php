@@ -8,12 +8,13 @@ use App\Controller\BaseController;
 #[Route('<?= $route_path ?>')]
 class <?= $class_name ?> extends BaseController
 {
-    const INDEX_ROOT_NAME = '<?= $route_name ?>'.'_index';
+const INDEX_ROOT_NAME = '<?= $route_name . '_index' ?>';
+
 <?= $generator->generateRouteForControllerMethod('/', sprintf('%s_index', $route_name), ['GET', 'POST']) ?>
-<?php if (isset($repository_full_class_name)): ?>
+<?php if (isset($repository_full_class_name)) : ?>
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
-    
+
 
     $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
 
@@ -26,62 +27,55 @@ class <?= $class_name ?> extends BaseController
     if($permission != null){
 
     $renders = [
-        'edit' =>  new ActionRender(function () use ($permission) {
-        if($permission == 'R'){
-        return false;
-        }elseif($permission == 'RD'){
-        return false;
-        }elseif($permission == 'RU'){
-        return true;
-        }elseif($permission == 'RUD'){
-        return true;
-        }elseif($permission == 'CRU'){
-        return true;
-        }
-        elseif($permission == 'CR'){
-        return false;
-        }else{
-        return true;
-        }
+    'edit' => new ActionRender(function () use ($permission) {
+    if($permission == 'R'){
+    return false;
+    }elseif($permission == 'RD'){
+    return false;
+    }elseif($permission == 'RU'){
+    return true;
+    }elseif($permission == 'CRUD'){
+    return true;
+    }elseif($permission == 'CRUD'){
+    return true;
+    }
+    elseif($permission == 'CR'){
+    return false;
+    }
 
-        }),
-        'delete' => new ActionRender(function () use ($permission) {
-        if($permission == 'R'){
-        return false;
-        }elseif($permission == 'RD'){
-        return true;
-        }elseif($permission == 'RU'){
-        return false;
-        }elseif($permission == 'RUD'){
-        return true;
-        }elseif($permission == 'CRU'){
-        return false;
-        }
-        elseif($permission == 'CR'){
-        return false;
-        }else{
-        return true;
-        }
-        }),
-        'show' => new ActionRender(function () use ($permission) {
-        if($permission == 'R'){
-        return true;
-        }elseif($permission == 'RD'){
-        return true;
-        }elseif($permission == 'RU'){
-        return true;
-        }elseif($permission == 'RUD'){
-        return true;
-        }elseif($permission == 'CRU'){
-        return true;
-        }
-        elseif($permission == 'CR'){
-        return true;
-        }else{
-        return true;
-        }
-        return true;
-        }),
+    }),
+    'delete' => new ActionRender(function () use ($permission) {
+    if($permission == 'R'){
+    return false;
+    }elseif($permission == 'RD'){
+    return true;
+    }elseif($permission == 'RU'){
+    return false;
+    }elseif($permission == 'CRUD'){
+    return true;
+    }elseif($permission == 'CRUD'){
+    return true;
+    }
+    elseif($permission == 'CR'){
+    return false;
+    }
+    }),
+    'show' => new ActionRender(function () use ($permission) {
+    if($permission == 'R'){
+    return true;
+    }elseif($permission == 'RD'){
+    return true;
+    }elseif($permission == 'RU'){
+    return true;
+    }elseif($permission == 'CRUD'){
+    return true;
+    }elseif($permission == 'CRU'){
+    return true;
+    }
+    elseif($permission == 'CR'){
+    return true;
+    }
+    }),
 
     ];
 
@@ -127,7 +121,7 @@ class <?= $class_name ?> extends BaseController
     , 'ajax' => true
     , 'icon' => '%icon% bi bi-trash'
     , 'attrs' => ['class' => 'btn-main']
-    ,  'render' => $renders['delete']
+    , 'render' => $renders['delete']
     ]
     ]
 
@@ -150,7 +144,7 @@ class <?= $class_name ?> extends BaseController
     'permition' => $permission
     ]);
     }
-<?php else: ?>
+<?php else : ?>
     public function index(EntityManagerInterface $entityManager): Response
     {
     $<?= $entity_var_plural ?> = $entityManager
@@ -192,7 +186,7 @@ $isAjax = $request->isXmlHttpRequest();
 
     $<?= $repository_var ?>->save($<?= $entity_var_singular ?>, true);
     $data = true;
-    $message       = 'Opération effectuée avec succès';
+    $message = 'Opération effectuée avec succès';
     $statut = 1;
     $this->addFlash('success', $message);
 
@@ -230,7 +224,7 @@ $isAjax = $request->isXmlHttpRequest();
     $entityManager->flush();
 
     $data = true;
-    $message       = 'Opération effectuée avec succès';
+    $message = 'Opération effectuée avec succès';
     $statut = 1;
     $this->addFlash('success', $message);
 
@@ -290,7 +284,7 @@ return $this->render('<?= $templates_path ?>/show.html.twig', [
 $form = $this->createForm(<?= $form_class_name ?>::class, $<?= $entity_var_singular ?>, [
 'method' => 'POST',
 'action' => $this->generateUrl('<?= $route_name ?>_edit', [
-'<?= $entity_identifier ?>' =>  $<?= $entity_var_singular ?>->get<?= ucfirst($entity_identifier) ?>()
+'<?= $entity_identifier ?>' => $<?= $entity_var_singular ?>->get<?= ucfirst($entity_identifier) ?>()
 ])
 ]);
 
@@ -312,7 +306,7 @@ $form->handleRequest($request);
 
     $<?= $repository_var ?>->save($<?= $entity_var_singular ?>, true);
     $data = true;
-    $message       = 'Opération effectuée avec succès';
+    $message = 'Opération effectuée avec succès';
     $statut = 1;
     $this->addFlash('success', $message);
 
@@ -348,7 +342,7 @@ $form->handleRequest($request);
     $entityManager->flush();
 
     $data = true;
-    $message       = 'Opération effectuée avec succès';
+    $message = 'Opération effectuée avec succès';
     $statut = 1;
     $this->addFlash('success', $message);
 
@@ -398,7 +392,7 @@ $form = $this->createFormBuilder()
 ->setAction(
 $this->generateUrl(
 '<?= $route_name ?>_delete'
-,   [
+, [
 '<?= $entity_identifier ?>' => $<?= $entity_var_singular ?>->get<?= ucfirst($entity_identifier) ?>()
 ]
 )
@@ -416,8 +410,8 @@ $form->handleRequest($request);
     $message = 'Opération effectuée avec succès';
 
     $response = [
-    'statut'   => 1,
-    'message'  => $message,
+    'statut' => 1,
+    'message' => $message,
     'redirect' => $redirect,
     'data' => $data
     ];
@@ -441,8 +435,8 @@ $form->handleRequest($request);
     $message = 'Opération effectuée avec succès';
 
     $response = [
-    'statut'   => 1,
-    'message'  => $message,
+    'statut' => 1,
+    'message' => $message,
     'redirect' => $redirect,
     'data' => $data
     ];

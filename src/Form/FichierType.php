@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FichierType extends AbstractType
 {
@@ -56,8 +57,8 @@ class FichierType extends AbstractType
             'label' => false
             //,'data_class' => Fichier::class
             , 'required' => $options['required']
-            , 'attr' => $attr
-
+            , 'attr' => $attr,
+            'constraints'=>new NotBlank(['message'=>'Selectionnez un fichier'])
             , 'constraints' => [
 
                 new File(

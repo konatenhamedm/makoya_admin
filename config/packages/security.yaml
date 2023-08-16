@@ -69,7 +69,7 @@ security:
         - { path: ^/css/, role: PUBLIC_ACCESS }
         - { path: ^/login$, role: PUBLIC_ACCESS }
         - { path: ^/home, role: IS_AUTHENTICATED_FULLY }
-        - { path: ^.*, role: IS_AUTHENTICATED_FULLY}
+        #- { path: ^.*, role: IS_AUTHENTICATED_FULLY}
 when@test:
     security:
         password_hashers:

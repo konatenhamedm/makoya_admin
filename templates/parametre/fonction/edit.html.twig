@@ -35,9 +35,26 @@
 
 {% block javascripts_inline %}
     <script>
-        $(function () {
+       {#  $(function () {
             init_select2('select');
-        }); 
+        }); #} 
+              $('.no-auto').each(function () {
+           const $this = $(this);
+           const $id = $('#' + $this.attr('id'));
+           init_date_picker($id,  'down', (start, e) => {
+               //$this.val(start.format('DD/MM/YYYY'));
+           }, null, null, null);
+
+           $id.on('apply.daterangepicker', function (ev, picker) {
+               $(this).val(picker.startDate.format('DD/MM/YYYY'));
+           });
+       });
+       $(function () {
+           $('select').each(function () {
+               init_select2($(this), null,  '#exampleModalSizeLg2');
+           });
+       });
+
         
     </script>
 {% endblock %}

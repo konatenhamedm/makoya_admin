@@ -1,25 +1,20 @@
 {% set image = image %}
 
 {% set data = data %}
+
 <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/assets/media/svg/avatars/blank.svg)">
 <!--begin::Image preview wrapper-->
-{# {% if  data != null%}
+{#  {% if data.children.image.vars.data is not null %}
+     {{ dump(colonne.children.image.vars.data.size) }}
+    {% endif %} #}
+ {% if  data.children.image.vars.data is not null %}
 
-{% if logo !=null %}
-
-<div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('uploads/'~ data.logo.path ~'/'~ data.logo.alt   )}})"></div>
-
-{% endif %}
-{% if photo !=null %}
-
-<div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('uploads/'~ data.photo.path ~'/'~ data.photo.alt   )}})"></div>
-
-{% endif %}
+<div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('uploads/'~ data.children.image.vars.data.path ~'/'~ data.children.image.vars.data.alt   )}})"></div>
 
 
-{% else %} #}
+{% else %} 
 <div class="image-input-wrapper w-125px h-125px" style="background-image: url(/assets/media/avatars/300-1.jpg)"></div>
-{# {% endif %} #}
+ {% endif %} 
 
 
 

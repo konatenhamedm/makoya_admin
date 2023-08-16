@@ -46,7 +46,7 @@ class IconController extends BaseController
                         return false;
                     }elseif($permission == 'RU'){
                         return true;
-                    }elseif($permission == 'RUD'){
+                    }elseif($permission == 'CRUD'){
                         return true;
                     }elseif($permission == 'CRU'){
                         return true;
@@ -65,7 +65,7 @@ class IconController extends BaseController
                         return true;
                     }elseif($permission == 'RU'){
                         return false;
-                    }elseif($permission == 'RUD'){
+                    }elseif($permission == 'CRUD'){
                         return true;
                     }elseif($permission == 'CRU'){
                         return false;
@@ -83,7 +83,7 @@ class IconController extends BaseController
                         return true;
                     }elseif($permission == 'RU'){
                         return true;
-                    }elseif($permission == 'RUD'){
+                    }elseif($permission == 'CRUD'){
                         return true;
                     }elseif($permission == 'CRU'){
                         return true;

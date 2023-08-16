@@ -3,24 +3,153 @@
 namespace App\Form;
 
 use App\Entity\Civilite;
+use App\Entity\Commune;
 use App\Entity\Prestataire;
 use App\Entity\Quartier;
+use App\Entity\Region;
+use App\Entity\SousPrefecture;
+use App\Repository\CommuneRepository;
+use App\Repository\QuartierRepository;
+use App\Repository\RegionRepository;
+use Doctrine\ORM\EntityRepository;
 use DoctrineExtensions\Query\Mysql\Quarter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PrestataireType extends AbstractType
 {
+    private $communeReprository;
+    private $quartierReprository;
+    private $regionReprository;
+    public function __construct(CommuneRepository $communeRepository, QuartierRepository $quartierRepository, RegionRepository $regionRepository)
+    {
+        $this->quartierReprository = $quartierRepository;
+        $this->communeReprository = $communeRepository;
+        $this->regionReprository = $regionRepository;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {  $type = $options['type'];
-       //dd($type);
-        if($type == "service"){
+    {
+        $type = $options['type'];
+        $password = $options['password'];
+        if ($password == "password" && $type != "service") {
+            $builder->add(
+                'password',
+                RepeatedType::class,
+                [
+                    'type'            => PasswordType::class,
+                    'invalid_message' => 'Les mots de passe doivent être identiques.',
+                    'required'        => $options['passwordRequired'],
+                    'first_options'   => ['label' => 'Mot de passe'],
+                    'second_options'  => ['label' => 'Répétez le mot de passe'],
+                ]
+            );
+        }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $departement = $event->getData()->getQuartier();
+            // dd($departement);
+            if ($event->getData()) {
+                $dataCommune = $this->communeReprository->createQueryBuilder('c')
+                    ->innerJoin('c.sousPrefecture', 's')
+                    ->innerJoin('s.departement', 'd')
+                    ->innerJoin('d.region', 'r')
+                    ->andWhere('r.id =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->orderBy('s.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+                $dataQuartier = $this->quartierReprository->createQueryBuilder('q')
+                    ->innerJoin('q.commune', 'c')
+                    ->innerJoin('c.sousPrefecture', 's')
+                    ->innerJoin('s.departement', 'd')
+                    ->innerJoin('d.region', 'r')
+                    ->andWhere('r.id =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->orderBy('q.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+                $event->getForm()->add('commune',  EntityType::class, [
+                    'class' => Commune::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('c')
+                            ->innerJoin('c.quartiers', 'q')
+                            ->andWhere('q.code =:quartier')
+                            ->setParameter('quartier', 'Q01')
+                            ->orderBy('c.id', 'ASC');
+                    },
+                    'mapped' => false,
+                    'label' => 'Région',
+                    'attr' => ['class' => 'has-select2 form-select region']
+                ]);
+                /* $event->getForm()->add('quartier', EntityType::class, [
+                'class' => Quartier::class,
+                'choice_label' => 'nom',
+                'choices' => $dataQuartier,
+                'mapped' => false,
+                'disabled' => false,
+                'attr' => ['class' => 'has-select2 quartier'],
+                'placeholder' => 'Selectionnez un quartier',
+                'constraints' => new NotBlank(['message' => 'Selectionnez un quartier']),
+            ]); */
+            } else {
+                $dataCommune = $this->communeReprository->createQueryBuilder('c')
+                    ->innerJoin('c.sousPrefecture', 's')
+                    ->innerJoin('s.departement', 'd')
+                    ->innerJoin('d.region', 'r')
+                    ->andWhere('r.id =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->orderBy('s.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+                $dataQuartier = $this->quartierReprository->createQueryBuilder('q')
+                    ->innerJoin('q.commune', 'c')
+                    ->innerJoin('c.sousPrefecture', 's')
+                    ->innerJoin('s.departement', 'd')
+                    ->innerJoin('d.region', 'r')
+                    ->andWhere('r.id =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->orderBy('q.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+                $event->getForm()->add('commune', EntityType::class, [
+                    'class' => Commune::class,
+                    'choice_label' => 'nom',
+                    'choices' => $dataCommune,
+                    'mapped' => false,
+                    'disabled' => false,
+                    'attr' => ['class' => 'has-select2 commune'],
+                    'placeholder' => 'Selectionnez une commune',
+
+                ]);
+                $event->getForm()->add('quartier', EntityType::class, [
+                    'class' => Quartier::class,
+                    'choice_label' => 'nom',
+                    'choices' => $dataQuartier,
+                    'mapped' => false,
+                    'disabled' => false,
+                    'attr' => ['class' => 'has-select2 quartier'],
+                    'placeholder' => 'Selectionnez un quartier',
+                    'constraints' => new NotBlank(['message' => 'Selectionnez un quartier']),
+                ]);
+            }
+        });
+
+        //dd($type);
+        if ($type == "service") {
             $builder->add('prestataireServices', CollectionType::class, [
                 'entry_type' => PrestataireServiceType::class,
                 'entry_options' => [
@@ -35,39 +164,53 @@ class PrestataireType extends AbstractType
                 'prototype' => true,
             ]);
         }
-            if($type !="service"){
-                $builder->add('username', TextType::class, ['label' => 'Pseudo'])
+        if ($type != "service") {
+            $builder->add('username', TextType::class, ['label' => 'Pseudo'])
                 ->add('quartier', EntityType::class, [
                     'class' => Quartier::class,
                     'choice_label' => 'nom',
                     'label' => 'Quartier',
-                    'attr' => ['class' => 'has-select2 form-select']
+                    'attr' => ['class' => 'has-select2 form-select quartier']
                 ])
-                ->add('password', RepeatedType::class, 
-                    [
-                        'type'            => PasswordType::class,
-                        'invalid_message' => 'Les mots de passe doivent être identiques.',
-                        'required'        => $options['passwordRequired'],
-                        'first_options'   => ['label' => 'Mot de passe'],
-                        'second_options'  => ['label' => 'Répétez le mot de passe'],
-                    ]
-                )
+                ->add('commune', EntityType::class, [
+                    'class' => Commune::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('m')
+                            ->orderBy('m.id', 'ASC');
+                    },
+                    'mapped' => false,
+                    'label' => 'Commune',
+                    'attr' => ['class' => 'has-select2 form-select commune']
+                ])
+                ->add('region', EntityType::class, [
+                    'class' => Region::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('m')
+                            ->orderBy('m.id', 'ASC');
+                    },
+                    'mapped' => false,
+                    'label' => 'Région',
+                    'attr' => ['class' => 'has-select2 form-select region']
+                ])
+
                 ->add('email')
                 ->add('denominationSociale')
-                ->add('logo', FichierType::class,
-                ['label' => 'Fichier',
-                    'label' => 'Logo',
-                    'doc_options' => $options['doc_options'],
-                    'required' => $options['doc_required'] ?? true])
+                ->add(
+                    'logo',
+                    FichierType::class,
+                    [
+                        'label' => 'Fichier',
+                        'label' => 'Logo',
+                        'doc_options' => $options['doc_options'],
+                        'required' => $options['doc_required'] ?? true
+                    ]
+                )
                 ->add('contactPrincipal')
                 ->add('longitude')
                 ->add('lattitude');
-            }
-
-          
-           
-
-     
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -82,8 +225,6 @@ class PrestataireType extends AbstractType
         $resolver->setRequired('doc_required');
         $resolver->setRequired('passwordRequired');
         $resolver->setRequired(['type']);
-       
+        $resolver->setRequired(['password']);
     }
-
- 
 }

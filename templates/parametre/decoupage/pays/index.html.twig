@@ -31,15 +31,10 @@
                             <div class="card-body py-1 py-lg-20" style="margin-top: -88px">
 
                                 <!--begin::Title-->
-                                <h2 class="fw-bolder fs-2qx text-red-900 " style="color:orangered">
-                                    Vous n'avez pas les droits neccessaires pour lire cette page
-                                </h2>
+                                 {% include "_includes/message_error.html.twig" %}
                                 <!--end::Title-->
                                 <!--begin::Illustration-->
-                                <div class="mb-1">
-                                    <img src="{{ asset('assets/media/oups.jpg') }}" class="mw-100 mh-200px theme-light-show" alt=""/>
-                                    <img src="{{ asset('assets/media/oups.jpg') }}" class="mw-100 mh-200px theme-dark-show" alt=""/>
-                                </div>
+                               
 
 
                             </div>

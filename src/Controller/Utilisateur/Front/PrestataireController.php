@@ -17,10 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
+use App\Repository\CommuneRepository;
+use App\Repository\QuartierRepository;
+use App\Repository\ServicePrestataireRepository;
+use App\Repository\SousCategorieRepository;
 
 #[Route('/utilisateur/front/prestataire')]
 class PrestataireController extends BaseController
 {
+
     private function numero()
     {
 
@@ -34,7 +39,7 @@ class PrestataireController extends BaseController
         } else {
             $nb = $nb + 1;
         }
-        return (date("y") . 'UP' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+        return (date("y") . 'PR' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
     }
     const INDEX_ROOT_NAME = 'app_utilisateur_front_prestataire_index';
 
@@ -61,7 +66,7 @@ class PrestataireController extends BaseController
                         return false;
                     } elseif ($permission == 'RU') {
                         return true;
-                    } elseif ($permission == 'RUD') {
+                    } elseif ($permission == 'CRUD') {
                         return true;
                     } elseif ($permission == 'CRU') {
                         return true;
@@ -78,7 +83,24 @@ class PrestataireController extends BaseController
                         return false;
                     } elseif ($permission == 'RU') {
                         return true;
-                    } elseif ($permission == 'RUD') {
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }),
+                'change_password' =>  new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return false;
+                    } elseif ($permission == 'RD') {
+                        return false;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
                         return true;
                     } elseif ($permission == 'CRU') {
                         return true;
@@ -95,7 +117,7 @@ class PrestataireController extends BaseController
                         return true;
                     } elseif ($permission == 'RU') {
                         return false;
-                    } elseif ($permission == 'RUD') {
+                    } elseif ($permission == 'CRUD') {
                         return true;
                     } elseif ($permission == 'CRU') {
                         return false;
@@ -112,7 +134,25 @@ class PrestataireController extends BaseController
                         return true;
                     } elseif ($permission == 'RU') {
                         return true;
-                    } elseif ($permission == 'RUD') {
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return true;
+                    } else {
+                        return true;
+                    }
+                    return true;
+                }),
+                'show_service' => new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return true;
+                    } elseif ($permission == 'RD') {
+                        return true;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
                         return true;
                     } elseif ($permission == 'CRU') {
                         return true;
@@ -142,19 +182,26 @@ class PrestataireController extends BaseController
                         $options = [
                             'default_class' => 'btn btn-xs btn-clean btn-icon mr-2 ',
                             'target' => '#exampleModalSizeLg2',
-                            
+
                             'actions' => [
                                 'edit' => [
                                     'url' => $this->generateUrl('app_utilisateur_front_prestataire_edit', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-default'], 'render' => $renders['edit']
-                                ], 
+                                ],
                                 'show' => [
                                     'url' => $this->generateUrl('app_utilisateur_front_prestataire_show', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ],
-                                'edit_service' => [
-                                    'target' => '#exampleModalSizeSm2',
-                                    'url' => $this->generateUrl('app_utilisateur_front_prestataire_edit_service', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['edit_service']
+                                
+                                'change_password' => [
+                                    'target' => '#exampleModalSizeNormal',
+                                    'url' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-lock', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['change_password']
                                 ],
-                               
+                                'edit_service' => [
+                                    'target' => '#exampleModalSizeLg2',
+                                    'url' => $this->generateUrl('app_utilisateur_front_prestataire_edit_service', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-plus-square text-light', 'attrs' => ['class' => 'btn-main', 'title' => 'Ajouter des services'], 'render' => $renders['edit_service']
+                                ],
+                                'show_service' => [
+                                    'url' => $this->generateUrl('app_parametre_prestation_prestataire_service_index', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-book', 'attrs' => ['class' => 'btn-primary', 'title' => 'Liste services'], 'render' => $renders['show_service']
+                                ],
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
                                     'url' => $this->generateUrl('app_utilisateur_front_prestataire_delete', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-main'],  'render' => $renders['delete']
@@ -187,7 +234,8 @@ class PrestataireController extends BaseController
         $prestataire = new Prestataire();
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
-            'type'=>'prestataire',
+            'type' => 'prestataire',
+            'password' => 'password',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -204,11 +252,12 @@ class PrestataireController extends BaseController
         if ($form->isSubmitted()) {
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
-
+            $quartier = $form->get('quartier')->getData();
 
             if ($form->isValid()) {
 
                 $prestataire->setReference($this->numero());
+                $prestataire->setQuartier($quartier);
                 $prestataireRepository->save($prestataire, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
@@ -253,7 +302,8 @@ class PrestataireController extends BaseController
 
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
-            'type'=>'prestataire',
+            'type' => 'prestataire',
+            'password' => 'nopassword',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -262,7 +312,7 @@ class PrestataireController extends BaseController
                 'reference' =>  $prestataire->getReference()
             ])
         ]);
-//dd($prestataire);
+        //dd($prestataire);
         $data = null;
         $statutCode = Response::HTTP_OK;
 
@@ -274,10 +324,12 @@ class PrestataireController extends BaseController
         if ($form->isSubmitted()) {
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
+            $quartier = $form->get('quartier')->getData();
 
 
             if ($form->isValid()) {
-
+                //dd($quartier);
+                $prestataire->setQuartier($quartier);
                 $prestataireRepository->save($prestataire, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
@@ -307,6 +359,69 @@ class PrestataireController extends BaseController
             'form' => $form,
         ]);
     }
+    #[Route('/{reference}/change/password', name: 'app_utilisateur_front_prestataire_change_password', methods: ['GET', 'POST'])]
+    public function changePassword(Request $request, Prestataire $prestataire, PrestataireRepository $prestataireRepository, FormError $formError): Response
+    {
+
+        $form = $this->createForm(PrestataireType::class, $prestataire, [
+            'method' => 'POST',
+            'type' => 'prestataire',
+            'password' => 'password',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'action' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', [
+                'reference' =>  $prestataire->getReference()
+            ])
+        ]);
+        //dd($prestataire);
+        $data = null;
+        $statutCode = Response::HTTP_OK;
+
+        $isAjax = $request->isXmlHttpRequest();
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $response = [];
+            $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
+            $quartier = $form->get('quartier')->getData();
+
+
+            if ($form->isValid()) {
+                //dd($quartier);
+                $prestataire->setQuartier($quartier);
+                $prestataireRepository->save($prestataire, true);
+                $data = true;
+                $message       = 'Opération effectuée avec succès';
+                $statut = 1;
+                $this->addFlash('success', $message);
+            } else {
+                $message = $formError->all($form);
+                $statut = 0;
+                $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+                if (!$isAjax) {
+                    $this->addFlash('warning', $message);
+                }
+            }
+
+
+            if ($isAjax) {
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
+            } else {
+                if ($statut == 1) {
+                    return $this->redirect($redirect, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return $this->renderForm('utilisateur/front/prestataire/password.html.twig', [
+            'prestataire' => $prestataire,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/{reference}/edit/service', name: 'app_utilisateur_front_prestataire_edit_service', methods: ['GET', 'POST'])]
     public function editService(Request $request, Prestataire $prestataire, PrestataireRepository $prestataireRepository, FormError $formError): Response
@@ -314,7 +429,8 @@ class PrestataireController extends BaseController
 
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
-            'type'=>'service',
+            'type' => 'service',
+            'password' => 'nopassword',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -323,7 +439,7 @@ class PrestataireController extends BaseController
                 'reference' =>  $prestataire->getReference()
             ])
         ]);
-//dd($prestataire);
+        //dd($prestataire);
         $data = null;
         $statutCode = Response::HTTP_OK;
 
@@ -412,5 +528,230 @@ class PrestataireController extends BaseController
             'prestataire' => $prestataire,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/liste/souscategorie', name: 'get_souscategorie', methods: ['GET'])]
+    public function getInfoSerie(Request $request, SousCategorieRepository $sousCategorieRepository, ServicePrestataireRepository $servicePrestataireRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesSousCate = array();
+
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+            $dataSousCat = $sousCategorieRepository->findBy(array("categorie" => $id));
+
+
+            //dd($dataSousCat);
+            $i = 0;
+
+
+            foreach ($dataSousCat as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesSousCate[$i]['id'] = $e->getId();
+                $tabEnsemblesSousCate[$i]['libelle'] = $e->getLibelle();
+                $i++;
+            }
+
+            $dataSousCategorie = json_encode($tabEnsemblesSousCate); // formater le résultat de la requête en json
+
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($dataSousCategorie);
+        }
+        return $response;
+    }
+
+    #[Route('/liste/service', name: 'get_service', methods: ['GET'])]
+    public function getService(Request $request, SousCategorieRepository $sousCategorieRepository, ServicePrestataireRepository $servicePrestataireRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesService = array();
+
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+
+            $dataService = $servicePrestataireRepository->findBy(array("categorie" => $id));
+
+            //dd($ensembles);
+
+            $i = 0;
+
+            foreach ($dataService as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesService[$i]['id'] = $e->getId();
+                $tabEnsemblesService[$i]['libelle'] = $e->getLibelle();
+                $i++;
+            }
+
+            $dataService = json_encode($tabEnsemblesService); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($dataService);
+
+
+
+            // dd($response);
+
+        }
+        return $response;
+    }
+
+
+
+    #[Route('/liste/commune', name: 'get_commune', methods: ['GET'])]
+    public function getCommune(Request $request, CommuneRepository $communeRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesCommune = array();
+
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+
+            $data = $communeRepository->createQueryBuilder('c')
+                ->innerJoin('c.sousPrefecture', 's')
+                ->innerJoin('s.departement', 'd')
+                ->innerJoin('d.region', 'r')
+                ->andWhere('r.id =:region')
+                ->setParameter('region', $id)
+                ->orderBy('s.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            /*   $dataQuartier = $this->quartierReprository->createQueryBuilder('q')
+            ->innerJoin('q.commune', 'c')
+            ->innerJoin('c.sousPrefecture', 's')
+            ->innerJoin('s.departement', 'd')
+            ->innerJoin('d.region', 'r')
+            ->andWhere('r.id =:region')
+            ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'RG1')))
+            ->orderBy('q.id', 'ASC')
+            ->getQuery()
+            ->getResult(); */
+
+            //$dataService = $servicePrestataireRepository->findBy(array("categorie" => $id));
+
+            //dd($ensembles);
+
+            $i = 0;
+
+            foreach ($data as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesCommune[$i]['id'] = $e->getId();
+                $tabEnsemblesCommune[$i]['libelle'] = $e->getNom();
+                $i++;
+            }
+
+            $dataCommune = json_encode($tabEnsemblesCommune); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($dataCommune);
+
+
+
+            // dd($response);
+
+        }
+        return $response;
+    }
+
+    #[Route('/liste/quartier', name: 'get_quartier', methods: ['GET'])]
+    public function getQuartier(Request $request, QuartierRepository $quartierRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesQuartier = array();
+
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+
+
+            $data = $quartierRepository->createQueryBuilder('q')
+                ->innerJoin('q.commune', 'c')
+                ->innerJoin('c.sousPrefecture', 's')
+                ->innerJoin('s.departement', 'd')
+                ->innerJoin('d.region', 'r')
+                ->andWhere('r.id =:region')
+                ->setParameter('region', $id)
+                ->orderBy('q.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            //$dataService = $servicePrestataireRepository->findBy(array("categorie" => $id));
+
+            //dd($ensembles);
+
+            $i = 0;
+
+            foreach ($data as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesQuartier[$i]['id'] = $e->getId();
+                $tabEnsemblesQuartier[$i]['libelle'] = $e->getNom();
+                $i++;
+            }
+
+            $dataQuartier = json_encode($tabEnsemblesQuartier); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($dataQuartier);
+
+
+
+            // dd($response);
+
+        }
+        return $response;
+    }
+
+    #[Route('/liste/quartier/commune', name: 'get_quartier_commune', methods: ['GET'])]
+    public function getQuartierCommune(Request $request, QuartierRepository $quartierRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesQuartier = array();
+
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+
+
+            $data = $quartierRepository->createQueryBuilder('q')
+                ->innerJoin('q.commune', 'c')
+                ->andWhere('c.id =:commune')
+                ->setParameter('commune', $id)
+                ->orderBy('c.id', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            //$dataService = $servicePrestataireRepository->findBy(array("categorie" => $id));
+
+            //dd($ensembles);
+
+            $i = 0;
+
+            foreach ($data as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesQuartier[$i]['id'] = $e->getId();
+                $tabEnsemblesQuartier[$i]['libelle'] = $e->getNom();
+                $i++;
+            }
+
+            $dataQuartier = json_encode($tabEnsemblesQuartier); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($dataQuartier);
+
+
+
+            // dd($response);
+
+        }
+        return $response;
     }
 }

@@ -14,7 +14,22 @@
     {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
     <div class="modal-body">
         {{ include('_includes/ajax/response.html.twig') }}
-        {{ form_widget(form) }}
+      <div class="row">
+       <div class="col-md-2 ">
+					{% include '_includes/image_categorie.html.twig'  with {'image':form.imageLaUne,'data':null} %}
+		</div>
+        <div class="col-md-10">
+        </div>
+      </div>
+	
+		<div class="row">
+            <div class="form-group col-md-12">
+				<label class="sr-onl" for="userinput1">
+					Libelle*
+				</label>
+				{{ form_widget(form.libelle) }}
+			</div>
+        </div>
     </div>
     <div class="modal-footer">
         {# {{ include('_includes/ajax/loader.html.twig') }} #}
@@ -28,7 +43,12 @@
     <script>
         $(function () {
             init_select2('select');
+            KTImageInput.createInstances();
+        var imageInputElement = document.querySelector("#kt_image_input_control");
+        var imageInput = KTImageInput.getInstance(imageInputElement);
         });
+
+        
        
     </script>
 {% endblock %}

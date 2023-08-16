@@ -1,0 +1,129 @@
+{% block page_content %}
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modification Publicite demande utilisateur simple</h5>
+        <div class="btn btn-icon btn-sm  ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <span class="svg-icon svg-icon-2x text-white">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+					<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+				</svg>
+            </span>
+        </div>
+    </div>
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="modal-body">
+        {{ include('_includes/ajax/response.html.twig') }}
+       <div class="row">
+					<div class="col-md-12 ">
+                     <label class="sr-onl" for="userinput1" >
+					Libelle
+				    </label>
+						{{ form_widget(form.libelle) }}
+					</div>
+					
+				</div>
+                <div class="row">
+					<div class="col-md-12 ">
+                     <label class="sr-onl" for="userinput1" >
+					Date début
+				    </label>
+						{{ form_widget(form.dateDebut) }}
+					</div>
+					
+				</div>
+                <div class="row">
+					<div class="col-md-12 ">
+                     <label class="sr-onl" for="userinput1" >
+					Date Fin
+				    </label>
+						{{ form_widget(form.dateFin) }}
+					</div>
+					
+				</div>
+                     <div class="row">
+					<div class="col-md-12 ">
+                     <label class="sr-onl" for="userinput1" >
+					Jours
+				    </label>
+						{{ form_widget(form.jours) }}
+					</div>
+					
+				</div>
+                     <div class="row">
+					<div class="col-md-12 ">
+                     <label class="sr-onl" for="userinput1" >
+					Utilisateur simple
+				    </label>
+						{{ form_widget(form.utilisateur) }}
+					</div>
+					
+				</div>
+    </div>
+    <div class="modal-footer">
+     {{ form_widget(form.annuler) }}
+      {{ form_widget(form.save) }}
+       {% if workflow_can(publicite_demande_utilisateur_simple, 'passer') %}
+            {{ form_widget(form.passer) }}
+        {% endif %}
+         {% if workflow_can(publicite_demande_utilisateur_simple, 'rejeter') %}
+           {#  {{ form_widget(form.rejeter) }} #}
+             <a title="Rejeter la demande" href="{{ path('app_publicite_publicite_demande_utilisateur_simple_rejeter',{'code':publicite_demande_utilisateur_simple.code }) }}" class="btn btn-danger btn-sm test" data-bs-stacked-toggle="modal" data-bs-stacked-modal="#exampleModalSizeLg1">Rejeter le document</a>
+             
+        {% endif %}
+       
+    </div>
+    {{ form_widget(form._token) }}
+	{{ form_end(form, {render_rest: false}) }}
+{% endblock %}
+{% block java %}
+    <script> 
+    $(function () {
+	  var elements = Array.from(document.querySelectorAll("[data-bs-stacked-modal]"));
+
+            if (elements && elements.length > 0) {
+                elements.forEach((element) => {
+                    if (element.getAttribute("data-kt-initialized") === "1" ) {
+                        return;
+                    }
+
+                    const url = element.getAttribute('href');
+                    element.setAttribute("data-kt-initialized", "1");
+
+
+                    element.addEventListener("click", function(e) {
+                        e.preventDefault();
+
+                        const modalEl = document.querySelector(this.getAttribute("data-bs-stacked-modal"));
+
+                        if (modalEl) {
+                            const modal = new bootstrap.Modal(modalEl);
+                            modal.show(element);
+                        }
+                    });
+                });
+            }
+init_select2('select',null,'#exampleModalSizeLg2');
+KTImageInput.createInstances();
+var imageInputElement = document.querySelector("#kt_image_input_control");
+var imageInput = KTImageInput.getInstance(imageInputElement);
+})
+    $('.no-auto').each(function () {
+           const $this = $(this);
+           const $id = $('#' + $this.attr('id'));
+           init_date_picker($id,  'down', (start, e) => {
+               //$this.val(start.format('DD/MM/YYYY'));
+           }, null, null, null);
+
+           $id.on('apply.daterangepicker', function (ev, picker) {
+               $(this).val(picker.startDate.format('DD/MM/YYYY'));
+           });
+       });
+    $(function () {
+      
+           init_select2('select', null,  '#exampleModalSizeLg2');
+       });
+
+       
+    </script>
+{% endblock %}

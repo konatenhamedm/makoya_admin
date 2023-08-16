@@ -77,13 +77,13 @@
 	{{ form_end(form, {render_rest: false}) }}
 {% endblock %}
 
-{% block java %}
+{% block javascripts_inline %}
 	<script>
 		$(function () {
-init_select2('select');
-KTImageInput.createInstances();
-var imageInputElement = document.querySelector("#kt_image_input_control");
-var imageInput = KTImageInput.getInstance(imageInputElement);
-});
+		init_select2('select',null,'#exampleModalSizeLg2');
+		KTImageInput.createInstances();
+		var imageInputElement = document.querySelector("#kt_image_input_control");
+		var imageInput = KTImageInput.getInstance(imageInputElement);
+		});
 	</script>
 {% endblock %}

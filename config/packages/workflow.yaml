@@ -1,0 +1,91 @@
+imports:
+framework:
+    workflows:
+        add_prestation_service:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'
+            supports:
+                - App\Entity\WorkflowServicePrestataire
+            initial_marking: demande_initie
+            places:
+                - demande_initie
+                - demande_valider
+                - demande_rejeter
+            transitions:
+                passer:
+                    from: demande_initie
+                    to: demande_valider
+                rejeter:
+                    from: demande_initie
+                    to: demande_rejeter
+
+        add_proposition_service:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'
+            supports:
+                - App\Entity\PropositionService
+            initial_marking: proposition_initie
+            places:
+                - proposition_initie
+                - proposition_valider
+                - proposition_rejeter
+            transitions:
+                passer:
+                    from: proposition_initie
+                    to: proposition_valider
+                rejeter:
+                    from: proposition_initie
+                    to: proposition_rejeter
+
+        add_demande_publicite:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'
+            supports:
+                - App\Entity\PubliciteDemande
+            initial_marking: demande_initie
+            places:
+                - demande_initie
+                - demande_valider
+                - demande_rejeter
+            transitions:
+                passer:
+                    from: demande_initie
+                    to: demande_valider
+                rejeter:
+                    from: demande_initie
+                    to: demande_rejeter
+
+        add_demande_publicite_utilisateur_simple:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'etat'
+            supports:
+                - App\Entity\PubliciteDemandeUtilisateurSimple
+            initial_marking: demande_initie
+            places:
+                - demande_initie
+                - demande_valider
+                - demande_rejeter
+            transitions:
+                passer:
+                    from: demande_initie
+                    to: demande_valider
+                rejeter:
+                    from: demande_initie
+                    to: demande_rejeter
+               

@@ -28,9 +28,13 @@ class Region
     #[ORM\OneToMany(mappedBy: 'region', targetEntity: Departement::class)]
     private Collection $departements;
 
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: PubliciteRegion::class)]
+    private Collection $publiciteRegions;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
+        $this->publiciteRegions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +102,36 @@ class Region
             // set the owning side to null (unless already changed)
             if ($departement->getRegion() === $this) {
                 $departement->setRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PubliciteRegion>
+     */
+    public function getPubliciteRegions(): Collection
+    {
+        return $this->publiciteRegions;
+    }
+
+    public function addPubliciteRegion(PubliciteRegion $publiciteRegion): static
+    {
+        if (!$this->publiciteRegions->contains($publiciteRegion)) {
+            $this->publiciteRegions->add($publiciteRegion);
+            $publiciteRegion->setRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePubliciteRegion(PubliciteRegion $publiciteRegion): static
+    {
+        if ($this->publiciteRegions->removeElement($publiciteRegion)) {
+            // set the owning side to null (unless already changed)
+            if ($publiciteRegion->getRegion() === $this) {
+                $publiciteRegion->setRegion(null);
             }
         }
 
