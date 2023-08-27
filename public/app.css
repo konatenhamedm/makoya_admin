@@ -1,0 +1,160 @@
+/* .map__image path:hover {
+    fill: rgb(45, 204, 24);
+    transition: fill 0.5s;
+} */
+
+/* .map__image {
+    float: left;
+    width: 65%;
+}
+
+.map__list {
+    float: right;
+    width: 35%;
+    padding: 2% 2%;
+} */
+
+.land {
+    fill: #cccccc;
+    fill-opacity: 1;
+    stroke: white;
+    stroke-opacity: 1;
+    stroke-width: .5;
+}
+
+#legend .levelOne {
+    border: black solid 1.5px;
+    background-color: rgb(221, 42, 29);
+    transition: background-color 1s;
+}
+#legend .levelTwo {
+    border: black solid 1.5px;
+    background-color: rgb(245, 152, 105);
+    transition: background-color 1s;
+}
+#legend .levelThree {
+    border: black solid 1.5px;
+    background-color: rgb(14, 226, 103);
+    transition: background-color 1s;
+}
+#legend .levelFour {
+    background-color: rgb(16, 105, 4);
+    border: black solid 1.5px;
+    transition: background-color 1s;
+}
+/*#legend .levelFive {
+    border: black solid 1.5px;
+    background-color: rgb(214, 47, 39);
+    transition: background-color 1s;
+} */
+
+.land.levelOne {
+    fill: rgb(221, 42, 29);
+    transition: fill 1s;
+}
+.land.levelTwo {
+    fill: rgb(245, 152, 105);
+    transition: fill 1s;
+}
+.land.levelThree {
+    fill: rgb(14, 226, 103);
+    transition: fill 1s;
+}
+.land.levelFour {
+    fill: rgb(16, 105, 4);
+    transition: fill 1s;
+}
+/*.land.levelFive {
+    fill: rgb(214, 47, 39);
+    transition: fill 1s;
+} */
+
+.land:hover {
+    stroke: #000000;
+    /* stroke-opacity: 1; */
+    stroke-width: 1;
+    transition: all 0.2s;
+}
+
+#CI-DE {
+    fill: #685c4a;
+}
+
+#CI-SV {
+    /* fill: #e5c9a3; */
+    fill: #392913;
+}
+
+#CI-WR {
+    /* fill: antiquewhite; */
+    fill: #f6bf76;
+}
+
+#CI-DH {
+    fill: #6d890b;
+}
+
+#CI-HT {
+    fill: #a3cf0a;
+}
+
+#CI-NC {
+    fill: #9b6f34;
+}
+
+#CI-MC {
+    fill: #4d2c00;
+}
+
+#CI-LC {
+    fill: #f6bf76;
+}
+
+#CI-MV {
+    fill: #c79451;
+}
+
+#CI-MR {
+    fill: #787825;
+}
+
+#CI-AG {
+    fill: #392913;
+}
+
+#CI-ZA {
+    fill: #f04f05;
+}
+
+#CI-BF {
+    fill: rgb(170 73 29);
+}
+
+#CI-SC {
+    fill: rgb(139, 136, 136);
+}
+
+#CI-LG {
+    fill: rgba(87, 79, 79, 0.836);
+}
+
+#CI-SB {
+    fill: rgba(36, 34, 34, 0.842);
+}
+
+#CI-BS {
+    fill: rgba(17, 16, 16, 0.973);
+}
+
+#CI-FR {
+    fill: green;
+}
+
+#CI-VB {
+    fill: #13c721;
+}
+
+ #CI-BF:hover, #CI-SC:hover, #CI-LG:hover, #CI-LC:hover, #CI-BS:hover,#CI-MR:hover,#CI-SB:hover,#CI-FR:hover,#CI-LG:hover,#CI-VB:hover,#CI-ZA:hover,#CI-AG:hover,#CI-MV:hover,#CI-HT:hover,#CI-WR:hover,#CI-DE:hover,#CI-DE:hover,#CI-SV:hover,#CI-MC:hover,#CI-NC:hover,#CI-DH:hover {
+    fill: rgb(241, 152, 18);
+    cursor: pointer;
+} 

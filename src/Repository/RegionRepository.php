@@ -39,6 +39,21 @@ class RegionRepository extends ServiceEntityRepository
         }
     }
 
+    public function getNbrePrestataireByRegions($val){
+    return $this->createQueryBuilder('r')
+            ->select('count(u.id) nbre')
+            ->innerJoin('r.departements','d')
+            ->innerJoin('d.sousPrefectures','s')
+            ->innerJoin('s.communes','c')
+            ->innerJoin('c.quartiers','q')
+            ->innerJoin('q.userFronts','u')
+            ->andWhere('r.code = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Region[] Returns an array of Region objects
 //     */

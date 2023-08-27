@@ -58,6 +58,9 @@ class PrestataireService
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Reclamation::class)]
     private Collection $reclamations;
 
+    #[ORM\OneToMany(mappedBy: 'service', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->dateCreation = new DateTime();
@@ -67,6 +70,7 @@ class PrestataireService
         $this->notes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -284,6 +288,36 @@ class PrestataireService
             // set the owning side to null (unless already changed)
             if ($reclamation->getService() === $this) {
                 $reclamation->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getService() === $this) {
+                $nombreClick->setService(null);
             }
         }
 

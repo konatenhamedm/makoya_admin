@@ -17,7 +17,6 @@
         "lexik/jwt-authentication-bundle": "^2.14",
         "mpdf/mpdf": "^8.1",
         "nelmio/api-doc-bundle": "*",
-        "nelmio/cors-bundle": "^2.3",
         "omines/datatables-bundle": "^0.7.0",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "^1.24",

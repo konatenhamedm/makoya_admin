@@ -28,9 +28,13 @@ class Quartier
     #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: UserFront::class)]
     private Collection $userFronts;
 
+    #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->userFronts = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +102,36 @@ class Quartier
             // set the owning side to null (unless already changed)
             if ($userFront->getQuartier() === $this) {
                 $userFront->setQuartier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setQuartier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getQuartier() === $this) {
+                $nombreClick->setQuartier(null);
             }
         }
 

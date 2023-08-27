@@ -28,9 +28,13 @@ class Commune
     #[ORM\ManyToOne(inversedBy: 'communes')]
     private ?SousPrefecture $sousPrefecture = null;
 
+    #[ORM\OneToMany(mappedBy: 'commune', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->quartiers = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +104,36 @@ class Commune
     public function setSousPrefecture(?SousPrefecture $sousPrefecture): static
     {
         $this->sousPrefecture = $sousPrefecture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setCommune($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getCommune() === $this) {
+                $nombreClick->setCommune(null);
+            }
+        }
 
         return $this;
     }

@@ -2,20 +2,24 @@
 
 
 namespace App\Events;
+
+use App\Controller\ApiInterface;
 use App\Entity\UserFront;
 use App\Entity\Utilisateur;
 use App\Entity\UtilisateurSimple;
 use App\Repository\UserFrontRepository;
 use App\Repository\UtilisateurRepository;
+use DateTime;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
-class AuthenticationSuccessListener
+class AuthenticationSuccessListener extends ApiInterface
 {
     private $utilisateurRepository;
     private $userFrontRepository;
-    public function __construct(UtilisateurRepository $utilisateurRepository,UserFrontRepository $userFrontRepository){
+    public function __construct(UtilisateurRepository $utilisateurRepository, UserFrontRepository $userFrontRepository)
+    {
         $this->utilisateurRepository = $utilisateurRepository;
         $this->userFrontRepository = $userFrontRepository;
     }
@@ -26,21 +30,31 @@ class AuthenticationSuccessListener
     {
         $data = $event->getData();
         $user = $event->getUser();
-
-        if (!$user instanceof UserFront ) {
+        $response = $this->response($user);
+        // dd($data["1"]);
+        /*   if (!$user instanceof UserFront) {
             return;
-        }
-       /* if (!$user instanceof Utilisateur ) {
+        } */
+        /* if (!$user instanceof Utilisateur ) {
             return;
         }*/
 
-        if($user instanceof UtilisateurSimple ){
-            $userData = $this->userFrontRepository->findBy(array('id'=>$user->getId()));
-            dd($userData);
-           // dd($userData);
-    $data['data'] =   $userData;
+        if ($user instanceof UtilisateurSimple) {
+            $userData = $this->userFrontRepository->findOneBy(array('reference' => '23US08001'));
+            //dd($user);
+            //dd($userData["reference"]);$response->getContent();
+            $data['data'] =   [
+                'reference' => $this->userFrontRepository->find(9)->getReference(),
+                'username' => $this->userFrontRepository->find(9)->getUsername(),
+
+                "avatar" => "https://fr.web.img6.acsta.net/newsv7/21/02/26/16/13/3979241.jpg",
+                "id" => $this->userFrontRepository->find(9)->getUserIdentifier(),
+                "accessToken" => "ffff",
+                "expiredAt" => new DateTime(),
+
+            ];
             $event->setData($data);
-      }
+        }
 
         /*if($user instanceof Utilisateur ){
             $data['data'] = array(
@@ -51,7 +65,5 @@ class AuthenticationSuccessListener
             $event->setData($data);
 
         }*/
-
-
     }
 }

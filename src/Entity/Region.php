@@ -31,10 +31,14 @@ class Region
     #[ORM\OneToMany(mappedBy: 'region', targetEntity: PubliciteRegion::class)]
     private Collection $publiciteRegions;
 
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
         $this->publiciteRegions = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +136,36 @@ class Region
             // set the owning side to null (unless already changed)
             if ($publiciteRegion->getRegion() === $this) {
                 $publiciteRegion->setRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getRegion() === $this) {
+                $nombreClick->setRegion(null);
             }
         }
 
