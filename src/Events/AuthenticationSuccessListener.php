@@ -10,6 +10,7 @@ use App\Entity\UtilisateurSimple;
 use App\Repository\UserFrontRepository;
 use App\Repository\UtilisateurRepository;
 use DateTime;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,6 +24,7 @@ class AuthenticationSuccessListener extends ApiInterface
         $this->utilisateurRepository = $utilisateurRepository;
         $this->userFrontRepository = $userFrontRepository;
     }
+
     /**
      * @param AuthenticationSuccessEvent $event
      */
@@ -30,27 +32,51 @@ class AuthenticationSuccessListener extends ApiInterface
     {
         $data = $event->getData();
         $user = $event->getUser();
-        $response = $this->response($user);
+        //$response = $this->response($user);
         // dd($data["1"]);
-        /*   if (!$user instanceof UserFront) {
+        /*  if (!$user instanceof UserFront || !$user instanceof Utilisateur) {
             return;
         } */
-        /* if (!$user instanceof Utilisateur ) {
-            return;
-        }*/
 
-        if ($user instanceof UtilisateurSimple) {
-            $userData = $this->userFrontRepository->findOneBy(array('reference' => '23US08001'));
+        //dd();
+        if ($user instanceof Utilisateur) {
+            $userData = $this->utilisateurRepository->find($user->getId());
             //dd($user);
-            //dd($userData["reference"]);$response->getContent();
+
             $data['data'] =   [
-                'reference' => $this->userFrontRepository->find(9)->getReference(),
-                'username' => $this->userFrontRepository->find(9)->getUsername(),
+                'reference' => $user->getId(),
+                'username' => $userData->getUsername(),
 
                 "avatar" => "https://fr.web.img6.acsta.net/newsv7/21/02/26/16/13/3979241.jpg",
-                "id" => $this->userFrontRepository->find(9)->getUserIdentifier(),
+                "id" =>  $user->getId(),
                 "accessToken" => "ffff",
                 "expiredAt" => new DateTime(),
+                "url" => "hhhh",
+                //"type" => "user",
+
+            ];
+            // dd($data)
+            $event->setData($data);
+        }
+
+        if ($user instanceof UtilisateurSimple) {
+            $userData = $this->userFrontRepository->findOneBy(array('reference' => $user->getReference()));
+            //dd($user);
+            //dd($userData["reference"]);$response->getContent();
+
+            $type = str_contains($userData->getReference(), 'PR') ? "prestataire" : "simple";
+
+
+            $data['data'] =   [
+                'reference' =>    $userData->getReference(),
+                'username' =>    $userData->getUsername(),
+
+                "avatar" => "https://fr.web.img6.acsta.net/newsv7/21/02/26/16/13/3979241.jpg",
+                "id" => $userData->getReference(),
+                "accessToken" => "ffff",
+                "expiredAt" => new DateTime(),
+                "url" => "hhhh",
+                "type" => $type,
 
             ];
             $event->setData($data);

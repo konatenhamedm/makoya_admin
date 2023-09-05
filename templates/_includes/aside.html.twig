@@ -73,7 +73,8 @@
                     </div>
                     {% for groupe in  menu.listeGroupeModule %}
                         {% if module.id == groupe.module_id %}
-                            <li class="menu-item" aria-haspopup="true">
+                    <li class="menu-item menu-item-active" aria-haspopup="true">
+                          {#   <li class="menu-item" aria-haspopup="true"> #}
                                 <a href="{{ path(groupe.lien) }}" class="menu-link">
 										<span class="menu-icon">
 										<i class="{{groupe.icon}} fs-3"></i>

@@ -34,12 +34,13 @@ services:
     App\Events\AuthenticationSuccessListener:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+        
+    App\Events\JWTAuthenticationFailureResponseSubscriber:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onLexikJwtAuthenticationOnAuthenticationFailure }
+        
+
     
-    #App\Events\LoginSuccessListener:
-        #tags:
-            #- { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onLoginSuccess }
-
-
     App\Service\FormErrorsSerializer:
         public: true
 

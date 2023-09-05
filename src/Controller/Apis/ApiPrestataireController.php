@@ -37,13 +37,12 @@ class ApiPrestataireController extends ApiInterface
      */
     public function getAll(PrestataireRepository $prestataireRepository): Response
     {
-        try{
+        try {
 
             $prestataires = $prestataireRepository->findAll();
             $response = $this->response($prestataires);
-
-        }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+        } catch (\Exception $exception) {
+            $this->setMessage($exception . toString());
             $response = $this->response(null);
         }
 
@@ -60,17 +59,17 @@ class ApiPrestataireController extends ApiInterface
      */
     public function getOne(?Prestataire $prestataire)
     {
-     /*  $prestataire= $prestataireRepository->find($id);*/
-        try{
-            if($prestataire){
+        /*  $prestataire= $prestataireRepository->find($id);*/
+        try {
+            if ($prestataire) {
                 $response = $this->response($prestataire);
-            }else{
+            } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
                 $response = $this->response($prestataire);
             }
-        }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+        } catch (\Exception $exception) {
+            $this->setMessage($exception . toString());
             $response = $this->response(null);
         }
 
@@ -86,15 +85,15 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="Prestataire")
      * @Security(name="Bearer")
      */
-    public function create(Request $request,PrestataireRepository $prestataireRepository,QuartierRepository $quartierRepository)
+    public function create(Request $request, PrestataireRepository $prestataireRepository, QuartierRepository $quartierRepository)
     {
-            try{
-                $data = json_decode($request->getContent());
+        try {
+            $data = json_decode($request->getContent());
 
-//dd($request->get(username));
-                $prestataire= $prestataireRepository->findOneBy(array('username'=>$request->get('username')));
-                if($prestataire== null){
-                    if(
+            //dd($request->get(username));
+            $prestataire = $prestataireRepository->findOneBy(array('username' => $request->get('username')));
+            if ($prestataire == null) {
+                if (
                     empty($request->get('contact')) ||
                     empty($request->get('denominationSociale')) ||
                     empty($request->get('email')) ||
@@ -102,60 +101,55 @@ class ApiPrestataireController extends ApiInterface
                     empty($request->get('quartier')) ||
                     empty($request->files->get('logo')) ||
                     empty($request->get('password'))
-                    ){
-                        $this->setMessage("Il existe certains champs vides !!!");
-                        $response = $this->response(null);
+                ) {
+                    $this->setMessage("Il existe certains champs vides !!!");
+                    $response = $this->response(null);
+                } else {
 
-                    }else{
+                    $prestataire = new Prestataire();
+                    $prestataire->setContactPrincipal($request->get('contact'));
+                    $prestataire->setDenominationSociale($request->get('denominationSociale'));
+                    $prestataire->setQuartier($quartierRepository->find($request->get('quartier')));
 
-                        $prestataire= new Prestataire();
-                        $prestataire->setContactPrincipal($request->get('contact'));
-                        $prestataire->setDenominationSociale($request->get('denominationSociale'));
-                        $prestataire->setQuartier($quartierRepository->find($request->get('quartier')));
+                    $uploadedFile = $request->files->get('logo');
+                    $names = 'document_' . "01";
+                    $filePrefix  = str_slug($names);
 
-                        $uploadedFile = $request->files->get('logo');
-                        $names = 'document_' . "01";
-                        $filePrefix  = str_slug($names);
+                    if ($uploadedFile) {
+                        $filePath = $this->getUploadDir(self::UPLOAD_PATH, true);
+                        $fichier = $this->utils->sauvegardeFichier($filePath, $filePrefix, $uploadedFile, self::UPLOAD_PATH);
 
-                        if ($uploadedFile) {
-                            $filePath = $this->getUploadDir(self::UPLOAD_PATH, true);
-                            $fichier = $this->utils->sauvegardeFichier($filePath, $filePrefix, $uploadedFile, self::UPLOAD_PATH);
+                        if ($fichier) {
 
-                            if ($fichier)
-                            {
-
-                                $prestataire->setLogo($fichier);
-                            }
-
+                            $prestataire->setLogo($fichier);
                         }
-
-                        $prestataire->setEmail($request->get('email'));
-                        $prestataire->setUsername($request->get('username'));
-                        $prestataire->setPassword($this->hasher->hashPassword($prestataire, $request->get('password')));
-
-
-                        // On sauvegarde en base
-                        $prestataireRepository->save($prestataire,true);
-
-                        // On retourne la confirmation
-                        $response = $this->response($prestataire);
                     }
 
+                    $prestataire->setEmail($request->get('email'));
+                    $prestataire->setUsername($request->get('username'));
+                    //$this->hasher->hashPassword($utilisateur, 'admin')
+                    $prestataire->setPassword($this->hasher->hashPassword($prestataire, $request->get('password')));
 
-                }else{
-                    $this->setMessage("cette ressource existe deja en base");
-                    $this->setStatusCode(300);
-                    $response = $this->response(null);
 
+                    // On sauvegarde en base
+                    $prestataireRepository->save($prestataire, true);
+
+                    // On retourne la confirmation
+                    $response = $this->response($prestataire);
                 }
-            }catch (\Exception $exception){
-                $this->setMessage($exception);
+            } else {
+                $this->setMessage("cette ressource existe deja en base");
+                $this->setStatusCode(300);
                 $response = $this->response(null);
             }
+        } catch (\Exception $exception) {
+            $this->setMessage($exception);
+            $response = $this->response(null);
+        }
 
 
         return $response;
-        }
+    }
 
 
     #[Route('/update/{id}', name: 'api_prestataire_update', methods: ['POST'])]
@@ -165,69 +159,62 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="Prestataire")
      * @Security(name="Bearer")
      */
-    public function update(Request $request,PrestataireRepository $prestataireRepository,$id,QuartierRepository $quartierRepository)
+    public function update(Request $request, PrestataireRepository $prestataireRepository, $id, QuartierRepository $quartierRepository)
     {
-       try{
-           $data = json_decode($request->getContent());
-          // dd(empty($request->get('contact')));
-           $prestataire= $prestataireRepository->find($id);
-           if($prestataire!= null){
+        try {
+            $data = json_decode($request->getContent());
+            // dd(empty($request->get('contact')));
+            $prestataire = $prestataireRepository->find($id);
+            if ($prestataire != null) {
 
 
-               if((empty($request->get('contact'))) || (empty($request->get('denominationSociale'))) ||(empty($request->get('email'))) || (empty($request->get('username'))) || ( empty($request->files->get('logo'))) 
-               || ( empty($request->get('password')))
-               || ( empty($request->get('quartier')))
-               ){
-                   $this->setMessage("Il existe certains champs vides !!!");
-                   $response = $this->response(null);
-               }else{
+                if ((empty($request->get('contact'))) || (empty($request->get('denominationSociale'))) || (empty($request->get('email'))) || (empty($request->get('username'))) || (empty($request->files->get('logo')))
+                    || (empty($request->get('password')))
+                    || (empty($request->get('quartier')))
+                ) {
+                    $this->setMessage("Il existe certains champs vides !!!");
+                    $response = $this->response(null);
+                } else {
 
 
-                   $prestataire->setContactPrincipal($request->get('contact'));
-                   $prestataire->setDenominationSociale($request->get('denominationSociale'));
+                    $prestataire->setContactPrincipal($request->get('contact'));
+                    $prestataire->setDenominationSociale($request->get('denominationSociale'));
 
-                   $uploadedFile = $request->files->get('logo');
-                   $names = 'document_' . "01";
-                   $filePrefix  = str_slug($names);
+                    $uploadedFile = $request->files->get('logo');
+                    $names = 'document_' . "01";
+                    $filePrefix  = str_slug($names);
 
-                   if ($uploadedFile) {
-                       $filePath = $this->getUploadDir(self::UPLOAD_PATH, true);
-                       $fichier = $this->utils->sauvegardeFichier($filePath, $filePrefix, $uploadedFile, self::UPLOAD_PATH);
+                    if ($uploadedFile) {
+                        $filePath = $this->getUploadDir(self::UPLOAD_PATH, true);
+                        $fichier = $this->utils->sauvegardeFichier($filePath, $filePrefix, $uploadedFile, self::UPLOAD_PATH);
 
-                       if ($fichier)
-                       {
+                        if ($fichier) {
 
-                           $prestataire->setLogo($fichier);
-                       }
+                            $prestataire->setLogo($fichier);
+                        }
+                    }
 
-                   }
-
-                   $prestataire->setEmail($request->get('email'));
-                   $prestataire->setQuartier($quartierRepository->find($request->get('quartier')));
-                   $prestataire->setUsername($request->get('username'));
-                   $prestataire->setPassword($this->hasher->hashPassword($prestataire, $request->get('password')));
+                    $prestataire->setEmail($request->get('email'));
+                    $prestataire->setQuartier($quartierRepository->find($request->get('quartier')));
+                    $prestataire->setUsername($request->get('username'));
+                    $prestataire->setPassword($this->hasher->hashPassword($prestataire, $request->get('password')));
 
 
-                   // On sauvegarde en base
-                   $prestataireRepository->save($prestataire,true);
+                    // On sauvegarde en base
+                    $prestataireRepository->save($prestataire, true);
 
-                   // On retourne la confirmation
-                   $response = $this->response($prestataire);
-               }
-
-
-           }else{
-               $this->setMessage("cette ressource est inexsitante");
-               $this->setStatusCode(300);
-               $response = $this->response(null);
-
-           }
-
-
-       }catch (\Exception $exception){
-           $this->setMessage($exception);
-           $response = $this->response(null);
-       }
+                    // On retourne la confirmation
+                    $response = $this->response($prestataire);
+                }
+            } else {
+                $this->setMessage("cette ressource est inexsitante");
+                $this->setStatusCode(300);
+                $response = $this->response(null);
+            }
+        } catch (\Exception $exception) {
+            $this->setMessage($exception);
+            $response = $this->response(null);
+        }
         return $response;
     }
 
@@ -239,26 +226,24 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="Prestataire")
      * @Security(name="Bearer")
      */
-    public function delete(Request $request,PrestataireRepository $prestataireRepository,$id)
+    public function delete(Request $request, PrestataireRepository $prestataireRepository, $id)
     {
-        try{
+        try {
             $data = json_decode($request->getContent());
 
-            $prestataire= $prestataireRepository->find($id);
-            if($prestataire!= null){
+            $prestataire = $prestataireRepository->find($id);
+            if ($prestataire != null) {
 
-                $prestataireRepository->remove($prestataire,true);
+                $prestataireRepository->remove($prestataire, true);
 
                 // On retourne la confirmation
                 $response = $this->response($prestataire);
-
-            }else{
+            } else {
                 $this->setMessage("cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
-
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -272,21 +257,21 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="Prestataire")
      * @Security(name="Bearer")
      */
-    public function active(?Prestataire $prestataire,PrestataireRepository $prestataireRepository)
+    public function active(?Prestataire $prestataire, PrestataireRepository $prestataireRepository)
     {
         /*  $prestataire= $prestataireRepository->find($id);*/
-        try{
-            if($prestataire){
+        try {
+            if ($prestataire) {
 
                 //$prestataire->setCode("555"); //TO DO nous ajouter un champs active
-                $prestataireRepository->save($prestataire,true);
+                $prestataireRepository->save($prestataire, true);
                 $response = $this->response($prestataire);
-            }else{
+            } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -303,18 +288,19 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="Prestataire")
      * @Security(name="Bearer")
      */
-    public function multipleActive(Request $request,PrestataireRepository $prestataireRepository){
-        try{
+    public function multipleActive(Request $request, PrestataireRepository $prestataireRepository)
+    {
+        try {
             $data = json_decode($request->getContent());
 
             $listePrestataires = $prestataireRepository->findAllByListId($data->ids);
             foreach ($listePrestataires as $listePrestataire) {
                 //$listePrestataire->setCode("555");  //TO DO nous ajouter un champs active
-                $prestataireRepository->save($listePrestataire,true);
+                $prestataireRepository->save($listePrestataire, true);
             }
-            
+
             $response = $this->response(null);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -328,10 +314,10 @@ class ApiPrestataireController extends ApiInterface
      * @OA\Tag(name="UserFront")
      * @Security(name="Bearer")
      */
-    public function ResetPassword(){
+    public function ResetPassword()
+    {
         try {
-
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }

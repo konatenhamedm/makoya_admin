@@ -36,7 +36,7 @@ const INDEX_ROOT_NAME = '<?= $route_name . '_index' ?>';
     return true;
     }elseif($permission == 'CRUD'){
     return true;
-    }elseif($permission == 'CRUD'){
+    }elseif($permission == 'CRU'){
     return true;
     }
     elseif($permission == 'CR'){
@@ -53,8 +53,8 @@ const INDEX_ROOT_NAME = '<?= $route_name . '_index' ?>';
     return false;
     }elseif($permission == 'CRUD'){
     return true;
-    }elseif($permission == 'CRUD'){
-    return true;
+    }elseif($permission == 'CRU'){
+    return false;
     }
     elseif($permission == 'CR'){
     return false;
