@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/parametre/prestation/categorie')]
+#[Route('/ads/parametre/prestation/categorie')]
 class CategorieController extends BaseController
 {
 
@@ -38,7 +38,7 @@ class CategorieController extends BaseController
         return (date("y") . 'CAT' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
     }
     const INDEX_ROOT_NAME = 'app_parametre_prestation_categorie_index';
-    #[Route('/', name: 'app_parametre_prestation_categorie_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_prestation_categorie_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -160,7 +160,7 @@ class CategorieController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_prestation_categorie_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_prestation_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CategorieRepository $categorieRepository, FormError $formError): Response
     {
         $categorie = new Categorie();
@@ -216,7 +216,7 @@ class CategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_prestation_categorie_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_prestation_categorie_show', methods: ['GET'])]
     public function show(Categorie $categorie): Response
     {
         return $this->render('parametre/prestation/categorie/show.html.twig', [
@@ -224,7 +224,7 @@ class CategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_prestation_categorie_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, FormError $formError): Response
     {
 
@@ -284,7 +284,7 @@ class CategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_prestation_categorie_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_prestation_categorie_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Categorie $categorie, CategorieRepository $categorieRepository): Response
     {
         $form = $this->createFormBuilder()

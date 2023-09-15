@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/message/contact')]
+#[Route('/ads/message/contact')]
 class ContactController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_message_contact_index';
-    #[Route('/', name: 'app_message_contact_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_message_contact_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -140,7 +140,7 @@ class ContactController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_message_contact_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_message_contact_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ContactRepository $contactRepository, FormError $formError): Response
     {
         $contact = new Contact();
@@ -192,7 +192,7 @@ class ContactController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_message_contact_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_message_contact_show', methods: ['GET'])]
     public function show(Contact $contact): Response
     {
         return $this->render('message/contact/show.html.twig', [
@@ -200,7 +200,7 @@ class ContactController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_message_contact_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_message_contact_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Contact $contact, ContactRepository $contactRepository, FormError $formError): Response
     {
 
@@ -256,7 +256,7 @@ class ContactController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_message_contact_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_message_contact_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Contact $contact, ContactRepository $contactRepository): Response
     {
         $form = $this->createFormBuilder()

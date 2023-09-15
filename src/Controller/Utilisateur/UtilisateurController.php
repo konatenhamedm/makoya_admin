@@ -23,14 +23,14 @@ use Omines\DataTablesBundle\Column\DateTimeColumn;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/utilisateur/utilisateur')]
+#[Route('/ads/utilisateur/utilisateur')]
 class UtilisateurController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_utilisateur_utilisateur_index';
 
 
-    #[Route('/', name: 'app_utilisateur_utilisateur_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_utilisateur_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -179,7 +179,7 @@ class UtilisateurController extends BaseController
         ]);
     }
   
-    #[Route('/new', name: 'app_utilisateur_utilisateur_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_utilisateur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UtilisateurRepository $utilisateurRepository, FormError $formError): Response
     {
         $utilisateur = new Utilisateur();
@@ -239,7 +239,7 @@ class UtilisateurController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_utilisateur_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_utilisateur_show', methods: ['GET'])]
     public function show(Utilisateur $utilisateur): Response
     {
         return $this->render('utilisateur/utilisateur/show.html.twig', [
@@ -247,7 +247,7 @@ class UtilisateurController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_utilisateur_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_utilisateur_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Utilisateur $utilisateur,EmployeRepository $employeRepository, UtilisateurRepository $utilisateurRepository, FormError $formError): Response
     {
         
@@ -307,7 +307,7 @@ class UtilisateurController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_utilisateur_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_utilisateur_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Utilisateur $utilisateur, UtilisateurRepository $utilisateurRepository): Response
     {
         $form = $this->createFormBuilder()

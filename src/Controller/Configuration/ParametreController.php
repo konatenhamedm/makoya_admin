@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-#[Route('/admin/config/parametere')]
+#[Route('/ads/config/parametre')]
 class ParametreController extends BaseController
 {
 

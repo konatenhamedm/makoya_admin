@@ -83,7 +83,7 @@
         <div class="row">
 			<div class="form-group col-md-4">
 				<label class="sr-onl" for="userinput1">
-					Sous-Prefecture*
+					Région*
 				</label>
 				{{ form_widget(form.region) }}
 			</div>
@@ -122,14 +122,15 @@
 	  $('.region').on('change',function(){
 		$res = $(this).closest('.row');
 		  $id = $(this).val();
+		  //alert("mmlm")
 		$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/communes',
             type:       'get',
              async: false,
             data:     {id:$id},
             dataType:   'json',
 			  success: function(json){
-               
+               console.log("KONATE---------",json);
                 $res.find('#'+$('.commune').attr("id")).html(''); //je vide la 2ème list
                 $res.find('#'+$('.commune').attr("id")).append('<option value selected="default">Choisissez</option>');
                 $.each(json, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
@@ -144,7 +145,7 @@
 		})
 
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartiers',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -168,7 +169,7 @@
 		$res = $(this).closest('.row');
 		  $id = $(this).val();
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartier/communes',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -197,7 +198,7 @@
 		$res = $(this).closest('.row');
 		  $id = $(this).val();
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartier/communes',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -228,7 +229,7 @@
 
              $id = $(this).val();
           $.ajax({
-            url:        '/utilisateur/front/prestataire/liste/commune',
+            url:        '/ads/utilisateur/front/prestataire/liste/commune',
             type:       'get',
              async: false,
             data:     {id:$id},

@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/parametre/decoupage/region')]
+#[Route('/ads/parametre/decoupage/region')]
 class RegionController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_parametre_decoupage_region_index';
 
-    #[Route('/', name: 'app_parametre_decoupage_region_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_decoupage_region_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
@@ -144,7 +144,7 @@ class RegionController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_decoupage_region_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_decoupage_region_new', methods: ['GET', 'POST'])]
     public function new(Request $request, RegionRepository $regionRepository, FormError $formError): Response
     {
         $region = new Region();
@@ -196,7 +196,7 @@ class RegionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_decoupage_region_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_decoupage_region_show', methods: ['GET'])]
     public function show(Region $region): Response
     {
         return $this->render('parametre/decoupage/region/show.html.twig', [
@@ -204,7 +204,7 @@ class RegionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_decoupage_region_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_decoupage_region_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Region $region, RegionRepository $regionRepository, FormError $formError): Response
     {
 
@@ -260,7 +260,7 @@ class RegionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_decoupage_region_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_decoupage_region_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Region $region, RegionRepository $regionRepository): Response
     {
         $form = $this->createFormBuilder()

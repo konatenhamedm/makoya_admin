@@ -19,12 +19,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/utilisateur/module')]
+#[Route('/ads/utilisateur/module')]
 class ModuleController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_utilisateur_module_index';
 
-    #[Route('/', name: 'app_utilisateur_module_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_module_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -165,7 +165,7 @@ class ModuleController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_module_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_module_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ModuleRepository $moduleRepository, FormError $formError): Response
     {
         $module = new Module();
@@ -224,7 +224,7 @@ class ModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_module_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_module_show', methods: ['GET'])]
     public function show(Module $module): Response
     {
         return $this->render('utilisateur/module/show.html.twig', [
@@ -232,7 +232,7 @@ class ModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_module_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_module_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Module $module, ModuleRepository $moduleRepository, FormError $formError): Response
     {
 
@@ -291,7 +291,7 @@ class ModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_module_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_module_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Module $module, ModuleRepository $moduleRepository): Response
     {
         $form = $this->createFormBuilder()

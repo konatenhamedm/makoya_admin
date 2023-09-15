@@ -24,13 +24,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin/parametre/fonction')]
+#[Route('/ads/admin/parametre/fonction')]
 class FonctionController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_fonction_index';
 
 
-    #[Route('/', name: 'app_parametre_fonction_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_fonction_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -170,7 +170,7 @@ class FonctionController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_fonction_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_fonction_new', methods: ['GET', 'POST'])]
     public function new(Request $request, FonctionRepository $fonctionRepository, FormError $formError): Response
     {
         $fonction = new Fonction();
@@ -229,7 +229,7 @@ class FonctionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_fonction_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_fonction_show', methods: ['GET'])]
     public function show(Fonction $fonction): Response
     {
         return $this->render('parametre/fonction/show.html.twig', [
@@ -237,7 +237,7 @@ class FonctionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_fonction_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_fonction_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Fonction $fonction, FonctionRepository $fonctionRepository, FormError $formError): Response
     {
         
@@ -296,7 +296,7 @@ class FonctionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_fonction_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_fonction_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Fonction $fonction, FonctionRepository $fonctionRepository): Response
     {
         $form = $this->createFormBuilder()
@@ -342,7 +342,7 @@ class FonctionController extends BaseController
     }
 
 
-    #[Route('/fonction/addFile', name: 'fonction_addFile_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/fonction/addFile', name: 'fonction_addFile_new', methods: ['GET', 'POST'])]
     public function addFile(Request $request,FormError $formError,FonctionRepository $fonctionRepository, EntityManagerInterface $entityManager)
     {
         $dossier = new UploadFile();

@@ -8,11 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
-#[Route('/statistque/dashboard')]
+#[Route('/ads/statistque/dashboard')]
 class DashboardController extends BaseController
 {
     
-    #[Route('/', name: 'app_president_dashboard_index')]
+    #[Route('/ads/', name: 'app_president_dashboard_index')]
     public function index(): Response
     {
        
@@ -85,7 +85,7 @@ class DashboardController extends BaseController
 
 
     
-    #[Route('/action', name: 'app_statistique_action')]
+    #[Route('/ads/action', name: 'app_statistique_action')]
     public function indexAction(): Response
     {
 

@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/parametre/decoupage/pays')]
+#[Route('/ads/parametre/decoupage/pays')]
 class PaysController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_parametre_decoupage_pays_index';
 
-    #[Route('/', name: 'app_parametre_decoupage_pays_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_decoupage_pays_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
@@ -144,7 +144,7 @@ class PaysController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_decoupage_pays_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_decoupage_pays_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PaysRepository $paysRepository, FormError $formError): Response
     {
         $pay = new Pays();
@@ -196,7 +196,7 @@ class PaysController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_decoupage_pays_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_decoupage_pays_show', methods: ['GET'])]
     public function show(Pays $pay): Response
     {
         return $this->render('parametre/decoupage/pays/show.html.twig', [
@@ -204,7 +204,7 @@ class PaysController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_decoupage_pays_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_decoupage_pays_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pays $pay, PaysRepository $paysRepository, FormError $formError): Response
     {
 
@@ -260,7 +260,7 @@ class PaysController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_decoupage_pays_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_decoupage_pays_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Pays $pay, PaysRepository $paysRepository): Response
     {
         $form = $this->createFormBuilder()

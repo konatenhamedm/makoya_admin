@@ -7,11 +7,10 @@
  */
 
 
-if (!function_exists('trans') ) {
-    
+if (!function_exists('trans')) {
+
     function trans($id, $parameters = array(), $domain = null, $locale = null)
     {
-
     }
 }
 
@@ -54,7 +53,7 @@ if (!function_exists('zip')) {
             return $items1;
         }, func_get_args());
 
-       
+
 
         $params = array_merge([function () {
             return (array)(func_get_args());
@@ -251,7 +250,7 @@ if (!function_exists('array_forget')) {
     {
         $original = &$array;
 
-        
+
 
         foreach ((array) $keys as $key) {
             $parts = explode('.', $key);
@@ -544,15 +543,13 @@ if (!function_exists('data_get')) {
                     return value($default);
                 }
 
-                $method = 'get'.strtolower(ucfirst($segment));
+                $method = 'get' . strtolower(ucfirst($segment));
 
                 if (method_exists($target, $method)) {
                     $target = $target->{$method()};
                 } else {
                     $target = $target->{$segment};
                 }
-
-               
             } else {
                 return value($default);
             }
@@ -683,7 +680,7 @@ if (!function_exists('snake_case')) {
         }
 
         if (!ctype_lower($value)) {
-            $value = strtolower(preg_replace('/(.)(?=[A-Z])/', '$1' . $delimiter, $value));
+            $value = strtolower(preg_replace('/ads/(.)(?=[A-Z])/', '$1' . $delimiter, $value));
         }
 
         return $snakeCache[$key] = $value;
@@ -742,7 +739,7 @@ if (!function_exists('str_finish')) {
     {
         $quoted = preg_quote($cap, '/');
 
-        return preg_replace('/(?:' . $quoted . ')+$/', '', $value) . $cap;
+        return preg_replace('/ads/(?:' . $quoted . ')+$/', '', $value) . $cap;
     }
 }
 
@@ -827,7 +824,7 @@ if (!function_exists('str_replace_array')) {
     function str_replace_array($search, array $replace, $subject)
     {
         foreach ($replace as $value) {
-            $subject = preg_replace('/' . $search . '/', $value, $subject, 1);
+            $subject = preg_replace('/ads/' . $search . '/', $value, $subject, 1);
         }
 
         return $subject;

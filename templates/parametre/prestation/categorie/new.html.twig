@@ -38,17 +38,13 @@
     </div>
     {{ form_end(form) }}
 {% endblock %}
-
-{% block java %}
+{% block javascripts_inline %}
     <script>
-        $(function () {
+     $(function () {
             init_select2('select');
             KTImageInput.createInstances();
         var imageInputElement = document.querySelector("#kt_image_input_control");
         var imageInput = KTImageInput.getInstance(imageInputElement);
         });
-
-        
-       
     </script>
 {% endblock %}

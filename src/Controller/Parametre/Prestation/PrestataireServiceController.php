@@ -19,11 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/parametre/prestation/prestataire/service')]
+#[Route('/ads/parametre/prestation/prestataire/service')]
 class PrestataireServiceController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_prestation_prestataire_service_index';
-    #[Route('/{reference}', name: 'app_parametre_prestation_prestataire_service_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/{reference}', name: 'app_parametre_prestation_prestataire_service_index', methods: ['GET', 'POST'])]
     public function index(Request $request, string $reference, DataTableFactory $dataTableFactory): Response
     {
 
@@ -158,7 +158,7 @@ class PrestataireServiceController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_prestation_prestataire_service_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_prestation_prestataire_service_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PrestataireServiceRepository $prestataireServiceRepository, FormError $formError): Response
     {
         $prestataireService = new PrestataireService();
@@ -210,7 +210,7 @@ class PrestataireServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_prestation_prestataire_service_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_prestation_prestataire_service_show', methods: ['GET'])]
     public function show(PrestataireService $prestataireService): Response
     {
         return $this->render('parametre/prestation/prestataire_service/show.html.twig', [
@@ -218,7 +218,7 @@ class PrestataireServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_prestation_prestataire_service_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_prestataire_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PrestataireService $prestataireService, PrestataireServiceRepository $prestataireServiceRepository, FormError $formError): Response
     {
 
@@ -274,7 +274,7 @@ class PrestataireServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_prestation_prestataire_service_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_prestation_prestataire_service_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, PrestataireService $prestataireService, PrestataireServiceRepository $prestataireServiceRepository): Response
     {
         $form = $this->createFormBuilder()

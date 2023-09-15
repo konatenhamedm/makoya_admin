@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/publicite/publicite/region')]
+#[Route('/ads/publicite/publicite/region')]
 class PubliciteRegionController extends BaseController
 {
     private function numero()

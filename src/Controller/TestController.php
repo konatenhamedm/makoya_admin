@@ -18,12 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/test')]
+#[Route('/ads/test')]
 class TestController extends BaseController
 {
 const INDEX_ROOT_NAME = 'app_test_index';
 
-    #[Route('/', name: 'app_test_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_test_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -157,7 +157,7 @@ const INDEX_ROOT_NAME = 'app_test_index';
     ]);
     }
 
-    #[Route('/new', name: 'app_test_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_test_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TestRepository $testRepository, FormError $formError): Response
 {
 $test = new Test();
@@ -214,7 +214,7 @@ $isAjax = $request->isXmlHttpRequest();
     ]);
 }
 
-    #[Route('/{id}/show', name: 'app_test_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_test_show', methods: ['GET'])]
 public function show(Test $test): Response
 {
 return $this->render('test/show.html.twig', [
@@ -222,7 +222,7 @@ return $this->render('test/show.html.twig', [
 ]);
 }
 
-    #[Route('/{id}/edit', name: 'app_test_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_test_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Test $test, TestRepository $testRepository, FormError $formError): Response
 {
 
@@ -281,7 +281,7 @@ $form->handleRequest($request);
     ]);
 }
 
-    #[Route('/{id}/delete', name: 'app_test_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_test_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Test $test, TestRepository $testRepository): Response
 {
 $form = $this->createFormBuilder()

@@ -15,13 +15,13 @@ use App\Service\FormError;
 
 
 
-#[Route('/autres/methodes/autres')]
+#[Route('/ads/autres/methodes/autres')]
 class AutresController extends BaseController
 {
 
 
 
-    #[Route('/new', name: 'app_workflowdemande_workflow_service_prestataire_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_workflowdemande_workflow_service_prestataire_new', methods: ['GET', 'POST'])]
     public function new(Request $request,  FormError $formError): Response
     {
         $workflowServicePrestataire = new WorkflowServicePrestataire();

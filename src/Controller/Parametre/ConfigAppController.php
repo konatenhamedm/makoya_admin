@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/parametre/config/app')]
+#[Route('/ads/parametre/config/app')]
 class ConfigAppController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_parametre_config_app_index';
 
 
-    #[Route('/', name: 'app_parametre_config_app_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_config_app_index', methods: ['GET', 'POST'])]
     public function index(Request $request,ConfigAppRepository $configurationAppRepository ,DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -167,7 +167,7 @@ class ConfigAppController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_config_app_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_config_app_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ConfigAppRepository $configAppRepository, FormError $formError): Response
     {
         $configApp = new ConfigApp();
@@ -230,7 +230,7 @@ class ConfigAppController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_config_app_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_config_app_show', methods: ['GET'])]
     public function show(ConfigApp $configApp): Response
     {
         return $this->render('parametre/config_app/show.html.twig', [
@@ -238,7 +238,7 @@ class ConfigAppController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_config_app_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_config_app_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ConfigApp $configApp, ConfigAppRepository $configAppRepository, FormError $formError): Response
     {
 
@@ -297,7 +297,7 @@ class ConfigAppController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_config_app_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_config_app_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, ConfigApp $configApp, ConfigAppRepository $configAppRepository): Response
     {
         $form = $this->createFormBuilder()

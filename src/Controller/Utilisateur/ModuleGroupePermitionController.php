@@ -18,10 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/utilisateur/module/groupe/permition')]
+#[Route('/ads/utilisateur/module/groupe/permition')]
 class ModuleGroupePermitionController extends AbstractController
 {
-    #[Route('/', name: 'app_utilisateur_module_groupe_permition_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_module_groupe_permition_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $table = $dataTableFactory->create()
@@ -111,7 +111,7 @@ class ModuleGroupePermitionController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_module_groupe_permition_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_module_groupe_permition_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ModuleGroupePermitionRepository $moduleGroupePermitionRepository, FormError $formError): Response
     {
         $moduleGroupePermition = new ModuleGroupePermition();
@@ -170,7 +170,7 @@ class ModuleGroupePermitionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_module_groupe_permition_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_module_groupe_permition_show', methods: ['GET'])]
     public function show(ModuleGroupePermition $moduleGroupePermition): Response
     {
         return $this->render('utilisateur/module_groupe_permition/show.html.twig', [
@@ -178,7 +178,7 @@ class ModuleGroupePermitionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_module_groupe_permition_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_module_groupe_permition_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ModuleGroupePermition $moduleGroupePermition, ModuleGroupePermitionRepository $moduleGroupePermitionRepository, FormError $formError): Response
     {
 
@@ -237,7 +237,7 @@ class ModuleGroupePermitionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_module_groupe_permition_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_module_groupe_permition_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, ModuleGroupePermition $moduleGroupePermition, ModuleGroupePermitionRepository $moduleGroupePermitionRepository): Response
     {
         $form = $this->createFormBuilder()

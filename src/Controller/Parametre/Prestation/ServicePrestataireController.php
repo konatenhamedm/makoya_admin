@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use App\Entity\Service;
 
-#[Route('/parametre/prestation/service/prestataire')]
+#[Route('/ads/parametre/prestation/service/prestataire')]
 class ServicePrestataireController extends BaseController
 {
     private function numero()
@@ -38,7 +38,7 @@ class ServicePrestataireController extends BaseController
         return (date("y") . 'SERV' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
     }
     const INDEX_ROOT_NAME = 'app_parametre_prestation_service_prestataire_index';
-    #[Route('/', name: 'app_parametre_prestation_service_prestataire_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_prestation_service_prestataire_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -160,7 +160,7 @@ class ServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_prestation_service_prestataire_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_prestation_service_prestataire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ServicePrestataireRepository $servicePrestataireRepository, FormError $formError): Response
     {
         $servicePrestataire = new ServicePrestataire();
@@ -212,7 +212,7 @@ class ServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_prestation_service_prestataire_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_prestation_service_prestataire_show', methods: ['GET'])]
     public function show(ServicePrestataire $servicePrestataire): Response
     {
         return $this->render('parametre/prestation/service_prestataire/show.html.twig', [
@@ -220,7 +220,7 @@ class ServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_prestation_service_prestataire_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_service_prestataire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ServicePrestataire $servicePrestataire, ServicePrestataireRepository $servicePrestataireRepository, FormError $formError): Response
     {
 
@@ -276,7 +276,7 @@ class ServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_prestation_service_prestataire_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_prestation_service_prestataire_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, ServicePrestataire $servicePrestataire, ServicePrestataireRepository $servicePrestataireRepository): Response
     {
         $form = $this->createFormBuilder()

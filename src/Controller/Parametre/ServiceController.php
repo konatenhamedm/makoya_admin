@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/parametre/service')]
+#[Route('/ads/parametre/service')]
 class ServiceController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_parametre_service_index';
 
 
-    #[Route('/', name: 'app_parametre_service_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_service_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -165,7 +165,7 @@ class ServiceController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_service_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_service_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ServiceRepository $serviceRepository, FormError $formError): Response
     {
         $service = new Service();
@@ -223,7 +223,7 @@ class ServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_service_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_service_show', methods: ['GET'])]
     public function show(Service $service): Response
     {
         return $this->render('parametre/service/show.html.twig', [
@@ -231,7 +231,7 @@ class ServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_service_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Service $service, ServiceRepository $serviceRepository, FormError $formError): Response
     {
 
@@ -292,7 +292,7 @@ class ServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_service_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_service_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Service $service, ServiceRepository $serviceRepository): Response
     {
         $form = $this->createFormBuilder()

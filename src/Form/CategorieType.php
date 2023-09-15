@@ -14,16 +14,11 @@ class CategorieType extends AbstractType
         $builder
             /*  ->add('code') */
             ->add('libelle')
-            ->add(
-                'imageLaUne',
-                FichierType::class,
-                [
-                    'label' => 'Fichier',
-                    'label' => 'Image',
-                    'doc_options' => $options['doc_options'],
-                    'required' => $options['doc_required'] ?? true
-                ]
-            );
+            ->add('imageLaUne', FichierType::class,
+            ['label' => 'Fichier',
+                'label' => false,
+                'doc_options' => $options['doc_options'],
+                'required' => $options['doc_required'] ?? true])
     }
 
     public function configureOptions(OptionsResolver $resolver): void

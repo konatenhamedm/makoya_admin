@@ -19,7 +19,7 @@ use App\Controller\BaseController;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/publicite/publicite/categorie')]
+#[Route('/ads/publicite/publicite/categorie')]
 class PubliciteCategorieController extends BaseController
 {
     private function numero()

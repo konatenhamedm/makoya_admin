@@ -5,7 +5,7 @@ namespace <?= $namespace ?>;
 <?= $use_statements; ?>
 use App\Controller\BaseController;
 
-#[Route('<?= $route_path ?>')]
+#[Route('<?= '/ads'.$route_path ?>')]
 class <?= $class_name ?> extends BaseController
 {
 const INDEX_ROOT_NAME = '<?= $route_name . '_index' ?>';

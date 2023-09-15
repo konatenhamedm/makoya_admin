@@ -53,7 +53,7 @@ public static function formatNumber($value, $decimal = 0, $sep = '.', $thousandS
         }
     }
 
-    return preg_replace('/\.00$/', '', number_format($value, $decimalLength, $sep, $thousandSep));
+    return preg_replace('/ads/\.00$/', '', number_format($value, $decimalLength, $sep, $thousandSep));
 }
 
 
@@ -95,7 +95,7 @@ public static function getInitialFromNames($nom, $prenom)
 public static function reverseFormat($string)
 {
     $value = floatval(strtr(trim($string), [' ' => '', ',' => '.']));
-    return preg_replace('/[\.,]00$/', '', $value);
+    return preg_replace('/ads/[\.,]00$/', '', $value);
 }
 
 

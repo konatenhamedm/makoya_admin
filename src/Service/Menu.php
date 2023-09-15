@@ -55,6 +55,10 @@ class Menu
         }*/
         //$this->getPermission();
     }
+    public function getRoute()
+    {
+        return $this->route;
+    }
     public function getNamePrestataire($reference)
     {
         return $this->em->getRepository(UserFront::class)->findOneBy(['reference' => $reference]);

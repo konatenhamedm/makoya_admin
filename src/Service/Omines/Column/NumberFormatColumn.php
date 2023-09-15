@@ -29,7 +29,7 @@ class NumberFormatColumn extends AbstractColumn
         }
 
         $val = trim(number_format(floatval($value), $decimalLength, ',', ' '));
-        $val = preg_replace('/,00$/', '', $val);
+        $val = preg_replace('/ads/,00$/', '', $val);
         return trim($val.' '.$this->options['unite']);
     }
 

@@ -19,14 +19,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/utilisateur/permition')]
+#[Route('/ads/utilisateur/permition')]
 class PermitionController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_utilisateur_permition_index';
 
 
 
-    #[Route('/', name: 'app_utilisateur_permition_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_permition_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -166,7 +166,7 @@ class PermitionController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_permition_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_permition_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PermitionRepository $permitionRepository, FormError $formError): Response
     {
         $permition = new Permition();
@@ -225,7 +225,7 @@ class PermitionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_permition_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_permition_show', methods: ['GET'])]
     public function show(Permition $permition): Response
     {
         return $this->render('utilisateur/permition/show.html.twig', [
@@ -233,7 +233,7 @@ class PermitionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_permition_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_permition_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Permition $permition, PermitionRepository $permitionRepository, FormError $formError): Response
     {
 
@@ -292,7 +292,7 @@ class PermitionController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_permition_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_permition_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Permition $permition, PermitionRepository $permitionRepository): Response
     {
         $form = $this->createFormBuilder()

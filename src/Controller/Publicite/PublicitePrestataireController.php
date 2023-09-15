@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/publicite/publicite/prestataire')]
+#[Route('/ads/publicite/publicite/prestataire')]
 class PublicitePrestataireController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_publicite_publicite_prestataire_index';

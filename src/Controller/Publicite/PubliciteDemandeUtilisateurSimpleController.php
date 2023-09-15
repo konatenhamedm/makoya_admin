@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/publicite/publicite/demande/utilisateur/simple')]
+#[Route('/ads/publicite/publicite/demande/utilisateur/simple')]
 class PubliciteDemandeUtilisateurSimpleController extends BaseController
 {
 

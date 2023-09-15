@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/publicite/publicite/encart')]
+#[Route('/ads/publicite/publicite/encart')]
 class PubliciteEncartController extends BaseController
 {
     private function numero()

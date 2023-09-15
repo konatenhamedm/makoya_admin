@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('fichier')]
 class FichierController extends AbstractController
 {
-    #[Route('/{id}', name: 'fichier_index', methods: ['GET'])]
+    #[Route('/ads/{id}', name: 'fichier_index', methods: ['GET'])]
     public function show(Request $request, Fichier $fichier)
     {
 

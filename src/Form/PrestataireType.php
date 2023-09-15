@@ -56,42 +56,47 @@ class PrestataireType extends AbstractType
         }
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $departement = $event->getData()->getQuartier();
-            // dd($departement);
+            //dd($departement);
             if ($event->getData()) {
-                $dataCommune = $this->communeReprository->createQueryBuilder('c')
+                $dataCommunes = $this->communeReprository->createQueryBuilder('c')
                     ->innerJoin('c.sousPrefecture', 's')
                     ->innerJoin('s.departement', 'd')
                     ->innerJoin('d.region', 'r')
-                    ->andWhere('r.id =:region')
-                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->andWhere('r =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'REG-ABJ1')))
                     ->orderBy('s.id', 'ASC')
                     ->getQuery()
                     ->getResult();
+
+                //dd($dataCommune);
 
                 $dataQuartier = $this->quartierReprository->createQueryBuilder('q')
                     ->innerJoin('q.commune', 'c')
                     ->innerJoin('c.sousPrefecture', 's')
                     ->innerJoin('s.departement', 'd')
                     ->innerJoin('d.region', 'r')
-                    ->andWhere('r.id =:region')
-                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->andWhere('r =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'REG-ABJ1')))
                     ->orderBy('q.id', 'ASC')
                     ->getQuery()
                     ->getResult();
+
 
                 $event->getForm()->add('commune',  EntityType::class, [
                     'class' => Commune::class,
                     'choice_label' => 'nom',
                     'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('c')
-                            ->innerJoin('c.quartiers', 'q')
-                            ->andWhere('q.code =:quartier')
-                            ->setParameter('quartier', 'Q01')
+                            ->innerJoin('c.sousPrefecture', 's')
+                            ->innerJoin('s.departement', 'd')
+                            ->innerJoin('d.region', 'r')
+                            ->andWhere('r =:region')
+                            ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'REG-ABJ1')))
                             ->orderBy('c.id', 'ASC');
                     },
                     'mapped' => false,
                     'label' => 'Région',
-                    'attr' => ['class' => 'has-select2 form-select region']
+                    'attr' => ['class' => 'has-select2 form-select commune']
                 ]);
                 /* $event->getForm()->add('quartier', EntityType::class, [
                 'class' => Quartier::class,
@@ -104,23 +109,23 @@ class PrestataireType extends AbstractType
                 'constraints' => new NotBlank(['message' => 'Selectionnez un quartier']),
             ]); */
             } else {
-                $dataCommune = $this->communeReprository->createQueryBuilder('c')
+                $dataCommunes = $this->communeReprository->createQueryBuilder('c')
                     ->innerJoin('c.sousPrefecture', 's')
                     ->innerJoin('s.departement', 'd')
                     ->innerJoin('d.region', 'r')
-                    ->andWhere('r.id =:region')
-                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->andWhere('r =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'REG-ABJ1')))
                     ->orderBy('s.id', 'ASC')
                     ->getQuery()
                     ->getResult();
 
-                $dataQuartier = $this->quartierReprository->createQueryBuilder('q')
+                $dataQuartiers = $this->quartierReprository->createQueryBuilder('q')
                     ->innerJoin('q.commune', 'c')
                     ->innerJoin('c.sousPrefecture', 's')
                     ->innerJoin('s.departement', 'd')
                     ->innerJoin('d.region', 'r')
-                    ->andWhere('r.id =:region')
-                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'R01')))
+                    ->andWhere('r =:region')
+                    ->setParameter('region', $this->regionReprository->findOneBy(array('code' => 'REG-ABJ1')))
                     ->orderBy('q.id', 'ASC')
                     ->getQuery()
                     ->getResult();
@@ -128,7 +133,7 @@ class PrestataireType extends AbstractType
                 $event->getForm()->add('commune', EntityType::class, [
                     'class' => Commune::class,
                     'choice_label' => 'nom',
-                    'choices' => $dataCommune,
+                    'choices' => $dataCommunes,
                     'mapped' => false,
                     'disabled' => false,
                     'attr' => ['class' => 'has-select2 commune'],
@@ -138,7 +143,7 @@ class PrestataireType extends AbstractType
                 $event->getForm()->add('quartier', EntityType::class, [
                     'class' => Quartier::class,
                     'choice_label' => 'nom',
-                    'choices' => $dataQuartier,
+                    'choices' => $dataQuartiers,
                     'mapped' => false,
                     'disabled' => false,
                     'attr' => ['class' => 'has-select2 quartier'],

@@ -19,12 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/resaux/signaler')]
+#[Route('/ads/resaux/signaler')]
 class SignalerController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_resaux_signaler_index';
 
-    #[Route('/', name: 'app_resaux_signaler_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_resaux_signaler_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -148,7 +148,7 @@ class SignalerController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_resaux_signaler_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_resaux_signaler_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SignalerRepository $signalerRepository, FormError $formError): Response
     {
         $signaler = new Signaler();
@@ -200,7 +200,7 @@ class SignalerController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_resaux_signaler_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_resaux_signaler_show', methods: ['GET'])]
     public function show(Signaler $signaler): Response
     {
         return $this->render('resaux/signaler/show.html.twig', [
@@ -208,7 +208,7 @@ class SignalerController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_resaux_signaler_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_resaux_signaler_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Signaler $signaler, SignalerRepository $signalerRepository, FormError $formError): Response
     {
 
@@ -264,7 +264,7 @@ class SignalerController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_resaux_signaler_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_resaux_signaler_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Signaler $signaler, SignalerRepository $signalerRepository): Response
     {
         $form = $this->createFormBuilder()

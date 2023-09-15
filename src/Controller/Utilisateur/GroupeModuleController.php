@@ -19,13 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/utilisateur/groupe/module')]
+#[Route('/ads/utilisateur/groupe/module')]
 class GroupeModuleController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_utilisateur_groupe_module_index';
 
 
-    #[Route('/', name: 'app_utilisateur_groupe_module_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_groupe_module_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -166,7 +166,7 @@ class GroupeModuleController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_groupe_module_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_groupe_module_new', methods: ['GET', 'POST'])]
     public function new(Request $request, GroupeModuleRepository $groupeModuleRepository, FormError $formError): Response
     {
         $groupeModule = new GroupeModule();
@@ -225,7 +225,7 @@ class GroupeModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_groupe_module_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_groupe_module_show', methods: ['GET'])]
     public function show(GroupeModule $groupeModule): Response
     {
         return $this->render('utilisateur/groupe_module/show.html.twig', [
@@ -233,7 +233,7 @@ class GroupeModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_groupe_module_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_groupe_module_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, GroupeModule $groupeModule, GroupeModuleRepository $groupeModuleRepository, FormError $formError): Response
     {
 
@@ -292,7 +292,7 @@ class GroupeModuleController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_groupe_module_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_groupe_module_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, GroupeModule $groupeModule, GroupeModuleRepository $groupeModuleRepository): Response
     {
         $form = $this->createFormBuilder()

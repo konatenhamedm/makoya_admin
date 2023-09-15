@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/utilisateur/front/utilisateur/simple')]
+#[Route('/ads/utilisateur/front/utilisateur/simple')]
 class UtilisateurSimpleController extends BaseController
 {
 
-     private function numero()
+    private function numero()
     {
 
         $query = $this->em->createQueryBuilder();
@@ -30,19 +30,18 @@ class UtilisateurSimpleController extends BaseController
             ->from(UtilisateurSimple::class, 'a');
 
         $nb = $query->getQuery()->getSingleScalarResult();
-        if ($nb == 0){
+        if ($nb == 0) {
             $nb = 1;
-        }else{
-            $nb =$nb + 1;
+        } else {
+            $nb = $nb + 1;
         }
-        return (date("y").'US'.date("m", strtotime("now")).str_pad($nb, 3, '0', STR_PAD_LEFT));
-
+        return (date("y") . 'US' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
     }
 
 
     const INDEX_ROOT_NAME = 'app_utilisateur_front_utilisateur_simple_index';
 
-    #[Route('/', name: 'app_utilisateur_front_utilisateur_simple_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_front_utilisateur_simple_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
@@ -59,6 +58,23 @@ class UtilisateurSimpleController extends BaseController
 
             $renders = [
                 'edit' =>  new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return false;
+                    } elseif ($permission == 'RD') {
+                        return false;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }),
+                'change_password' =>  new ActionRender(function () use ($permission) {
                     if ($permission == 'R') {
                         return false;
                     } elseif ($permission == 'RD') {
@@ -126,7 +142,7 @@ class UtilisateurSimpleController extends BaseController
             if ($hasActions) {
                 $table->add('reference', TextColumn::class, [
                     'label' => 'Actions', 'orderable' => false, 'globalSearchable' => false, 'className' => 'grid_row_actions', 'render' => function ($value, UtilisateurSimple $context) use ($renders) {
-                       // dd($context);
+                        // dd($context);
                         $options = [
                             'default_class' => 'btn btn-xs btn-clean btn-icon mr-2 ',
                             'target' => '#exampleModalSizeLg2',
@@ -137,6 +153,10 @@ class UtilisateurSimpleController extends BaseController
                                 ],
                                 'show' => [
                                     'url' => $this->generateUrl('app_utilisateur_front_utilisateur_simple_show', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
+                                ],
+                                'change_password' => [
+                                    'target' => '#exampleModalSizeNormal',
+                                    'url' => $this->generateUrl('app_utilisateur_front_utilisateur_simple_change_password', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-lock', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['change_password']
                                 ],
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
@@ -164,12 +184,14 @@ class UtilisateurSimpleController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_front_utilisateur_simple_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_front_utilisateur_simple_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
     {
         $utilisateurSimple = new UtilisateurSimple();
         $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
             'method' => 'POST',
+            'type' => 'utilisateur_simple',
+            'password' => 'password',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -186,9 +208,10 @@ class UtilisateurSimpleController extends BaseController
         if ($form->isSubmitted()) {
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_utilisateur_simple_index');
-
+            $password = $form->get('password')->getData();
 
             if ($form->isValid()) {
+                $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $password));
                 $utilisateurSimple->setReference($this->numero());
                 $utilisateurSimpleRepository->save($utilisateurSimple, true);
                 $data = true;
@@ -220,7 +243,7 @@ class UtilisateurSimpleController extends BaseController
         ]);
     }
 
-    #[Route('/{reference}/show', name: 'app_utilisateur_front_utilisateur_simple_show', methods: ['GET'])]
+    #[Route('/ads/{reference}/show', name: 'app_utilisateur_front_utilisateur_simple_show', methods: ['GET'])]
     public function show(UtilisateurSimple $utilisateurSimple): Response
     {
         return $this->render('utilisateur/front/utilisateur_simple/show.html.twig', [
@@ -228,12 +251,14 @@ class UtilisateurSimpleController extends BaseController
         ]);
     }
 
-    #[Route('/{reference}/edit', name: 'app_utilisateur_front_utilisateur_simple_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{reference}/edit', name: 'app_utilisateur_front_utilisateur_simple_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
     {
-//dd($utilisateurSimple->getNom());
+        //dd($utilisateurSimple->getNom());
         $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
             'method' => 'POST',
+            'type' => 'utilisateur_simple',
+            'password' => 'nopassword',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -288,7 +313,72 @@ class UtilisateurSimpleController extends BaseController
         ]);
     }
 
-    #[Route('/{reference}/delete', name: 'app_utilisateur_front_utilisateur_simple_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/{reference}/change/password', name: 'app_utilisateur_front_utilisateur_simple_change_password', methods: ['GET', 'POST'])]
+    public function changePassword(Request $request, UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
+    {
+
+        $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
+            'method' => 'POST',
+            'type' => 'utilisateur_simple',
+            'password' => 'password',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'action' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', [
+                'reference' =>  $utilisateurSimple->getReference()
+            ])
+        ]);
+        //dd($prestataire);
+        $data = null;
+        $statutCode = Response::HTTP_OK;
+
+        $isAjax = $request->isXmlHttpRequest();
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $response = [];
+            $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
+            // $quartier = $form->get('quartier')->getData();
+            $password = $form->get('password')->getData();
+
+            if ($form->isValid()) {
+                //dd($quartier);
+                $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $password));
+                //$prestataire->setQuartier($quartier);
+                $utilisateurSimpleRepository->save($utilisateurSimple, true);
+                $data = true;
+                $message       = 'Opération effectuée avec succès';
+                $statut = 1;
+                $this->addFlash('success', $message);
+            } else {
+                $message = $formError->all($form);
+                $statut = 0;
+                $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+                if (!$isAjax) {
+                    $this->addFlash('warning', $message);
+                }
+            }
+
+
+            if ($isAjax) {
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
+            } else {
+                if ($statut == 1) {
+                    return $this->redirect($redirect, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return $this->renderForm('utilisateur/front/utilisateur_simple/password.html.twig', [
+            'prestataire' => $utilisateurSimple,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/ads/{reference}/delete', name: 'app_utilisateur_front_utilisateur_simple_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository): Response
     {
         $form = $this->createFormBuilder()

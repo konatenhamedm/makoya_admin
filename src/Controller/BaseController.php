@@ -24,7 +24,7 @@ class BaseController extends AbstractController
     protected $workflow;
 
 
-    public function __construct(EntityManagerInterface $em,Menu $menu,Security $security,UserPasswordHasherInterface $hasher,Registry $workflow,)
+    public function __construct(EntityManagerInterface $em, Menu $menu, Security $security, UserPasswordHasherInterface $hasher, Registry $workflow,)
     {
         $this->em = $em;
         $this->security = $security;
@@ -32,6 +32,4 @@ class BaseController extends AbstractController
         $this->hasher = $hasher;
         $this->workflow = $workflow;
     }
-
-   
 }

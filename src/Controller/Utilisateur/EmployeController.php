@@ -27,13 +27,13 @@ use Omines\DataTablesBundle\Column\DateTimeColumn;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/utilisateur/employe')]
+#[Route('/ads/utilisateur/employe')]
 class EmployeController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_utilisateur_employe_index';
 
 
-    #[Route('/', name: 'app_utilisateur_employe_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_employe_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -184,7 +184,7 @@ class EmployeController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_utilisateur_employe_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_utilisateur_employe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EmployeRepository $employeRepository, FormError $formError): Response
     {
         $employe = new Employe();
@@ -243,7 +243,7 @@ class EmployeController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_utilisateur_employe_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_utilisateur_employe_show', methods: ['GET'])]
     public function show(Employe $employe): Response
     {
         return $this->render('utilisateur/employe/show.html.twig', [
@@ -251,7 +251,7 @@ class EmployeController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_utilisateur_employe_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_utilisateur_employe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Employe $employe, EmployeRepository $employeRepository, FormError $formError): Response
     {
         
@@ -310,7 +310,7 @@ class EmployeController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_utilisateur_employe_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_utilisateur_employe_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Employe $employe, EmployeRepository $employeRepository): Response
     {
         $form = $this->createFormBuilder()
@@ -357,7 +357,7 @@ class EmployeController extends BaseController
 
 
 
-    #[Route('/employe/addFile', name: 'employe_addFile_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/employe/addFile', name: 'employe_addFile_new', methods: ['GET', 'POST'])]
     public function addFile(Request $request,FormError $formError,EmployeRepository $employeRepository, EntityManagerInterface $entityManager,CiviliteRepository $civiliteRepository,FonctionRepository $fonctionRepository)
     {
         $dossier = new UploadFile();

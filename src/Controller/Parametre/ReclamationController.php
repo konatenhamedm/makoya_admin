@@ -19,12 +19,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/parametre/reclamation')]
+#[Route('/ads/parametre/reclamation')]
 class ReclamationController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_reclamation_index';
 
-    #[Route('/{etat}', name: 'app_parametre_reclamation_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/{etat}', name: 'app_parametre_reclamation_index', methods: ['GET', 'POST'])]
     public function index(Request $request, string $etat, DataTableFactory $dataTableFactory): Response
     {
 
@@ -159,7 +159,7 @@ class ReclamationController extends BaseController
         ]);
     }
 
-    #[Route('/pub/new', name: 'app_parametre_reclamation_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/pub/new', name: 'app_parametre_reclamation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ReclamationRepository $reclamationRepository, FormError $formError): Response
     {
         $reclamation = new Reclamation();
@@ -211,7 +211,7 @@ class ReclamationController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_reclamation_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_reclamation_show', methods: ['GET'])]
     public function show(Reclamation $reclamation): Response
     {
         return $this->render('parametre/reclamation/show.html.twig', [
@@ -219,7 +219,7 @@ class ReclamationController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_reclamation_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_reclamation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Reclamation $reclamation, ReclamationRepository $reclamationRepository, FormError $formError): Response
     {
 
@@ -275,7 +275,7 @@ class ReclamationController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_reclamation_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_reclamation_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Reclamation $reclamation, ReclamationRepository $reclamationRepository): Response
     {
         $form = $this->createFormBuilder()

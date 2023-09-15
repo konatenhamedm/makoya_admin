@@ -114,7 +114,7 @@ class CustomTwigExtension extends AbstractExtension
             }
         }
         try {
-            $value = preg_replace('/\.00$/', '', number_format($value, $decimalLength, $sep, $thousandSep));
+            $value = preg_replace('/ads/\.00$/', '', number_format($value, $decimalLength, $sep, $thousandSep));
         } catch (TypeError $e) {
             $value = $default;
         }

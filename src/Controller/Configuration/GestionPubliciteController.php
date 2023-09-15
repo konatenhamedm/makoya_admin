@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-#[Route('/admin/config/publicite')]
+#[Route('/ads/admin/config/publicite')]
 class GestionPubliciteController extends BaseController
 {
 

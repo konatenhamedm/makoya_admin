@@ -3,21 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\FichierRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 use Gedmo\Mapping\Annotation as Gedmo;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: FichierRepository::class)]
 #[Table(name: 'param_fichier')]
 #[ORM\HasLifecycleCallbacks]
 class Fichier
 {
+    const DEFAULT_MIME_TYPES = [
+        'text/plain', 'application/octet-stream', 'application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,83 +42,46 @@ class Fichier
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $date = null;
+    private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column(length: 5)]
     #[Group(["fichier"])]
     private ?string $url = null;
 
+    #[Assert\NotNull(message: "Veuillez sélectionner un fichier", groups: ["FileRequired"])]
+    private  $file;
 
-    #[Assert\NotNull(message:"Veuillez sélectionner un fichier", groups:["FileRequired"])]
-    private  $file ;
 
+    private ?string $verifieIfeditEmployeDocument = null;
 
+    /**
+     * @return string|null
+     */
+    public function getVerifieIfeditEmployeDocument()
+    {
+        return $this->verifieIfeditEmployeDocument;
+    }
+
+    /**
+     * @param string|null $verifieIfeditEmployeDocument
+     */
+    public function setVerifieIfeditEmployeDocument($verifieIfeditEmployeDocument)
+    {
+        $this->verifieIfeditEmployeDocument = $verifieIfeditEmployeDocument;
+    }
     /**
      * @var string
      */
     private $uploadDir;
 
 
+    private $filePrefix = '';
+
+
     /**
      * @var mixed
      */
     private $tempFilename;
-
-
-    private $filePrefix = '';
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    public function getAlt(): ?string
-    {
-        return $this->alt;
-    }
-
-    public function setAlt(string $alt): self
-    {
-        $this->alt = $alt;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
 
     public function getFile(): ?string
     {
@@ -123,9 +90,6 @@ class Fichier
 
     public function __construct()
     {
-
-        $this->date = new \DateTime();
-
     }
 
     // On modifie le setter de File, pour prendre en compte l'upload d'un fichier lorsqu'il en existe déjà un autre
@@ -173,14 +137,13 @@ class Fichier
         $clientOriginalName = $this->file->getClientOriginalName();
 
         $fileExt  = pathinfo($clientOriginalName, PATHINFO_EXTENSION);
-        $baseName = $this->filePrefix.'_'.pathinfo($clientOriginalName, PATHINFO_FILENAME);
+        $baseName = $this->filePrefix . '_' . pathinfo($clientOriginalName, PATHINFO_FILENAME);
 
         $this->url = $fileExt;
 
         // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
         $this->alt = substr(str_slug($baseName, '_'), 0, 255 - 1 - strlen($fileExt)) . '.' . $fileExt;
         $this->size      = $this->file->getSize();
-
     }
 
 
@@ -250,6 +213,60 @@ class Fichier
         return $this;
     }
 
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): self
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(string $alt): self
+    {
+        $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
     /**
      * @return mixed
      */
@@ -264,13 +281,6 @@ class Fichier
         // On retourne le chemin relatif vers l'image pour notre code PHP
         return __DIR__ . '/../../public/' . $this->getUploadDir();
     }
-
-    protected function getUploadBaseDir()
-    {
-        // On retourne le chemin relatif vers l'image pour notre code PHP
-        return __DIR__ . '/../../public/uploads/';
-    }
-
     public function getWebPath()
     {
         return @$this->getFullFileName();
@@ -280,8 +290,21 @@ class Fichier
 
     public function getFileNamePath()
     {
-        return 'uploads/'.$this->getPath().'/'.$this->getFileName();
+        return 'uploads/' . $this->getPath() . '/' . $this->getFileName();
     }
+
+    public function getFileName()
+    {
+        return basename($this->getFullFileName());
+    }
+
+
+    protected function getUploadBaseDir()
+    {
+        // On retourne le chemin relatif vers l'image pour notre code PHP
+        return __DIR__ . '/../../public/uploads/';
+    }
+
 
     /**
      * @return mixed
@@ -308,23 +331,17 @@ class Fichier
         return $fileName;
     }
 
-    public function getFileName()
+    public function getUrl(): ?string
     {
-        return basename($this->getFullFileName());
+        return $this->url;
     }
 
-    public function getSize(): ?int
+    public function setUrl(string $url): self
     {
-        return $this->size;
-    }
-
-    public function setSize(int $size): self
-    {
-        $this->size = $size;
+        $this->url = $url;
 
         return $this;
     }
-
 
     /**
      * Get the value of filePrefix
@@ -345,6 +362,4 @@ class Fichier
 
         return $this;
     }
-
-    
 }

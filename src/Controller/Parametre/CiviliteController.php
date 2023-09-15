@@ -19,13 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin/parametre/civilite')]
+#[Route('/ads/admin/parametre/civilite')]
 class CiviliteController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_civilite_index';
 
 
-    #[Route('/', name: 'app_parametre_civilite_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_civilite_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
@@ -163,7 +163,7 @@ class CiviliteController extends BaseController
 
     }
 
-    #[Route('/new', name: 'app_parametre_civilite_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_civilite_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CiviliteRepository $civiliteRepository, FormError $formError): Response
     {
         $civilite = new Civilite();
@@ -222,7 +222,7 @@ class CiviliteController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_civilite_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_civilite_show', methods: ['GET'])]
     public function show(Civilite $civilite): Response
     {
         return $this->render('parametre/civilite/show.html.twig', [
@@ -230,7 +230,7 @@ class CiviliteController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_civilite_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_civilite_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Civilite $civilite, CiviliteRepository $civiliteRepository, FormError $formError): Response
     {
         
@@ -289,7 +289,7 @@ class CiviliteController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_civilite_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_civilite_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Civilite $civilite, CiviliteRepository $civiliteRepository): Response
     {
         $form = $this->createFormBuilder()

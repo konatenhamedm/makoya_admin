@@ -80,10 +80,10 @@
 			</div>
     	</div>
 		
-        <div class="row">
+        <div class="row tester">
 			<div class="form-group col-md-4">
 				<label class="sr-onl" for="userinput1">
-					Sous-Prefecture*
+					Région*
 				</label>
 				{{ form_widget(form.region) }}
 			</div>
@@ -118,11 +118,66 @@
 {% block javascripts_inline %}
 	{# <script src="assets/js/scripts.bundle.js"></script> #}
 	<script>
+	//$tester = $('.tester');
+	var commune;
+	var region;
+	$.ajax({
+			 url:        '/ads/utilisateur/front/prestataire/getCommuneRegionQuartier',
+            type:       'get',
+             async: false,
+            data:     {id:$('.tester').find('.quartier').val()},
+            dataType:   'json',
+			  success: function(json){
+              console.log(json)
+			  commune = json.commune;
+			  region = json.region;
+           
+
+            }
+		})
+
+	$.ajax({
+			 url:        '/ads/utilisateur/front/prestataire/liste/communes',
+            type:       'get',
+             async: false,
+            data:     {id:$('.tester').find('.region').val()},
+            dataType:   'json',
+			  success: function(json){
+              
+                $('.tester').find('#'+$('.commune').attr("id")).html(''); //je vide la 2ème list
+                $('.tester').find('#'+$('.commune').attr("id")).append('<option value selected="default">Choisissez</option>');
+                $.each(json, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                     
+                   $('.tester').find("#"+$('.commune').attr("id")).append('<option value="'+ value.id +'" '+((value.id == commune) ? ' selected' : '' )+' >' + value.libelle +'</option>');
+             
+                });
+
+            }
+		})
+
+	$.ajax({
+			 url:        '/ads/utilisateur/front/prestataire/liste/regions',
+            type:       'get',
+             async: false,
+            dataType:   'json',
+			  success: function(json){
+             console.log(json)
+                $('.tester').find('#'+$('.region').attr("id")).html(''); //je vide la 2ème list
+                $('.tester').find('#'+$('.region').attr("id")).append('<option value selected="default">Choisissez</option>');
+                $.each(json, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                     
+                   $('.tester').find("#"+$('.region').attr("id")).append('<option value="'+ value.id +'" '+((value.id == region) ? ' selected' : '' )+' >' + value.libelle +'</option>');
+             
+                });
+
+            }
+		})
+
 	$('.region').on('change',function(){
 		$res = $(this).closest('.row');
 		  $id = $(this).val();
 		$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/communes',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -143,7 +198,7 @@
 		})
 
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartiers',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -171,7 +226,7 @@
 		//$res = $(this).closest('.row');
 		  $id = $(this).val();
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartier/communes',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -198,7 +253,7 @@
 		$res = $(this).closest('.row');
 		  $id = $(this).val();
 			$.ajax({
-			 url:        '/utilisateur/front/prestataire/liste/quartier/commune',
+			 url:        '/ads/utilisateur/front/prestataire/liste/quartier/commune',
             type:       'get',
              async: false,
             data:     {id:$id},

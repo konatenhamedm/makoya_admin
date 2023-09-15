@@ -52,12 +52,12 @@
                  {{ knp_menu_render('Config', {'allow_safe_labels': true}) }}#}
 
                 <ul class="menu-nav">
-                    <li class="menu-item menu-item-active" aria-haspopup="true">
-                        <a href="index.html" class="menu-link active dashboard">
+                    <li class="menu-item {%if menu.getRoute == "app_default" %} menu-item-activee {% endif %}" aria-haspopup="true">
+                        <a href="{{ path('app_default') }}" class="menu-link {%if menu.getRoute == "app_default" %} active {% endif %} dashboard">
 										<span class="menu-icon">
 												<i class="bi bi-grid fs-3"></i>
 										</span>
-                            <span class="menu-tet menu-title">Tableau de bord</span>
+                            <span class="menu-text menu-title">Tableau de bord</span>
                         </a>
                     </li>
                 {% for module in menu.listeModule %}
@@ -73,9 +73,10 @@
                     </div>
                     {% for groupe in  menu.listeGroupeModule %}
                         {% if module.id == groupe.module_id %}
-                    <li class="menu-item menu-item-active" aria-haspopup="true">
+                       {#  {{ dump( )}} #}
+                    <li class="menu-item {% if menu.getRoute == groupe.lien %} menu-item-activee {% endif %}" aria-haspopup="true">
                           {#   <li class="menu-item" aria-haspopup="true"> #}
-                                <a href="{{ path(groupe.lien) }}" class="menu-link">
+                                <a href="{{ path(groupe.lien) }}" class="menu-link {% if menu.getRoute == groupe.lien %} active {% endif %}">
 										<span class="menu-icon">
 										<i class="{{groupe.icon}} fs-3"></i>
 									</span>
@@ -86,9 +87,6 @@
                     {% endfor%}
 
                 {% endfor %}
-
-
-
                 </ul>
              {#   {{ dump(menu.listeGroupeModule) }}#}
 

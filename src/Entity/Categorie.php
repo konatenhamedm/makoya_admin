@@ -242,7 +242,7 @@ class Categorie
         return $this->imageLaUne;
     }
 
-    public function setImageLaUne(?Fichier $imageLaUne): static
+    public function setImageLaUne(?Fichier $imageLaUne): self
     {
         $this->imageLaUne = $imageLaUne;
 

@@ -19,12 +19,12 @@ use App\Controller\BaseController;
 use App\Repository\WorkflowServicePrestataireRepository;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/workflowdemande/workflow/service/prestataire')]
+#[Route('/ads/workflowdemande/workflow/service/prestataire')]
 class WorkflowServicePrestataireController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_workflowdemande_workflow_service_prestataire_index';
 
-    #[Route('/{etat}', name: 'app_workflowdemande_workflow_service_prestataire_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/{etat}', name: 'app_workflowdemande_workflow_service_prestataire_index', methods: ['GET', 'POST'])]
     public function index(Request $request, string $etat, DataTableFactory $dataTableFactory): Response
     {
 
@@ -157,7 +157,7 @@ class WorkflowServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_workflowdemande_workflow_service_prestataire_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_workflowdemande_workflow_service_prestataire_show', methods: ['GET'])]
     public function show(WorkflowServicePrestataire $workflowServicePrestataire): Response
     {
         return $this->render('workflowdemande/workflow_service_prestataire/show.html.twig', [
@@ -165,7 +165,7 @@ class WorkflowServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_workflowdemande_workflow_service_prestataire_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_workflowdemande_workflow_service_prestataire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, WorkflowServicePrestataire $workflowServicePrestataire, WorkflowServicePrestataireRepository $workflowServicePrestataireRepository, FormError $formError): Response
     {
 
@@ -238,7 +238,7 @@ class WorkflowServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/rejeter', name: 'app_workflowdemande_workflow_service_prestataire_rejeter', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/rejeter', name: 'app_workflowdemande_workflow_service_prestataire_rejeter', methods: ['GET', 'POST'])]
     public function Rejeter(Request $request, WorkflowServicePrestataire $workflowServicePrestataire, WorkflowServicePrestataireRepository $workflowServicePrestataireRepository, FormError $formError): Response
     {
         //dd();
@@ -314,7 +314,7 @@ class WorkflowServicePrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_workflowdemande_workflow_service_prestataire_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_workflowdemande_workflow_service_prestataire_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, WorkflowServicePrestataire $workflowServicePrestataire): Response
     {
         $form = $this->createFormBuilder()

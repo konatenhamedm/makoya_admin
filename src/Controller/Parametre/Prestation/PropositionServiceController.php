@@ -19,11 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use Doctrine\ORM\QueryBuilder;
 
-#[Route('/parametre/prestation/proposition/service')]
+#[Route('/ads/parametre/prestation/proposition/service')]
 class PropositionServiceController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_prestation_proposition_service_index';
-    #[Route('/{etat}', name: 'app_parametre_prestation_proposition_service_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/{etat}', name: 'app_parametre_prestation_proposition_service_index', methods: ['GET', 'POST'])]
     public function index(Request $request, string $etat, DataTableFactory $dataTableFactory): Response
     {
 
@@ -153,7 +153,7 @@ class PropositionServiceController extends BaseController
         ]);
     }
 
-    #[Route('/new/add', name: 'app_parametre_prestation_proposition_service_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new/add', name: 'app_parametre_prestation_proposition_service_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PropositionServiceRepository $propositionServiceRepository, FormError $formError): Response
     {
         $propositionService = new PropositionService();
@@ -206,7 +206,7 @@ class PropositionServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_prestation_proposition_service_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_prestation_proposition_service_show', methods: ['GET'])]
     public function show(PropositionService $propositionService): Response
     {
         return $this->render('parametre/prestation/proposition_service/show.html.twig', [
@@ -214,7 +214,7 @@ class PropositionServiceController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_prestation_proposition_service_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_proposition_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PropositionService $propositionService, PropositionServiceRepository $propositionServiceRepository, FormError $formError): Response
     {
 
@@ -284,7 +284,7 @@ class PropositionServiceController extends BaseController
     }
 
 
-    #[Route('/{id}/rejeter', name: 'app_parametre_prestation_proposition_service_rejeter', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/rejeter', name: 'app_parametre_prestation_proposition_service_rejeter', methods: ['GET', 'POST'])]
     public function Rejeter(Request $request, PropositionService $propositionService, PropositionServiceRepository $propositionServiceRepository, FormError $formError): Response
     {
         //dd();
@@ -357,7 +357,7 @@ class PropositionServiceController extends BaseController
     }
 
 
-    #[Route('/{id}/delete', name: 'app_parametre_prestation_proposition_service_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_prestation_proposition_service_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, PropositionService $propositionService, PropositionServiceRepository $propositionServiceRepository): Response
     {
         $form = $this->createFormBuilder()

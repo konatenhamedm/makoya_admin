@@ -17,7 +17,7 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig');
     }
 
-    #[Route('/error_page', name: 'page_error_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/error_page', name: 'page_error_index', methods: ['GET', 'POST'])]
     public function errorIndex(Request $request): Response
     {
         return $this->render('error.html.twig', []);

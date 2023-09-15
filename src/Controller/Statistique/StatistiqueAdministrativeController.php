@@ -15,7 +15,7 @@ class StatistiqueAdministrativeController extends BaseController
 
     const INDEX_ROOT_NAME = 'app_statistique_administrative';
 
-    #[Route('/statistique/administrative', name: 'app_statistique_administrative')]
+    #[Route('/ads/statistique/administrative', name: 'app_statistique_administrative')]
     public function index(): Response
     {
 
@@ -26,7 +26,7 @@ class StatistiqueAdministrativeController extends BaseController
         ]);
     }
 
-    #[Route('/api/liste_region', name: 'get_all_region', methods: ['GET'])]
+    #[Route('/ads/api/liste_region', name: 'get_all_region', methods: ['GET'])]
     public function getInfoSerie(Request $request, RegionRepository $regionRepository, CommuneRepository $communeRepository)
     {
         $response = new Response();

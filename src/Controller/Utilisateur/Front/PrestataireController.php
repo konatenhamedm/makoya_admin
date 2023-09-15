@@ -19,10 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use App\Repository\CommuneRepository;
 use App\Repository\QuartierRepository;
+use App\Repository\RegionRepository;
 use App\Repository\ServicePrestataireRepository;
 use App\Repository\SousCategorieRepository;
 
-#[Route('/utilisateur/front/prestataire')]
+#[Route('/ads/utilisateur/front/prestataire')]
 class PrestataireController extends BaseController
 {
 
@@ -43,7 +44,7 @@ class PrestataireController extends BaseController
     }
     const INDEX_ROOT_NAME = 'app_utilisateur_front_prestataire_index';
 
-    #[Route('/', name: 'app_utilisateur_front_prestataire_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_utilisateur_front_prestataire_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
@@ -190,7 +191,7 @@ class PrestataireController extends BaseController
                                 'show' => [
                                     'url' => $this->generateUrl('app_utilisateur_front_prestataire_show', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ],
-                                
+
                                 'change_password' => [
                                     'target' => '#exampleModalSizeNormal',
                                     'url' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', ['reference' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-lock', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['change_password']
@@ -252,12 +253,13 @@ class PrestataireController extends BaseController
         if ($form->isSubmitted()) {
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
-            $quartier = $form->get('quartier')->getData();
+            //$quartier = $form->get('quartier')->getData();
+            $password = $form->get('password')->getData();
 
             if ($form->isValid()) {
-
+                $prestataire->setPassword($this->hasher->hashPassword($prestataire, $password));
                 $prestataire->setReference($this->numero());
-                $prestataire->setQuartier($quartier);
+                //$prestataire->setQuartier($quartier);
                 $prestataireRepository->save($prestataire, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
@@ -288,7 +290,7 @@ class PrestataireController extends BaseController
         ]);
     }
 
-    #[Route('/{reference}/show', name: 'app_utilisateur_front_prestataire_show', methods: ['GET'])]
+    #[Route('/ads/{reference}/show', name: 'app_utilisateur_front_prestataire_show', methods: ['GET'])]
     public function show(Prestataire $prestataire): Response
     {
         return $this->render('utilisateur/front/prestataire/show.html.twig', [
@@ -387,12 +389,13 @@ class PrestataireController extends BaseController
         if ($form->isSubmitted()) {
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
-            $quartier = $form->get('quartier')->getData();
-
+            // $quartier = $form->get('quartier')->getData();
+            $password = $form->get('password')->getData();
 
             if ($form->isValid()) {
                 //dd($quartier);
-                $prestataire->setQuartier($quartier);
+                $prestataire->setPassword($this->hasher->hashPassword($prestataire, $password));
+                //$prestataire->setQuartier($quartier);
                 $prestataireRepository->save($prestataire, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
@@ -602,7 +605,7 @@ class PrestataireController extends BaseController
 
 
 
-    #[Route('/liste/commune', name: 'get_commune', methods: ['GET'])]
+    #[Route('/liste/communes', name: 'get_commune', methods: ['GET'])]
     public function getCommune(Request $request, CommuneRepository $communeRepository)
     {
         $response = new Response();
@@ -659,8 +662,81 @@ class PrestataireController extends BaseController
         }
         return $response;
     }
+    #[Route('/getCommuneRegionQuartier', name: 'get_commune_region_quartier', methods: ['GET'])]
+    public function getCommuneRegionQuartier(Request $request, QuartierRepository $quartierRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesCommune = array();
 
-    #[Route('/liste/quartier', name: 'get_quartier', methods: ['GET'])]
+        $id = '';
+        $id = $request->get('id');
+        //dd( $id);
+        if ($id) {
+
+
+            $dataCommuneRegion = $quartierRepository->createQueryBuilder('q')
+                ->select('c.id as commune,r.id as region')
+                ->innerJoin('q.commune', 'c')
+                ->innerJoin('c.sousPrefecture', 's')
+                ->innerJoin('s.departement', 'd')
+                ->innerJoin('d.region', 'r')
+                ->andWhere('q.id =:quartier')
+                ->setParameter('quartier', $id)
+                ->getQuery()
+                ->getSingleResult();
+
+            //dd($dataCommune);
+
+
+
+            $data = json_encode($dataCommuneRegion); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($data);
+
+
+
+            // dd($response);
+
+        }
+        return $response;
+    }
+    #[Route('/liste/regions', name: 'get_regions', methods: ['GET'])]
+    public function getRegions(Request $request, RegionRepository $regionRepository)
+    {
+        $response = new Response();
+        $tabEnsemblesQuartier = array();
+
+
+
+        $dataRegions = $regionRepository->createQueryBuilder('r')
+            ->getQuery()
+            ->getResult();
+
+        //dd($dataRegions);
+
+        $i = 0;
+
+        foreach ($dataRegions as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+            $tabEnsemblesQuartier[$i]['id'] = $e->getId();
+            $tabEnsemblesQuartier[$i]['libelle'] = $e->getNom();
+            $i++;
+        }
+
+        //dd()
+
+
+
+        $data = json_encode($tabEnsemblesQuartier); // formater le résultat de la requête en json
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($data);
+
+
+        return $response;
+    }
+
+    #[Route('/liste/quartiers', name: 'get_quartier', methods: ['GET'])]
     public function getQuartier(Request $request, QuartierRepository $quartierRepository)
     {
         $response = new Response();
@@ -709,7 +785,7 @@ class PrestataireController extends BaseController
         return $response;
     }
 
-    #[Route('/liste/quartier/commune', name: 'get_quartier_commune', methods: ['GET'])]
+    #[Route('/liste/quartier/communes', name: 'get_quartier_commune', methods: ['GET'])]
     public function getQuartierCommune(Request $request, QuartierRepository $quartierRepository)
     {
         $response = new Response();

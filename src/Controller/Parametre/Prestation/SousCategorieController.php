@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/parametre/prestation/sous/categorie')]
+#[Route('/ads/parametre/prestation/sous/categorie')]
 class SousCategorieController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_prestation_sous_categorie_index';
-    #[Route('/', name: 'app_parametre_prestation_sous_categorie_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_prestation_sous_categorie_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
 
@@ -144,7 +144,7 @@ class SousCategorieController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_prestation_sous_categorie_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_prestation_sous_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SousCategorieRepository $sousCategorieRepository, FormError $formError): Response
     {
         $sousCategorie = new SousCategorie();
@@ -196,7 +196,7 @@ class SousCategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_prestation_sous_categorie_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_prestation_sous_categorie_show', methods: ['GET'])]
     public function show(SousCategorie $sousCategorie): Response
     {
         return $this->render('parametre/prestation/sous_categorie/show.html.twig', [
@@ -204,7 +204,7 @@ class SousCategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_prestation_sous_categorie_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_sous_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SousCategorie $sousCategorie, SousCategorieRepository $sousCategorieRepository, FormError $formError): Response
     {
 
@@ -260,7 +260,7 @@ class SousCategorieController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_prestation_sous_categorie_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_prestation_sous_categorie_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, SousCategorie $sousCategorie, SousCategorieRepository $sousCategorieRepository): Response
     {
         $form = $this->createFormBuilder()

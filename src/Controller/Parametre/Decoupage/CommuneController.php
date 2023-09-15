@@ -18,13 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
-#[Route('/parametre/decoupage/commune')]
+#[Route('/ads/parametre/decoupage/commune')]
 class CommuneController extends BaseController
 {
 
     const INDEX_ROOT_NAME = 'app_parametre_decoupage_commune_index';
 
-    #[Route('/', name: 'app_parametre_decoupage_commune_index', methods: ['GET', 'POST'])]
+    #[Route('/ads/', name: 'app_parametre_decoupage_commune_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
@@ -144,7 +144,7 @@ class CommuneController extends BaseController
         ]);
     }
 
-    #[Route('/new', name: 'app_parametre_decoupage_commune_new', methods: ['GET', 'POST'])]
+    #[Route('/ads/new', name: 'app_parametre_decoupage_commune_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommuneRepository $communeRepository, FormError $formError): Response
     {
         $commune = new Commune();
@@ -196,7 +196,7 @@ class CommuneController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_parametre_decoupage_commune_show', methods: ['GET'])]
+    #[Route('/ads/{id}/show', name: 'app_parametre_decoupage_commune_show', methods: ['GET'])]
     public function show(Commune $commune): Response
     {
         return $this->render('parametre/decoupage/commune/show.html.twig', [
@@ -204,7 +204,7 @@ class CommuneController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_parametre_decoupage_commune_edit', methods: ['GET', 'POST'])]
+    #[Route('/ads/{id}/edit', name: 'app_parametre_decoupage_commune_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commune $commune, CommuneRepository $communeRepository, FormError $formError): Response
     {
 
@@ -260,7 +260,7 @@ class CommuneController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_parametre_decoupage_commune_delete', methods: ['DELETE', 'GET'])]
+    #[Route('/ads/{id}/delete', name: 'app_parametre_decoupage_commune_delete', methods: ['DELETE', 'GET'])]
     public function delete(Request $request, Commune $commune, CommuneRepository $communeRepository): Response
     {
         $form = $this->createFormBuilder()

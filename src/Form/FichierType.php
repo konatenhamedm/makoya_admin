@@ -100,7 +100,7 @@ class FichierType extends AbstractType
                    
                         //$data['alt'] = null;
                         
-                    $parts = explode('/public/uploads/', $options['doc_options']['uploadDir']);
+                    $parts = explode('/ads/public/uploads/', $options['doc_options']['uploadDir']);
                     $path = $parts[1] ?? '';
 
                     
