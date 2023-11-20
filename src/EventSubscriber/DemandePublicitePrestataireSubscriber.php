@@ -129,7 +129,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
   public static function getSubscribedEvents(): array
   {
     return [
-      'workflow.add_demande_publicite.transition.passer' => 'handleValidation',
+      'workflow.add_demande_publicite.transition.passer' ,
       'workflow.add_demande_publicite.transition.rejeter' => 'handleRejeter',
 
     ];

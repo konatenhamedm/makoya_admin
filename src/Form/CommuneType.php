@@ -14,16 +14,15 @@ class CommuneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code')
+            /*  ->add('code') */
             ->add('nom')
             ->add('sousPrefecture', EntityType::class, [
-                'placeholder'=>'----',
+                'placeholder' => '----',
                 'class' => SousPrefecture::class,
                 'choice_label' => 'nom',
                 'label' => 'Sous préfecture',
                 'attr' => ['class' => 'has-select2 form-select']
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

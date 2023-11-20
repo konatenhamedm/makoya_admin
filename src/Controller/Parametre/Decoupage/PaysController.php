@@ -144,11 +144,27 @@ class PaysController extends BaseController
         ]);
     }
 
+    private function numero()
+    {
+
+        $query = $this->em->createQueryBuilder();
+        $query->select("count(a.id)")
+            ->from(Pays::class, 'a');
+
+        $nb = $query->getQuery()->getSingleScalarResult();
+        if ($nb == 0) {
+            $nb = 1;
+        } else {
+            $nb = $nb + 1;
+        }
+        return (date("y") . 'PAY' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+    }
+
     #[Route('/ads/new', name: 'app_parametre_decoupage_pays_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PaysRepository $paysRepository, FormError $formError): Response
     {
-        $pay = new Pays();
-        $form = $this->createForm(PaysType::class, $pay, [
+        $pays = new Pays();
+        $form = $this->createForm(PaysType::class, $pays, [
             'method' => 'POST',
             'action' => $this->generateUrl('app_parametre_decoupage_pays_new')
         ]);
@@ -165,8 +181,8 @@ class PaysController extends BaseController
 
 
             if ($form->isValid()) {
-
-                $paysRepository->save($pay, true);
+                $pays->setCode($this->numero());
+                $paysRepository->save($pays, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
                 $statut = 1;

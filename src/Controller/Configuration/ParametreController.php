@@ -90,11 +90,11 @@ class ParametreController extends BaseController
                     'id' => 'param_module',
                     'href' => $this->generateUrl('app_parametre_prestation_sous_categorie_index')
                 ],
-                [
+                /* [
                     'label' => 'Service',
                     'id' => 'param_permission',
                     'href' => $this->generateUrl('app_parametre_prestation_service_prestataire_index')
-                ]/* ,
+                ],
                 [
                     'label' => 'Proposition service',
                     'id' => 'param_permission_groupe',

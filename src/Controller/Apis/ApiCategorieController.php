@@ -3,8 +3,8 @@
 namespace App\Controller\Apis;
 
 use App\Controller\ApiInterface;
-use App\Entity\Civilite;
-use App\Repository\CiviliteRepository;
+use App\Entity\Categorie;
+use App\Repository\CategorieRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,10 +16,10 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 
-#[Route('/api/civilite')]
-class ApiCiviliteController extends ApiInterface
+#[Route('/api/categorie')]
+class ApiCategorieController extends ApiInterface
 {
-    #[Route('/', name: 'api_civilite', methods: ['GET'])]
+    #[Route('/', name: 'api_categorie', methods: ['GET'])]
     /**
      * Affiche toutes les civiltes.
      * @OA\Response(
@@ -27,18 +27,18 @@ class ApiCiviliteController extends ApiInterface
      *     description="Returns the rewards of an user",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Civilite::class, groups={"full"}))
+     *        @OA\Items(ref=@Model(type=Categorie::class, groups={"full"}))
      *     )
      * )
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function getAll(CiviliteRepository $civiliteRepository): Response
+    public function getAll(CategorieRepository $categorieRepository): Response
     {
         try {
 
-            $civilites = $civiliteRepository->findAll();
-            $response = $this->response($civilites);
+            $categories = $categorieRepository->findAll();
+            $response = $this->response($categories);
         } catch (\Exception $exception) {
             $this->setMessage("");
             $response = $this->response(null);
@@ -49,22 +49,22 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/getOne/{id}', name: 'api_civilite_get_one', methods: ['GET'])]
+    #[Route('/getOne/{id}', name: 'api_categorie_get_one', methods: ['GET'])]
     /**
      * Affiche une civilte en offrant un identifiant.
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function getOne(?Civilite $civilite)
+    public function getOne(?Categorie $categorie)
     {
-        /*  $civilite = $civiliteRepository->find($id);*/
+        /*  $categorie = $categorieRepository->find($id);*/
         try {
-            if ($civilite) {
-                $response = $this->response($civilite);
+            if ($categorie) {
+                $response = $this->response($categorie);
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
-                $response = $this->response($civilite);
+                $response = $this->response($categorie);
             }
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -76,29 +76,29 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/create', name: 'api_civilite_create', methods: ['POST'])]
+    #[Route('/create', name: 'api_categorie_create', methods: ['POST'])]
     /**
-     * Permet de créer une civilite.
+     * Permet de créer une categorie.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function create(Request $request, CiviliteRepository $civiliteRepository)
+    public function create(Request $request, CategorieRepository $categorieRepository)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->findOneBy(array('code' => $data->code));
-            if ($civilite == null) {
-                $civilite = new Civilite();
-                $civilite->setCode($data->code);
-                $civilite->setLibelle($data->libelle);
+            $categorie = $categorieRepository->findOneBy(array('code' => $data->code));
+            if ($categorie == null) {
+                $categorie = new Categorie();
+                $categorie->setCode($data->code);
+                $categorie->setLibelle($data->libelle);
 
                 // On sauvegarde en base
-                $civiliteRepository->add($civilite, true);
+                $categorieRepository->add($categorie, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($categorie);
             } else {
                 $this->setMessage("cette ressource existe deja en base");
                 $this->setStatusCode(300);
@@ -114,29 +114,29 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/update/{id}', name: 'api_civilite_update', methods: ['POST'])]
+    #[Route('/update/{id}', name: 'api_categorie_update', methods: ['POST'])]
     /**
-     * Permet de mettre à jour une civilite.
+     * Permet de mettre à jour une categorie.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function update(Request $request, CiviliteRepository $civiliteRepository, $id)
+    public function update(Request $request, CategorieRepository $categorieRepository, $id)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->find($id);
-            if ($civilite != null) {
+            $categorie = $categorieRepository->find($id);
+            if ($categorie != null) {
 
-                $civilite->setCode($data->code);
-                $civilite->setLibelle($data->libelle);
+                $categorie->setCode($data->code);
+                $categorie->setLibelle($data->libelle);
 
                 // On sauvegarde en base
-                $civiliteRepository->add($civilite, true);
+                $categorieRepository->add($categorie, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($categorie);
             } else {
                 $this->setMessage("cette ressource est inexsitante");
                 $this->setStatusCode(300);
@@ -150,25 +150,25 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/delete/{id}', name: 'api_civilite_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'api_categorie_delete', methods: ['POST'])]
     /**
-     * permet de supprimer une civilite en offrant un identifiant.
+     * permet de supprimer une categorie en offrant un identifiant.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function delete(Request $request, CiviliteRepository $civiliteRepository, $id)
+    public function delete(Request $request, CategorieRepository $categorieRepository, $id)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->find($id);
-            if ($civilite != null) {
+            $categorie = $categorieRepository->find($id);
+            if ($categorie != null) {
 
-                $civiliteRepository->remove($civilite, true);
+                $categorieRepository->remove($categorie, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($categorie);
             } else {
                 $this->setMessage("cette ressource est inexistante");
                 $this->setStatusCode(300);
@@ -182,21 +182,21 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/active/{id}', name: 'api_civilite_active', methods: ['GET'])]
+    #[Route('/active/{id}', name: 'api_categorie_active', methods: ['GET'])]
     /**
-     * Permet d'activer une civilite en offrant un identifiant.
-     * @OA\Tag(name="Civilite")
+     * Permet d'activer une categorie en offrant un identifiant.
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function active(?Civilite $civilite, CiviliteRepository $civiliteRepository)
+    public function active(?Categorie $categorie, CategorieRepository $categorieRepository)
     {
-        /*  $civilite = $civiliteRepository->find($id);*/
+        /*  $categorie = $categorieRepository->find($id);*/
         try {
-            if ($civilite) {
+            if ($categorie) {
 
-                //$civilite->setCode("555"); //TO DO nous ajouter un champs active
-                $civiliteRepository->add($civilite, true);
-                $response = $this->response($civilite);
+                //$categorie->setCode("555"); //TO DO nous ajouter un champs active
+                $categorieRepository->add($categorie, true);
+                $response = $this->response($categorie);
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
@@ -212,22 +212,22 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/active/multiple', name: 'api_civilite_active_multiple', methods: ['POST'])]
+    #[Route('/active/multiple', name: 'api_categorie_active_multiple', methods: ['POST'])]
     /**
      * Permet de faire une desactivation multiple.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Categorie")
      * @Security(name="Bearer")
      */
-    public function multipleActive(Request $request, CiviliteRepository $civiliteRepository)
+    public function multipleActive(Request $request, CategorieRepository $categorieRepository)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $listeCivilites = $civiliteRepository->findAllByListId($data->ids);
-            foreach ($listeCivilites as $listeCivilite) {
-                //$listeCivilite->setCode("555");  //TO DO nous ajouter un champs active
-                $civiliteRepository->add($listeCivilite, true);
+            $listeCategories = $categorieRepository->findAllByListId($data->ids);
+            foreach ($listeCategories as $listeCategorie) {
+                //$listeCategorie->setCode("555");  //TO DO nous ajouter un champs active
+                $categorieRepository->add($listeCategorie, true);
             }
 
             $response = $this->response(null);

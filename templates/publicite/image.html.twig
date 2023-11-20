@@ -1,0 +1,72 @@
+{% block page_content %}
+    {% form_theme form 'widget/fields-block.html.twig' %}
+    {% from '_macros/image_publicite.html.twig' import prototype_ligne_colonne %}
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter des images</h5>
+        <div class="btn btn-icon btn-sm  ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <span class="svg-icon svg-icon-2x text-white">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+					<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+				</svg>
+            </span>
+        </div>
+    </div>
+    {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
+    <div class="modal-body modal-reunion content-doc">
+        {{ include('_includes/ajax/response.html.twig') }}
+       	<div class="container">
+           <div class="row">
+                <div class="col-12">
+                <button type="button" class="btn btn-primary new-image" data-collection="#publiciteImages">Ajouter image</button>
+               
+                  <div id="publiciteImages" class="row" data-prototype="{{ include("_macros/image_publicite.html.twig",{form: form.publiciteImages.vars.prototype})|e("html_attr") }}"
+                   data-index="{{ form.publiciteImages|length > 0 ? form.publiciteImage|last.var.name + 1:0}}">
+                  {% for image in form.publiciteImages %}
+                  {{ dump(image)}}
+                    {{ include("_macros/image_publicite.html.twig", {form: image})}}
+                  {% endfor %}
+                  </div>
+                </div>
+           </div>
+        </div>
+			<br>
+    </div>
+    <div class="modal-footer">
+        {# {{ include('_includes/ajax/loader.html.twig') }} #}
+        <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-main btn-ajax btn-sm"><span class="spinner-border d-none  spinner-ajax spinner-border-sm" role="status" aria-hidden="true"></span> Valider</button>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form,{render_rest: false}) }}
+{% endblock %}
+
+{% block java %}
+   <script>
+      $(function () {
+        init_select2('select', null, '.content-doc');
+            KTImageInput.createInstances();
+            var imageInputElement = document.querySelector("#kt_image_input_control");
+            var imageInput = KTImageInput.getInstance(imageInputElement);
+        });
+
+        const newItem = (e) =>{
+        const collectionHolder = document.querySelector(e.currentTarget.dataset.collection);
+
+                    collectionHolder.innerHTML += collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.dataset.index);
+                    collectionHolder.dataset.index++;
+                    document.querySelectorAll('.btn-remove').forEach(btn => btn.addEventListener('click',removeItem));
+
+        }
+
+             const removeItem = (e) =>{
+            console.log(e.currentTarget.closest('.item'));
+            e.currentTarget.closest('.item').remove()
+        }
+        
+        document.querySelectorAll('.new-image').forEach(btn => btn.addEventListener('click',newItem));
+
+
+
+  </script>
+{% endblock %}

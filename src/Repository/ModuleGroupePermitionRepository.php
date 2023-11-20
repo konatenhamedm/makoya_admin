@@ -39,40 +39,41 @@ class ModuleGroupePermitionRepository extends ServiceEntityRepository
         }
     }
 
-    public function  getPermission($groupe,$lien)
+    public function  getPermission($groupe, $lien)
     {
         $resultat = $this->createQueryBuilder('m')
-        ->select('p.code','m.menuPrincipal')
-//            ->where('m.groupeUser = : val')
-        ->innerJoin('m.permition','p')
-        ->innerJoin('m.groupeModule','gm')
-        ->innerJoin('m.groupeUser','gu')
-        ->andWhere('gm.lien = :lien')
-        ->andWhere('gu.id = :val')
-        ->setParameters(['val'=> $groupe,'lien'=>$lien])
-        /*  ->setMaxResults(10)*/
-        ->getQuery()
-        ->getOneOrNullResult();
+            ->select('p.code', 'm.menuPrincipal')
+            //            ->where('m.groupeUser = : val')
+            ->innerJoin('m.permition', 'p')
+            ->innerJoin('m.groupeModule', 'gm')
+            ->innerJoin('m.groupeUser', 'gu')
+            ->andWhere('gm.lien = :lien')
+            ->andWhere('gu.id = :val')
+            ->setParameters(['val' => $groupe, 'lien' => $lien])
+            /*  ->setMaxResults(10)*/
+            ->getQuery()
+            ->getOneOrNullResult();
 
-       
 
-        return $resultat ;
+
+        return $resultat;
     }
 
-    public function  afficheModule($groupe){
+    public function  afficheModule($groupe)
+    {
         return $this->createQueryBuilder('m')
-            ->select('md.id','md.titre','md.ordre')
-//            ->where('m.groupeUser = : val')
-            ->innerJoin('m.module','md')
-            ->innerJoin('m.groupeUser','gu')
+            ->select('md.id', 'md.titre', 'md.ordre')
+            //            ->where('m.groupeUser = : val')
+            ->innerJoin('m.module', 'md')
+            ->innerJoin('m.groupeUser', 'gu')
             ->andWhere('gu.id = :val')
             ->setParameter('val', $groupe)
             ->groupBy('md.id')
             ->orderBy('md.ordre', 'ASC')
-          /*  ->setMaxResults(10)*/
+            /*  ->setMaxResults(10)*/
             ->getQuery()
             ->getResult();
-        }
+    }
     public function affiche($params)
     {
         $conn = $this->getEntityManager()
@@ -89,46 +90,46 @@ class ModuleGroupePermitionRepository extends ServiceEntityRepository
              order by m.ordre_groupe ASC
            
             ";
-       /* $stmt = $conn->executeQuery($sql);
+        /* $stmt = $conn->executeQuery($sql);
         return $stmt->fetchAll();*/
         $stmt = $conn->executeQuery($sql);
         return $stmt->fetchAllAssociative();
-
     }
-    public function  afficheGroupe(){
+    public function  afficheGroupe()
+    {
         return $this->createQueryBuilder('m')
-            ->select('g.id','g.titre','g.ordre','md.id')
-            ->innerJoin('m.groupeModule','g')
-            ->leftJoin('m.module','md')
-           /* ->innerJoin('m.module','md')*/
-           /* ->groupBy('g.id')*/
+            ->select('g.id', 'g.titre', 'g.ordre', 'md.id')
+            ->innerJoin('m.groupeModule', 'g')
+            ->leftJoin('m.module', 'md')
+            /* ->innerJoin('m.module','md')*/
+            /* ->groupBy('g.id')*/
             ->orderBy('g.ordre', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
-//    /**
-//     * @return ModuleGroupePermition[] Returns an array of ModuleGroupePermition objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return ModuleGroupePermition[] Returns an array of ModuleGroupePermition objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?ModuleGroupePermition
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?ModuleGroupePermition
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

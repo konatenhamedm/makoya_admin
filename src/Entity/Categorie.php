@@ -6,6 +6,7 @@ use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 class Categorie
@@ -19,6 +20,7 @@ class Categorie
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Veuillez renseigner le libelle")]
     private ?string $libelle = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: SousCategorie::class)]
@@ -40,6 +42,7 @@ class Categorie
 
     #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
+    #[Assert\NotBlank(message: "Veuillez renseigner le nom de l'entreprise")]
     private ?Fichier $imageLaUne = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: PropositionService::class)]

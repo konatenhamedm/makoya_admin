@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Service\Menu;
@@ -22,13 +23,12 @@ class ApiInterface extends AbstractController
     protected  $hasher;
     protected  $utils;
 
-    public function __construct(Security $security,UserPasswordHasherInterface $hasher,Utils $utils)
+    public function __construct(Security $security, UserPasswordHasherInterface $hasher, Utils $utils)
     {
 
         $this->security = $security;
         $this->hasher = $hasher;
         $this->utils = $utils;
-
     }
 
 
@@ -36,7 +36,7 @@ class ApiInterface extends AbstractController
      * @var integer HTTP status code - 200 (OK) by default
      */
     protected $statusCode = 200;
-    protected $message ="Operation effectuée avec succes";
+    protected $message = "Operation effectuée avec succes";
 
     /**
      * Gets the value of statusCode.
@@ -83,18 +83,17 @@ class ApiInterface extends AbstractController
 
         // On instancie le convertisseur
         $serializer = new Serializer($normalizers, $encoders);
-        if($data == null){
+        if ($data == null) {
             $arrayData = [
-                'data'=>null,
-                'message'=>$this->getMessage(),
-                'status'=>$this->getStatusCode()
+                'data' => null,
+                'message' => $this->getMessage(),
+                'status' => $this->getStatusCode()
             ];
-        }
-        else{
+        } else {
             $arrayData = [
-                'data'=>$data,
-                'message'=>$this->getMessage(),
-                'status'=>$this->getStatusCode()
+                'data' => $data,
+                'message' => $this->getMessage(),
+                'status' => $this->getStatusCode()
             ];
         }
 
@@ -114,5 +113,4 @@ class ApiInterface extends AbstractController
         return $response;
         //return new JsonResponse($response, $this->getStatusCode(), $headers);
     }
-
 }

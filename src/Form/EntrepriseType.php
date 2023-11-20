@@ -2,24 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\Pays;
+use App\Entity\Entreprise;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PaysType extends AbstractType
+class EntrepriseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            /* ->add('code') */
-            ->add('nomPays');
+            ->add('code')
+            ->add('denomination')
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Pays::class,
+            'data_class' => Entreprise::class,
         ]);
     }
 }

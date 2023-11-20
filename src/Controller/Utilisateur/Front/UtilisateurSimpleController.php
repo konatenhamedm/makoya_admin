@@ -188,6 +188,7 @@ class UtilisateurSimpleController extends BaseController
     public function new(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
     {
         $utilisateurSimple = new UtilisateurSimple();
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
             'method' => 'POST',
             'type' => 'utilisateur_simple',
@@ -196,6 +197,7 @@ class UtilisateurSimpleController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_utilisateur_simple_new')
         ]);
         $form->handleRequest($request);
@@ -255,6 +257,7 @@ class UtilisateurSimpleController extends BaseController
     public function edit(Request $request, UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
     {
         //dd($utilisateurSimple->getNom());
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
             'method' => 'POST',
             'type' => 'utilisateur_simple',
@@ -263,6 +266,7 @@ class UtilisateurSimpleController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_utilisateur_simple_edit', [
                 'reference' =>  $utilisateurSimple->getReference()
             ])
@@ -316,33 +320,36 @@ class UtilisateurSimpleController extends BaseController
     #[Route('/{reference}/change/password', name: 'app_utilisateur_front_utilisateur_simple_change_password', methods: ['GET', 'POST'])]
     public function changePassword(Request $request, UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(UtilisateurSimpleType::class, $utilisateurSimple, [
             'method' => 'POST',
             'type' => 'utilisateur_simple',
-            'password' => 'password',
+            'password' => 'changePassword',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
-            'action' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', [
+            'validation_groups' => $validationGroups,
+            'action' => $this->generateUrl('app_utilisateur_front_utilisateur_simple_change_password', [
                 'reference' =>  $utilisateurSimple->getReference()
             ])
         ]);
-        //dd($prestataire);
+
         $data = null;
         $statutCode = Response::HTTP_OK;
 
         $isAjax = $request->isXmlHttpRequest();
-
+        //dd($utilisateurSimple);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            //dd($utilisateurSimple);
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_front_prestataire_index');
             // $quartier = $form->get('quartier')->getData();
             $password = $form->get('password')->getData();
+
 
             if ($form->isValid()) {
                 //dd($quartier);

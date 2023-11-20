@@ -90,7 +90,8 @@ class WorkflowServicePrestataireType extends AbstractType
                         'label' => 'Fichier',
                         'label' => 'image',
                         'doc_options' => $options['doc_options'],
-                        'required' => $options['doc_required'] ?? true
+                        'required' => $options['doc_required'] ?? true,
+                        'validation_groups' => $options['validation_groups'],
                     ]
                 )
 
@@ -162,9 +163,11 @@ class WorkflowServicePrestataireType extends AbstractType
             'doc_required' => true,
             'fichiers' => false,
             'doc_options' => [],
+            'validation_groups' => [],
         ]);
         $resolver->setRequired('doc_options');
         $resolver->setRequired('doc_required');
         $resolver->setRequired('type');
+        $resolver->setRequired(['validation_groups']);
     }
 }

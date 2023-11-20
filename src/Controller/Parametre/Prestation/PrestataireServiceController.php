@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
+use App\Form\PrestataireServiceType;
 use Doctrine\ORM\QueryBuilder;
 
 #[Route('/ads/parametre/prestation/prestataire/service')]
@@ -86,7 +87,7 @@ class PrestataireServiceController extends BaseController
                         return true;
                     }
                 }),*/
-               /*  'show' => new ActionRender(function () use ($permission) {
+                /*  'show' => new ActionRender(function () use ($permission) {
                     if ($permission == 'R') {
                         return true;
                     } elseif ($permission == 'RD') {
@@ -103,8 +104,7 @@ class PrestataireServiceController extends BaseController
                         return true;
                     }
                     return true;
-                }), */
-            ];
+                }), */];
 
 
             $hasActions = false;
@@ -124,7 +124,7 @@ class PrestataireServiceController extends BaseController
                             'target' => '#exampleModalSizeLg22',
 
                             'actions' => [
-                               /*  'show' => [
+                                /*  'show' => [
                                     'url' => $this->generateUrl('app_parametre_prestation_prestataire_service_show', ['id' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ], */
                                 /*  'edit' => [
@@ -134,8 +134,7 @@ class PrestataireServiceController extends BaseController
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
                                     'url' => $this->generateUrl('app_parametre_prestation_prestataire_service_delete', ['id' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-main'],  'render' => $renders['delete']
-                                ] */
-                            ]
+                                ] */]
 
                         ];
                         return $this->renderView('_includes/default_actions_prestataire.html.twig', compact('options', 'context'));
@@ -161,9 +160,15 @@ class PrestataireServiceController extends BaseController
     #[Route('/ads/new', name: 'app_parametre_prestation_prestataire_service_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PrestataireServiceRepository $prestataireServiceRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $prestataireService = new PrestataireService();
-        $form = $this->createForm(PrestataireService1Type::class, $prestataireService, [
+        $form = $this->createForm(PrestataireServiceType::class, $prestataireService, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_prestataire_service_new')
         ]);
         $form->handleRequest($request);
@@ -221,9 +226,14 @@ class PrestataireServiceController extends BaseController
     #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_prestataire_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PrestataireService $prestataireService, PrestataireServiceRepository $prestataireServiceRepository, FormError $formError): Response
     {
-
-        $form = $this->createForm(PrestataireService1Type::class, $prestataireService, [
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
+        $form = $this->createForm(PrestataireServiceType::class, $prestataireService, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_prestataire_service_edit', [
                 'id' =>  $prestataireService->getId()
             ])

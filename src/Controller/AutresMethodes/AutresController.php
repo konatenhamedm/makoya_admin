@@ -24,6 +24,8 @@ class AutresController extends BaseController
     #[Route('/ads/new', name: 'app_workflowdemande_workflow_service_prestataire_new', methods: ['GET', 'POST'])]
     public function new(Request $request,  FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
+
         $workflowServicePrestataire = new WorkflowServicePrestataire();
         $form = $this->createForm(WorkflowServicePrestataireType::class, $workflowServicePrestataire, [
             'method' => 'POST',
@@ -32,6 +34,7 @@ class AutresController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_workflowdemande_workflow_service_prestataire_new')
         ]);
         $form->handleRequest($request);

@@ -13,23 +13,26 @@ class PubliciteImage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Fichier $image = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'publiciteImages')]
     private ?Publicite $publicite = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getImage(): ?string
+    public function getImage(): ?Fichier
     {
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?Fichier $image): static
     {
         $this->image = $image;
 

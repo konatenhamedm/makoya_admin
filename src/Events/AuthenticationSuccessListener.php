@@ -46,14 +46,6 @@ class AuthenticationSuccessListener extends ApiInterface
             $data['data'] =   [
                 'reference' => $user->getId(),
                 'username' => $userData->getUsername(),
-
-                "avatar" => "https://fr.web.img6.acsta.net/newsv7/21/02/26/16/13/3979241.jpg",
-                "id" =>  $user->getId(),
-                "accessToken" => "ffff",
-                "expiredAt" => new DateTime(),
-                "url" => "hhhh",
-                //"type" => "user",
-
             ];
             // dd($data)
             $event->setData($data);
@@ -61,23 +53,18 @@ class AuthenticationSuccessListener extends ApiInterface
 
         if ($user instanceof UtilisateurSimple) {
             $userData = $this->userFrontRepository->findOneBy(array('reference' => $user->getReference()));
-            //dd($user);
+
             //dd($userData["reference"]);$response->getContent();
 
             $type = str_contains($userData->getReference(), 'PR') ? "prestataire" : "simple";
 
 
-            $data['data'] =   [
-                'reference' =>    $userData->getReference(),
-                'username' =>    $userData->getUsername(),
-
-                "avatar" => "https://fr.web.img6.acsta.net/newsv7/21/02/26/16/13/3979241.jpg",
-                "id" => $userData->getReference(),
-                "accessToken" => "ffff",
-                "expiredAt" => new DateTime(),
-                "url" => "hhhh",
+            $data['user'] =   [
+                'id' =>    $userData->getReference(),
+                'name' =>    $user->getNomComplet(),
                 "type" => $type,
-
+                "email" => $userData->getEmail(),
+                'image' => 'http://localhost:8000/uploads/' . $userData->getPhoto()->getPath() . '/' . $userData->getPhoto()->getAlt()
             ];
             $event->setData($data);
         }

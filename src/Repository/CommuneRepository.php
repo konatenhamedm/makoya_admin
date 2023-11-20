@@ -49,6 +49,15 @@ class CommuneRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getCommunes()
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('c.id,c.nom')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Commune[] Returns an array of Commune objects
     //     */

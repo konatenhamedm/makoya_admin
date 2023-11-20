@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserFrontRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -67,6 +68,12 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Signaler::class)]
     private Collection $signalers;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateDesactivation = null;
+
     public function __construct()
     {
         $this->publicitePrestataires = new ArrayCollection();
@@ -74,6 +81,7 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
         $this->notes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->signalers = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
 
 
@@ -355,6 +363,30 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
                 $signaler->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getDateDesactivation(): ?\DateTimeInterface
+    {
+        return $this->dateDesactivation;
+    }
+
+    public function setDateDesactivation(\DateTimeInterface $dateDesactivation): static
+    {
+        $this->dateDesactivation = $dateDesactivation;
 
         return $this;
     }

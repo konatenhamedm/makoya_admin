@@ -20,10 +20,12 @@ class JWTAuthenticationFailureResponseSubscriber implements EventSubscriberInter
 
     public function onLexikJwtAuthenticationOnAuthenticationFailure(AuthenticationFailureEvent $event): void
     {
+
         /** @var JWTAuthenticationFailureResponse $response */
         $response = $event->getResponse();
         // My own processing where I used to have $event->getException()->getToken()
-        $response->setMessage("ERROR MESSAGE");
+        $response->setMessage("Invalid credentials");
+        $response->setData(['data' => []]);
     }
 
     public static function getSubscribedEvents(): array

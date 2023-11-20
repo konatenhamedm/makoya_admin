@@ -14,16 +14,15 @@ class QuartierType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code')
+            /*  ->add('code') */
             ->add('nom')
             ->add('commune', EntityType::class, [
-                'placeholder'=>'----',
+                'placeholder' => '----',
                 'class' => Commune::class,
                 'choice_label' => 'nom',
                 'label' => 'Commune',
                 'attr' => ['class' => 'has-select2 form-select']
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

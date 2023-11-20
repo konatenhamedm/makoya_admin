@@ -168,7 +168,7 @@ class WorkflowServicePrestataireController extends BaseController
     #[Route('/ads/{id}/edit', name: 'app_workflowdemande_workflow_service_prestataire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, WorkflowServicePrestataire $workflowServicePrestataire, WorkflowServicePrestataireRepository $workflowServicePrestataireRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(WorkflowServicePrestataireType::class, $workflowServicePrestataire, [
             'method' => 'POST',
             'type' => 'allData',
@@ -176,6 +176,7 @@ class WorkflowServicePrestataireController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_workflowdemande_workflow_service_prestataire_edit', [
                 'id' =>  $workflowServicePrestataire->getId()
             ])

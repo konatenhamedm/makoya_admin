@@ -14,16 +14,15 @@ class SousPrefectureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code')
+            /* ->add('code') */
             ->add('nom')
             ->add('departement', EntityType::class, [
-                'placeholder'=>'----',
+                'placeholder' => '----',
                 'class' => Departement::class,
                 'choice_label' => 'nom',
                 'label' => 'Département',
                 'attr' => ['class' => 'has-select2 form-select']
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

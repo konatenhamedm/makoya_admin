@@ -21,6 +21,21 @@ use App\Controller\BaseController;
 #[Route('/ads/parametre/decoupage/quartier')]
 class QuartierController extends BaseController
 {
+    private function numero()
+    {
+
+        $query = $this->em->createQueryBuilder();
+        $query->select("count(a.id)")
+            ->from(Quartier::class, 'a');
+
+        $nb = $query->getQuery()->getSingleScalarResult();
+        if ($nb == 0) {
+            $nb = 1;
+        } else {
+            $nb = $nb + 1;
+        }
+        return (date("y") . 'QTR' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+    }
 
     const INDEX_ROOT_NAME = 'app_parametre_decoupage_quartier_index';
 
@@ -165,7 +180,7 @@ class QuartierController extends BaseController
 
 
             if ($form->isValid()) {
-
+                $quartier->setCode($this->numero());
                 $quartierRepository->save($quartier, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';

@@ -30,7 +30,7 @@ class CommuneController extends BaseController
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
 
         $table = $dataTableFactory->create()
-        ->add('code', TextColumn::class, ['label' => 'Code'])
+            ->add('code', TextColumn::class, ['label' => 'Code'])
             ->add('nom', TextColumn::class, ['label' => 'Nom'])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => Commune::class,
@@ -144,6 +144,23 @@ class CommuneController extends BaseController
         ]);
     }
 
+
+    private function numero()
+    {
+
+        $query = $this->em->createQueryBuilder();
+        $query->select("count(a.id)")
+            ->from(Commune::class, 'a');
+
+        $nb = $query->getQuery()->getSingleScalarResult();
+        if ($nb == 0) {
+            $nb = 1;
+        } else {
+            $nb = $nb + 1;
+        }
+        return (date("y") . 'COM' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+    }
+
     #[Route('/ads/new', name: 'app_parametre_decoupage_commune_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CommuneRepository $communeRepository, FormError $formError): Response
     {
@@ -165,7 +182,7 @@ class CommuneController extends BaseController
 
 
             if ($form->isValid()) {
-
+                $commune->setCode($this->numero());
                 $communeRepository->save($commune, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';

@@ -143,7 +143,21 @@ class DepartementController extends BaseController
             'permition' => $permission
         ]);
     }
+    private function numero()
+    {
 
+        $query = $this->em->createQueryBuilder();
+        $query->select("count(a.id)")
+            ->from(Departement::class, 'a');
+
+        $nb = $query->getQuery()->getSingleScalarResult();
+        if ($nb == 0) {
+            $nb = 1;
+        } else {
+            $nb = $nb + 1;
+        }
+        return (date("y") . 'DEPT' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+    }
     #[Route('/ads/new', name: 'app_parametre_decoupage_departement_new', methods: ['GET', 'POST'])]
     public function new(Request $request, DepartementRepository $departementRepository, FormError $formError): Response
     {
@@ -165,7 +179,7 @@ class DepartementController extends BaseController
 
 
             if ($form->isValid()) {
-
+                $departement->setCode($this->numero());
                 $departementRepository->save($departement, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';

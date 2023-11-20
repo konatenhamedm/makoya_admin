@@ -14,15 +14,14 @@ class SousCategorieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code')
+            /*  ->add('code') */
             ->add('libelle')
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'libelle',
                 'label' => 'Catégroie',
                 'attr' => ['class' => 'has-select2 form-select']
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

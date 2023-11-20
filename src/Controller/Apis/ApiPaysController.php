@@ -40,7 +40,7 @@ class ApiPaysController extends ApiInterface
             $payss = $paysRepository->findAll();
             $response = $this->response($payss);
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -67,7 +67,7 @@ class ApiPaysController extends ApiInterface
                 $response = $this->response($pays);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -105,7 +105,7 @@ class ApiPaysController extends ApiInterface
                 $response = $this->response(null);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -143,7 +143,7 @@ class ApiPaysController extends ApiInterface
                 $response = $this->response(null);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
         return $response;
@@ -175,7 +175,7 @@ class ApiPaysController extends ApiInterface
                 $response = $this->response(null);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
         return $response;
@@ -203,7 +203,7 @@ class ApiPaysController extends ApiInterface
                 $response = $this->response(null);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -232,7 +232,7 @@ class ApiPaysController extends ApiInterface
 
             $response = $this->response(null);
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
         return $response;

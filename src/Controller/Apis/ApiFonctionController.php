@@ -43,7 +43,7 @@ class ApiFonctionController extends ApiInterface
             $response = $this->response($fonctions);
 
         }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -70,7 +70,7 @@ class ApiFonctionController extends ApiInterface
                 $response = $this->response($fonction);
             }
         }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -109,7 +109,7 @@ class ApiFonctionController extends ApiInterface
 
                 }
             }catch (\Exception $exception){
-                $this->setMessage($exception.toString());
+                $this->setMessage($exception->getMessage());
                 $response = $this->response(null);
             }
 
@@ -150,7 +150,7 @@ class ApiFonctionController extends ApiInterface
 
 
        }catch (\Exception $exception){
-           $this->setMessage($exception.toString());
+           $this->setMessage($exception->getMessage());
            $response = $this->response(null);
        }
         return $response;
@@ -183,7 +183,7 @@ class ApiFonctionController extends ApiInterface
 
             }
         }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
         return $response;
@@ -209,7 +209,7 @@ class ApiFonctionController extends ApiInterface
                 $response = $this->response(null);
             }
         }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -236,7 +236,7 @@ class ApiFonctionController extends ApiInterface
             
             $response = $this->response(true);
         }catch (\Exception $exception){
-            $this->setMessage($exception.toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
         return $response;

@@ -138,6 +138,11 @@ License: For each use you must have a valid license purchased only from above li
         <script>
             var asset_base_path = "{{ asset('assets') }}";
             var current_user_id = "{{ app.user.id|default(0) }}";
+
+			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
         </script>
 		<!--End::Google Tag Manager -->
 	</head>
@@ -173,7 +178,13 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Mobile logo-->
 							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
 								<a href="index-2.html" class="d-lg-none">
-									<img alt="Logo" src="assets/media/logos/demo13-small.svg" class="h-25px" />
+									   
+                {% if menu.findParametre | length > 0 %}
+            <img alt="Logo" width="160" height="42" src="{{ asset('uploads/' ~ menu.findParametre.logo.path ~'/'~ menu.findParametre.logo.alt) }}" class="h-25px"/>
+            {% else %}
+                <img alt="Logo" src="{{ asset('assets/media/logos/logo_tt.png') }}" class="h-25px"  />
+            {% endif %}
+								
 								</a>
 							</div>
 							<!--end::Mobile logo-->
@@ -1356,6 +1367,7 @@ License: For each use you must have a valid license purchased only from above li
 						<!--end::Toolbar-->
 						<!--begin::Post-->
 						<div class="post d-flex flex-column-fluid" id="kt_post">
+						 {% block stats %}{% endblock %}
 							<!--begin::Container-->
 							<div id="kt_content_container" class="container-xxl">
 								

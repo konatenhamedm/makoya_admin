@@ -122,6 +122,21 @@ class PubliciteCategorieController extends BaseController
                         return true;
                     }
                 }),
+                'image' => new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return true;
+                    } elseif ($permission == 'RD') {
+                        return true;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return true;
+                    }
+                }),
 
             ];
 
@@ -148,6 +163,9 @@ class PubliciteCategorieController extends BaseController
                                 ],
                                 'show' => [
                                     'url' => $this->generateUrl('app_publicite_publicite_categorie_show', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
+                                ],
+                                'image' => [
+                                    'url' => $this->generateUrl('app_publicite_publicite_categorie_images', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['show']
                                 ],
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
@@ -178,9 +196,16 @@ class PubliciteCategorieController extends BaseController
     #[Route('/pub/new', name: 'app_publicite_publicite_categorie_new', methods: ['GET', 'POST'])]
     public function news(Request $request, PubliciteCategorieRepository $publiciteCategorieRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $publiciteCategorie = new PubliciteCategorie();
         $form = $this->createForm(PubliciteCategorieType::class, $publiciteCategorie, [
             'method' => 'POST',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_categorie_new')
         ]);
         $form->handleRequest($request);
@@ -239,9 +264,15 @@ class PubliciteCategorieController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PubliciteCategorie $publiciteCategorie, PubliciteCategorieRepository $publiciteCategorieRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PubliciteCategorieType::class, $publiciteCategorie, [
             'method' => 'POST',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_categorie_edit', [
                 'code' => $publiciteCategorie->getCode()
             ])
@@ -287,6 +318,68 @@ class PubliciteCategorieController extends BaseController
         }
 
         return $this->renderForm('publicite/publicite_categorie/edit.html.twig', [
+            'publicite_categorie' => $publiciteCategorie,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{code}/images', name: 'app_publicite_publicite_categorie_images', methods: ['GET', 'POST'])]
+    public function ajouterImage(Request $request, PubliciteCategorie $publiciteCategorie, PubliciteCategorieRepository $publiciteCategorieRepository, FormError $formError): Response
+    {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
+        $form = $this->createForm(PubliciteCategorieType::class, $publiciteCategorie, [
+            'method' => 'POST',
+            'type' => 'images',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
+            'action' => $this->generateUrl('app_publicite_publicite_categorie_edit', [
+                'code' => $publiciteCategorie->getCode()
+            ])
+        ]);
+
+        $data = null;
+        $statutCode = Response::HTTP_OK;
+
+        $isAjax = $request->isXmlHttpRequest();
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $response = [];
+            $redirect = $this->generateUrl('app_publicite_publicite_categorie_index');
+
+
+            if ($form->isValid()) {
+
+                $publiciteCategorieRepository->save($publiciteCategorie, true);
+                $data = true;
+                $message = 'Opération effectuée avec succès';
+                $statut = 1;
+                $this->addFlash('success', $message);
+            } else {
+                $message = $formError->all($form);
+                $statut = 0;
+                $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+                if (!$isAjax) {
+                    $this->addFlash('warning', $message);
+                }
+            }
+
+
+            if ($isAjax) {
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
+            } else {
+                if ($statut == 1) {
+                    return $this->redirect($redirect, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return $this->renderForm('publicite/image.html.twig', [
             'publicite_categorie' => $publiciteCategorie,
             'form' => $form,
         ]);

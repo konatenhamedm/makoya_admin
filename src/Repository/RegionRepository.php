@@ -39,43 +39,60 @@ class RegionRepository extends ServiceEntityRepository
         }
     }
 
-    public function getNbrePrestataireByRegions($val){
-    return $this->createQueryBuilder('r')
-            ->select('count(u.id) nbre')
-            ->innerJoin('r.departements','d')
-            ->innerJoin('d.sousPrefectures','s')
-            ->innerJoin('s.communes','c')
-            ->innerJoin('c.quartiers','q')
-            ->innerJoin('q.userFronts','u')
+    public function getNbrePrestataireUserSimpleByRegions($val)
+    {
+        return $this->createQueryBuilder('r')
+            ->select(' u.reference,u.email,u.username')
+            ->innerJoin('r.departements', 'd')
+            ->innerJoin('d.sousPrefectures', 's')
+            ->innerJoin('s.communes', 'c')
+            ->innerJoin('c.quartiers', 'q')
+            ->innerJoin('q.userFronts', 'u')
             ->andWhere('r.code = :val')
             ->setParameter('val', $val)
+            /* ->groupBy('u.reference') */
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-//    /**
-//     * @return Region[] Returns an array of Region objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getInfos($val)
+    {
+        return $this->createQueryBuilder('r')
+            ->select(' u.reference,u.email,u.username,r.code')
+            ->innerJoin('r.departements', 'd')
+            ->innerJoin('d.sousPrefectures', 's')
+            ->innerJoin('s.communes', 'c')
+            ->innerJoin('c.quartiers', 'q')
+            ->innerJoin('q.userFronts', 'u')
+            ->andWhere('r.code = :val')
+            ->setParameter('val', $val)
+            /* ->groupBy('u.reference') */
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Region
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Region[] Returns an array of Region objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('r.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Region
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

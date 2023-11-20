@@ -127,16 +127,16 @@ class PublicitePrestataireController extends BaseController
                             'target' => '#exampleModalSizeLg2',
 
                             'actions' => [
-                                'edit' => [
+                                /* 'edit' => [
                                     'url' => $this->generateUrl('app_publicite_publicite_prestataire_edit', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-default'], 'render' => $renders['edit']
-                                ],
+                                ], */
                                 'show' => [
                                     'url' => $this->generateUrl('app_publicite_publicite_prestataire_show', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ],
-                                'delete' => [
+                                /* 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
                                     'url' => $this->generateUrl('app_publicite_publicite_prestataire_delete', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-main'], 'render' => $renders['delete']
-                                ]
+                                ] */
                             ]
 
                         ];

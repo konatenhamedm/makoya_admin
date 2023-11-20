@@ -1,28 +1,27 @@
-{% set image = image %}
 
-{# {{ dump(image)}} #}
-
-{% set data = data %}
-
+{# {% macro colonne(colonne) %} #}
+    <div class="col-4 item">
+				  
+		{#  {{ form_row(form.image) }} 
+ #}
 <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/assets/media/svg/avatars/blank.svg)">
 <!--begin::Image preview wrapper-->
-{#  {% if data.children.image.vars.data is not null %}
-     {{ dump(colonne.children.image.vars.data.size) }}
-    {% endif %} #}
- {% if  data.children.image.vars.data is not null %}
 
-<div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('uploads/'~ data.children.image.vars.data.path ~'/'~ data.children.image.vars.data.alt   )}})"></div>
-
-{% else %} 
 <div class="image-input-wrapper w-125px h-125px" style="background-image: url(/assets/media/avatars/300-1.jpg)"></div>
- {% endif %} 
+
+
+
+
 <!--end::Image preview wrapper-->
 <!--begin::Edit button-->
 <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Change avatar">
     <i class="bi bi-pencil-fill fs-7"></i>
     <!--begin::Inputs-->
- 
-{{ form_widget(image,{attr:{'type':'file',"name":"avatar"}}) }}
+   {# {{ dump(form.image)}}   #}
+  {{ form_row(form.image,{attr:{'type':'file',"name":"avatar"}}) }} 
+{# {{ form_row(form.children.image.vars.data,{attr:{'type':'file',"name":"avatar"}}) }}
+ #}
+    
     
    {#  <input type="file" name="avatar" accept=".png, .jpg, .jpeg" /> #}
     <input type="hidden" name="avatar_remove" />
@@ -40,3 +39,25 @@
 </span>
 <!--end::Remove button-->
 </div>
+        <div class="form-group">
+         <button type="button" class="btn btn-danger btn-remove">
+         Delete
+         </button>
+        </div>
+       
+	</div>
+
+{# {% endmacro  %} #}
+
+{# 
+{% macro prototype_ligne_colonne(form) %}
+    <div class="list-colonne"  data-prototype="{{ _self.colonne(form.publiciteImages.vars.prototype)|e }}"></div>
+    <button type="button" data-protoname="__name__" class="btn btn-default add_line btn-xs" id="add_ligne"  data-protoclass=".list-colonne" data-container=".column-container">
+        <i class="fa fa-plus"></i> Ajouter une image
+    </button>
+    <div class="column-container proto-container" data-childclass="">
+        {% for item in form.publiciteImages %}
+            {{ _self.colonne(item|e) }}
+        {% endfor %}
+    </div> #}
+{# {% endmacro %} #}

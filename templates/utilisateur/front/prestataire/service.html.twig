@@ -13,7 +13,7 @@
         </div>
     </div>
     {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
-    <div class="modal-body card-principal">
+    <div class="modal-body card-principal content-doc">
 		{{ include('_includes/ajax/response.html.twig') }}
 	
 			{{ prototype_ligne_colonne(form) }}
@@ -30,14 +30,19 @@
 {% endblock %}
 {% block java %}
     <script>
-     
+       $(function () {
+           
+            init_select2('select', null, '#exampleModalSizeLg2');
+
+        });
            $('.categorie').on('change',function (e) {
                 
-             $res = $(this).closest('.row');
+            const $this = $(this)
+             $res = $this.closest('.row-colonne');
 
              $id = $(this).val();
           $.ajax({
-            url:        '/utilisateur/front/prestataire/liste/souscategorie',
+            url:        '/ads/utilisateur/front/prestataire/liste/souscategorie',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -58,7 +63,7 @@
         });
 
             $.ajax({
-            url:        '/utilisateur/front/prestataire/liste/service',
+            url:        '/ads/utilisateur/front/prestataire/liste/service',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -85,7 +90,7 @@
 
             
 
-          init_select2('select',null,'#exampleModalSizeLg2');
+          init_select2('select', null, '.content-doc');
 			//init_select2('select');
             KTImageInput.createInstances();
             var imageInputElement = document.querySelector("#kt_image_input_control");
@@ -120,12 +125,12 @@
             var imageInput = KTImageInput.getInstance(imageInputElement);
 
             $('.categorie').on('change',function (e) {
-                
-             $res = $container;
+               const $this = $(this)
+             $res = $this.closest('.row-colonne');
 
              $id = $(this).val();
           $.ajax({
-            url:        '/utilisateur/front/prestataire/liste/souscategorie',
+            url:        '/ads/utilisateur/front/prestataire/liste/souscategorie',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -146,7 +151,7 @@
         });
 
             $.ajax({
-            url:        '/utilisateur/front/prestataire/liste/service',
+            url:        '/ads/utilisateur/front/prestataire/liste/service',
             type:       'get',
              async: false,
             data:     {id:$id},
@@ -199,7 +204,7 @@
                     .replace(new RegExp(name, 'g'), index));
 
 
-                init_select2($prototype.find('select'), null, '#exampleModalSizeSm2');
+                init_select2($prototype.find('select'), null, '#exampleModalSizeLg2');
 
 
                 // On ajoute au prototype un lien pour pouvoir supprimer la prestation

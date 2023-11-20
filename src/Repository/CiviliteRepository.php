@@ -30,6 +30,15 @@ class CiviliteRepository extends ServiceEntityRepository
         }
     }
 
+    public function getCivilites()
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('c.id,c.libelle')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function remove(Civilite $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -39,38 +48,37 @@ class CiviliteRepository extends ServiceEntityRepository
         }
     }
 
-        public function findAllByListId($value): array
+    public function findAllByListId($value): array
     {
         return $this->createQueryBuilder('c')
             ->andwhere('c.id IN (:ids)')
             ->setParameter('ids', $value)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-//    /**
-//     * @return Civilite[] Returns an array of Civilite objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Civilite[] Returns an array of Civilite objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Civilite
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Civilite
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

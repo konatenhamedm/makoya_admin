@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Service;
 
+use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
@@ -12,21 +14,21 @@ class FileUploader
         $this->setTargetDirectory($targetDirectory);
     }
 
-    public function upload(UploadedFile $file, $prefix = null, &$path = null, $newFileName = false, $replacePath = false)
+    public function upload(mixed $file, string $prefix = null, &$path = null, $newFileName = false, $replacePath = false)
     {
+        if (!is_a($file, UploadedFile::class)) {
+            throw new Exception("Le fichier n'est pas une insatnce de UploadedFile !", 1);
+        }
+
         if (!$replacePath) {
             if ($prefix == 'private') {
-                $path = dirname($this->targetDirectory).'/data';
+                $path = dirname($this->targetDirectory) . '/data';
             } else {
-                $path = $this->targetDirectory.'/public/uploads/nas';
+                $path = $this->targetDirectory . '/public/uploads/nas';
             }
         }
 
-       
-
-
         $this->setTargetDirectory($path);
-
         $extension = $file->guessExtension();
 
         if (!$extension) {
@@ -35,12 +37,12 @@ class FileUploader
 
         $realFileName = str_slug(basename($file->getClientOriginalName(), ".{$extension}"), '_');
 
-       
 
-        $fileName = $newFileName === false ? md5(uniqid()) : (substr($newFileName.$realFileName, 0, 200));
-        $fileName .= '.'.$extension;
 
-    
+        $fileName = $newFileName === false ? md5(uniqid()) : (substr($newFileName . $realFileName, 0, 200));
+        $fileName .= '.' . $extension;
+
+
         $file->move($this->getTargetDirectory(), $fileName);
 
 

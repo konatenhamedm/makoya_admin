@@ -42,7 +42,7 @@ class ApiPrestataireController extends ApiInterface
             $prestataires = $prestataireRepository->findAll();
             $response = $this->response($prestataires);
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 
@@ -69,7 +69,7 @@ class ApiPrestataireController extends ApiInterface
                 $response = $this->response($prestataire);
             }
         } catch (\Exception $exception) {
-            $this->setMessage($exception . toString());
+            $this->setMessage($exception->getMessage());
             $response = $this->response(null);
         }
 

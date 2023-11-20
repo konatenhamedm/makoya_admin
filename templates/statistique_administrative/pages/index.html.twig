@@ -283,6 +283,80 @@
         
         requestInt();
     })
+
+    $(document).ready(function(){
+
+         $('#anneeSelect, #partenaireSelect, #intituleSelect').change(function(){
+            $('#infos').html('<p class="text-center">Veuillez selectionner une région sur la carte</p>');
+            requestInt();
+        });
+
+        function refreshMap() {
+            $('.land').click(function(){
+                $this = $(this);
+                $('#infos').html('<h3 class="text-center">'+$this.attr('title')+'</h3>')
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: baseUrl+"getInfosRegion",
+                    data: {
+                        region: $this.attr('id'),
+                        annee: $('#anneeSelect').val(),
+                        partenaire: $('#partenaireSelect').val(),
+                        intitule: $('#intituleSelect').val(),
+                    },
+                    success: function(msg) {
+                        districts = msg.districts;
+                        result = '<div class="pl-2">';
+                        districts.forEach(district => {
+                            partenaires = district.partenaires;
+                            resPartenaire = '';
+                            partenaires.forEach(partenaire => {
+                                interventions = partenaire.interventions;
+                                resIntervention = '';
+                                interventions.forEach(intervention => {
+                                    intervention_date = new Date(intervention.date_intervention)
+                                    resIntervention += `
+                                        <div class="container">
+                                            <li>${intervention.title} : ${intervention_date.getDate()}/${intervention_date.getMonth()}/${intervention_date.getFullYear()}</li>
+                                        </div>
+                                    `;
+                                });
+                                resPartenaire = `
+                                    <div class="container-fluid p-0">
+                                        <a class="unstyledLink rounded border p-0 px-1 mr-1 text-center collapsed" data-toggle="collapse" href="#collapsePartenaire${partenaire.reference}" role="button" aria-expanded="false" aria-controls="collapsePartenaire${partenaire.reference}">+</a>
+                                        Partenaire ${partenaire.title} : ${partenaire.interventions.length} interventions
+                                    </div>
+                                    <div class="container">
+                                        <div class="collapse" id="collapsePartenaire${partenaire.reference}">
+                                            ${resIntervention}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+
+                            resDistrict = `
+                                <div class="container-fluid p-0">
+                                    <a class="unstyledLink rounded border p-0 px-1 mr-1 text-center collapsed" data-toggle="collapse" href="#collapseDistrict${district.reference}" role="button" aria-expanded="false" aria-controls="collapseDistrict${district.reference}">+</a>
+                                    District ${district.title} : ${district.partenaires.length} partenaires
+                                </div>
+                                <div class="container">
+                                    <div class="collapse" id="collapseDistrict${district.reference}">
+                                        ${resPartenaire}
+                                    </div>
+                                </div>
+                            `;
+                            result += resDistrict
+                        });
+                        result += '</div>';
+                        // $this.attr('data-bs-content', "<ul><li>District Aboisso : 38</li><li>District Adiaké : 18</li><li>District Grand-Bassam : 11</li></ul><a href='zoomPage.html' class='vp'><i class='fa fa-search-plus'></i> Voir Plus</a>")
+                        $('#infos').append(result)
+                    }
+                });
+            });
+            requestInt();
+        }
+    })
    
    </script>
 {% endblock %}

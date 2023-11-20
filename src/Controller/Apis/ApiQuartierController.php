@@ -3,8 +3,9 @@
 namespace App\Controller\Apis;
 
 use App\Controller\ApiInterface;
-use App\Entity\Civilite;
+use App\Entity\Quartier;
 use App\Repository\CiviliteRepository;
+use App\Repository\QuartierRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,10 +17,10 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 
-#[Route('/api/civilite')]
-class ApiCiviliteController extends ApiInterface
+#[Route('/api/quartier')]
+class ApiQuartierController extends ApiInterface
 {
-    #[Route('/', name: 'api_civilite', methods: ['GET'])]
+    #[Route('/', name: 'api_quartier', methods: ['GET'])]
     /**
      * Affiche toutes les civiltes.
      * @OA\Response(
@@ -27,18 +28,18 @@ class ApiCiviliteController extends ApiInterface
      *     description="Returns the rewards of an user",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Civilite::class, groups={"full"}))
+     *        @OA\Items(ref=@Model(type=Quartier::class, groups={"full"}))
      *     )
      * )
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function getAll(CiviliteRepository $civiliteRepository): Response
+    public function getAll(QuartierRepository $quartierRepository): Response
     {
         try {
 
-            $civilites = $civiliteRepository->findAll();
-            $response = $this->response($civilites);
+            $quartiers = $quartierRepository->findAll();
+            $response = $this->response($quartiers);
         } catch (\Exception $exception) {
             $this->setMessage("");
             $response = $this->response(null);
@@ -49,22 +50,24 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/getOne/{id}', name: 'api_civilite_get_one', methods: ['GET'])]
+
+
+    #[Route('/getOne/{id}', name: 'api_quartier_get_one', methods: ['GET'])]
     /**
      * Affiche une civilte en offrant un identifiant.
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function getOne(?Civilite $civilite)
+    public function getOne(?Quartier $quartier)
     {
-        /*  $civilite = $civiliteRepository->find($id);*/
+        /*  $quartier = $quartierRepository->find($id);*/
         try {
-            if ($civilite) {
-                $response = $this->response($civilite);
+            if ($quartier) {
+                $response = $this->response($quartier);
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
-                $response = $this->response($civilite);
+                $response = $this->response($quartier);
             }
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -76,29 +79,29 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/create', name: 'api_civilite_create', methods: ['POST'])]
+    #[Route('/create', name: 'api_quartier_create', methods: ['POST'])]
     /**
-     * Permet de créer une civilite.
+     * Permet de créer une quartier.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function create(Request $request, CiviliteRepository $civiliteRepository)
+    public function create(Request $request, QuartierRepository $quartierRepository)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->findOneBy(array('code' => $data->code));
-            if ($civilite == null) {
-                $civilite = new Civilite();
-                $civilite->setCode($data->code);
-                $civilite->setLibelle($data->libelle);
+            $quartier = $quartierRepository->findOneBy(array('code' => $data->code));
+            if ($quartier == null) {
+                $quartier = new Quartier();
+                $quartier->setCode($data->code);
+                $quartier->setNom($data->libelle);
 
                 // On sauvegarde en base
-                $civiliteRepository->add($civilite, true);
+                $quartierRepository->add($quartier, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($quartier);
             } else {
                 $this->setMessage("cette ressource existe deja en base");
                 $this->setStatusCode(300);
@@ -114,29 +117,29 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/update/{id}', name: 'api_civilite_update', methods: ['POST'])]
+    #[Route('/update/{id}', name: 'api_quartier_update', methods: ['POST'])]
     /**
-     * Permet de mettre à jour une civilite.
+     * Permet de mettre à jour une quartier.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function update(Request $request, CiviliteRepository $civiliteRepository, $id)
+    public function update(Request $request, QuartierRepository $quartierRepository, $id)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->find($id);
-            if ($civilite != null) {
+            $quartier = $quartierRepository->find($id);
+            if ($quartier != null) {
 
-                $civilite->setCode($data->code);
-                $civilite->setLibelle($data->libelle);
+                $quartier->setCode($data->code);
+                $quartier->setNom($data->libelle);
 
                 // On sauvegarde en base
-                $civiliteRepository->add($civilite, true);
+                $quartierRepository->add($quartier, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($quartier);
             } else {
                 $this->setMessage("cette ressource est inexsitante");
                 $this->setStatusCode(300);
@@ -150,25 +153,25 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/delete/{id}', name: 'api_civilite_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'api_quartier_delete', methods: ['POST'])]
     /**
-     * permet de supprimer une civilite en offrant un identifiant.
+     * permet de supprimer une quartier en offrant un identifiant.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function delete(Request $request, CiviliteRepository $civiliteRepository, $id)
+    public function delete(Request $request, QuartierRepository $quartierRepository, $id)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $civilite = $civiliteRepository->find($id);
-            if ($civilite != null) {
+            $quartier = $quartierRepository->find($id);
+            if ($quartier != null) {
 
-                $civiliteRepository->remove($civilite, true);
+                $quartierRepository->remove($quartier, true);
 
                 // On retourne la confirmation
-                $response = $this->response($civilite);
+                $response = $this->response($quartier);
             } else {
                 $this->setMessage("cette ressource est inexistante");
                 $this->setStatusCode(300);
@@ -182,21 +185,21 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/active/{id}', name: 'api_civilite_active', methods: ['GET'])]
+    #[Route('/active/{id}', name: 'api_quartier_active', methods: ['GET'])]
     /**
-     * Permet d'activer une civilite en offrant un identifiant.
-     * @OA\Tag(name="Civilite")
+     * Permet d'activer une quartier en offrant un identifiant.
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function active(?Civilite $civilite, CiviliteRepository $civiliteRepository)
+    public function active(?Quartier $quartier, QuartierRepository $quartierRepository)
     {
-        /*  $civilite = $civiliteRepository->find($id);*/
+        /*  $quartier = $quartierRepository->find($id);*/
         try {
-            if ($civilite) {
+            if ($quartier) {
 
-                //$civilite->setCode("555"); //TO DO nous ajouter un champs active
-                $civiliteRepository->add($civilite, true);
-                $response = $this->response($civilite);
+                //$quartier->setCode("555"); //TO DO nous ajouter un champs active
+                $quartierRepository->add($quartier, true);
+                $response = $this->response($quartier);
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
@@ -212,22 +215,22 @@ class ApiCiviliteController extends ApiInterface
     }
 
 
-    #[Route('/active/multiple', name: 'api_civilite_active_multiple', methods: ['POST'])]
+    #[Route('/active/multiple', name: 'api_quartier_active_multiple', methods: ['POST'])]
     /**
      * Permet de faire une desactivation multiple.
      *
-     * @OA\Tag(name="Civilite")
+     * @OA\Tag(name="Quartier")
      * @Security(name="Bearer")
      */
-    public function multipleActive(Request $request, CiviliteRepository $civiliteRepository)
+    public function multipleActive(Request $request, QuartierRepository $quartierRepository)
     {
         try {
             $data = json_decode($request->getContent());
 
-            $listeCivilites = $civiliteRepository->findAllByListId($data->ids);
-            foreach ($listeCivilites as $listeCivilite) {
-                //$listeCivilite->setCode("555");  //TO DO nous ajouter un champs active
-                $civiliteRepository->add($listeCivilite, true);
+            $listeQuartiers = $quartierRepository->findAllByListId($data->ids);
+            foreach ($listeQuartiers as $listeQuartier) {
+                //$listeQuartier->setCode("555");  //TO DO nous ajouter un champs active
+                $quartierRepository->add($listeQuartier, true);
             }
 
             $response = $this->response(null);

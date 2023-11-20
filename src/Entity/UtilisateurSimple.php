@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UtilisateurSimpleRepository::class)]
-#[ORM\Table(name:'user_front_utilisateur_simple')]
+#[ORM\Table(name: 'user_front_utilisateur_simple')]
 class UtilisateurSimple extends UserFront
 {
     #[ORM\Id]
@@ -28,10 +28,10 @@ class UtilisateurSimple extends UserFront
     #[ORM\ManyToOne(inversedBy: 'utilisateurSimples')]
     private ?Civilite $genre = null;
 
-    
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $photo= null;
+    private ?Fichier $photo = null;
 
     #[ORM\OneToMany(mappedBy: 'utilisateurSimple', targetEntity: NotificationUtilisateurSimple::class)]
     private Collection $notificationUtilisateurSimples;
@@ -53,7 +53,10 @@ class UtilisateurSimple extends UserFront
     {
         return $this->id;
     }
-
+    public function getNomComplet(): ?string
+    {
+        return $this->getNom() . ' ' . $this->getPrenoms();
+    }
     public function getNom(): ?string
     {
         return $this->nom;
@@ -102,7 +105,7 @@ class UtilisateurSimple extends UserFront
         return $this;
     }
 
-    public function getPhoto(): ?Fichier 
+    public function getPhoto(): ?Fichier
     {
         return $this->photo;
     }

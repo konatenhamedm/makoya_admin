@@ -110,6 +110,9 @@
             "./config/packages/datatables.yaml"
         ]
     },
+    "oselya/ip-geolocation-bundle": {
+        "version": "0.0.3"
+    },
     "phpunit/phpunit": {
         "version": "9.5",
         "recipe": {

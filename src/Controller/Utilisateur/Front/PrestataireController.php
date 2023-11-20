@@ -232,6 +232,7 @@ class PrestataireController extends BaseController
     #[Route('/new', name: 'app_utilisateur_front_prestataire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PrestataireRepository $prestataireRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $prestataire = new Prestataire();
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
@@ -241,6 +242,7 @@ class PrestataireController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_prestataire_new')
         ]);
         $form->handleRequest($request);
@@ -301,7 +303,7 @@ class PrestataireController extends BaseController
     #[Route('/{reference}/edit', name: 'app_utilisateur_front_prestataire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Prestataire $prestataire, PrestataireRepository $prestataireRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
             'type' => 'prestataire',
@@ -310,6 +312,7 @@ class PrestataireController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_prestataire_edit', [
                 'reference' =>  $prestataire->getReference()
             ])
@@ -364,7 +367,7 @@ class PrestataireController extends BaseController
     #[Route('/{reference}/change/password', name: 'app_utilisateur_front_prestataire_change_password', methods: ['GET', 'POST'])]
     public function changePassword(Request $request, Prestataire $prestataire, PrestataireRepository $prestataireRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
             'type' => 'prestataire',
@@ -373,6 +376,7 @@ class PrestataireController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_prestataire_change_password', [
                 'reference' =>  $prestataire->getReference()
             ])
@@ -429,7 +433,7 @@ class PrestataireController extends BaseController
     #[Route('/{reference}/edit/service', name: 'app_utilisateur_front_prestataire_edit_service', methods: ['GET', 'POST'])]
     public function editService(Request $request, Prestataire $prestataire, PrestataireRepository $prestataireRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PrestataireType::class, $prestataire, [
             'method' => 'POST',
             'type' => 'service',
@@ -438,6 +442,7 @@ class PrestataireController extends BaseController
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_utilisateur_front_prestataire_edit_service', [
                 'reference' =>  $prestataire->getReference()
             ])

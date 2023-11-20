@@ -3,7 +3,7 @@ api_login_check:
     methods: ['POST']
 
 api_api_login_check:
-    path: /api/api/login_check
+    path: /api/auth/login_check
     methods: ['POST']
     
 controllers:

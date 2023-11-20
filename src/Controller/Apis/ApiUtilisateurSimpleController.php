@@ -21,6 +21,8 @@ use function Symfony\Component\VarDumper\Caster\__toString;
 #[Route('/api/utilisateur/simple')]
 class ApiUtilisateurSimpleController extends ApiInterface
 {
+
+
     #[Route('/', name: 'api_utilisateurSimple', methods: ['GET'])]
     /**
      * Affiche toutes les utilisateurs front.
@@ -37,12 +39,11 @@ class ApiUtilisateurSimpleController extends ApiInterface
      */
     public function getAll(UtilisateurSimpleRepository $utilisateurSimpleRepository): Response
     {
-        try{
+        try {
 
             $utilisateurSimples = $utilisateurSimpleRepository->findAll();
             $response = $this->response($utilisateurSimples);
-
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -60,16 +61,16 @@ class ApiUtilisateurSimpleController extends ApiInterface
      */
     public function getOne(?UtilisateurSimple $utilisateurSimple)
     {
-     /*  $utilisateurSimple= $utilisateurSimpleRepository->find($id);*/
-        try{
-            if($utilisateurSimple){
+        /*  $utilisateurSimple= $utilisateurSimpleRepository->find($id);*/
+        try {
+            if ($utilisateurSimple) {
                 $response = $this->response($utilisateurSimple);
-            }else{
+            } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
                 $response = $this->response($utilisateurSimple);
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -86,57 +87,55 @@ class ApiUtilisateurSimpleController extends ApiInterface
      * @OA\Tag(name="UtilisateurSimple")
      * @Security(name="Bearer")
      */
-    public function create(Request $request,UtilisateurSimpleRepository $utilisateurSimpleRepository,QuartierRepository $quartierRepository)
+    public function create(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository, QuartierRepository $quartierRepository)
     {
-            try{
-                $data = json_decode($request->getContent());
-//dd($data);
-                $utilisateurSimple= $utilisateurSimpleRepository->findOneBy(array('username'=>$data->username));
+        try {
+            $data = json_decode($request->getContent());
+            //dd($data);
+            $utilisateurSimple = $utilisateurSimpleRepository->findOneBy(array('username' => $data->username));
 
-                if($utilisateurSimple == null){
+            if ($utilisateurSimple == null) {
 
-                    if(  empty($request->get('contact')) ||
-                        empty($request->get('prenoms')) ||
-                        empty($request->get('email')) ||
-                        empty($request->get('username')) ||
-                        empty($request->get('quartier')) ||
-                        empty($request->files->get('nom')) ||
-                        empty($request->get('password')))
-                    {
-                        $this->setMessage("Il existe certains champs vides !!!");
-                        $response = $this->response(null);
-                    }else{
-                        $utilisateurSimple= new UtilisateurSimple();
-                        $utilisateurSimple->setContact($data->contact);
-                        $utilisateurSimple->setNom($data->nom);
-                        $utilisateurSimple->setEmail($data->email);
-                        $utilisateurSimple->setQuartier($quartierRepository->find($request->get('quartier')));
-                        $utilisateurSimple->setPrenoms($data->prenoms);
-                        $utilisateurSimple->setUsername($data->username);
-                        $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $data->password));
-
-                        // On sauvegarde en base
-                        $utilisateurSimpleRepository->save($utilisateurSimple,true);
-
-                        // On retourne la confirmation
-                        $response = $this->response($utilisateurSimple);
-                    }
-
-
-                }else{
-                    $this->setMessage("cette ressource existe deja en base");
-                    $this->setStatusCode(300);
+                if (
+                    empty($request->get('contact')) ||
+                    empty($request->get('prenoms')) ||
+                    empty($request->get('email')) ||
+                    empty($request->get('username')) ||
+                    empty($request->get('quartier')) ||
+                    empty($request->files->get('nom')) ||
+                    empty($request->get('password'))
+                ) {
+                    $this->setMessage("Il existe certains champs vides !!!");
                     $response = $this->response(null);
+                } else {
+                    $utilisateurSimple = new UtilisateurSimple();
+                    $utilisateurSimple->setContact($data->contact);
+                    $utilisateurSimple->setNom($data->nom);
+                    $utilisateurSimple->setEmail($data->email);
+                    $utilisateurSimple->setQuartier($quartierRepository->find($request->get('quartier')));
+                    $utilisateurSimple->setPrenoms($data->prenoms);
+                    $utilisateurSimple->setUsername($data->username);
+                    $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $data->password));
 
+                    // On sauvegarde en base
+                    $utilisateurSimpleRepository->save($utilisateurSimple, true);
+
+                    // On retourne la confirmation
+                    $response = $this->response($utilisateurSimple);
                 }
-            }catch (\Exception $exception){
-                $this->setMessage($exception);
+            } else {
+                $this->setMessage("cette ressource existe deja en base");
+                $this->setStatusCode(300);
                 $response = $this->response(null);
             }
+        } catch (\Exception $exception) {
+            $this->setMessage($exception);
+            $response = $this->response(null);
+        }
 
 
         return $response;
-        }
+    }
 
 
     #[Route('/update/{id}', name: 'api_utilisateurSimple_update', methods: ['POST'])]
@@ -146,51 +145,46 @@ class ApiUtilisateurSimpleController extends ApiInterface
      * @OA\Tag(name="UtilisateurSimple")
      * @Security(name="Bearer")
      */
-    public function update(Request $request,UtilisateurSimpleRepository $utilisateurSimpleRepository,$id,QuartierRepository $quartierRepository)
+    public function update(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository, $id, QuartierRepository $quartierRepository)
     {
-       try{
-           $data = json_decode($request->getContent());
+        try {
+            $data = json_decode($request->getContent());
 
-           $utilisateurSimple= $utilisateurSimpleRepository->find($id);
-           if($utilisateurSimple!= null){
-               if(  empty($request->get('contact')) ||
-                   empty($request->get('prenoms')) ||
-                   empty($request->get('email')) ||
-                   empty($request->get('username')) ||
-                   empty($request->files->get('nom')) ||
-                   empty($request->get('password')))
-               {
-                   $this->setMessage("Il existe certains champs vides !!!");
-                   $response = $this->response(null);
+            $utilisateurSimple = $utilisateurSimpleRepository->find($id);
+            if ($utilisateurSimple != null) {
+                if (
+                    empty($request->get('contact')) ||
+                    empty($request->get('prenoms')) ||
+                    empty($request->get('email')) ||
+                    empty($request->get('username')) ||
+                    empty($request->files->get('nom')) ||
+                    empty($request->get('password'))
+                ) {
+                    $this->setMessage("Il existe certains champs vides !!!");
+                    $response = $this->response(null);
+                } else {
+                    $utilisateurSimple->setContact($data->contact);
+                    $utilisateurSimple->setEmail($data->email);
+                    $utilisateurSimple->setNom($data->nom);
+                    $utilisateurSimple->setPrenoms($data->prenoms);
+                    $utilisateurSimple->setQuartier($quartierRepository->find($request->get('quartier')));
+                    $utilisateurSimple->setUsername($data->username);
+                    $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $data->password));
+                    // On sauvegarde en base
+                    $utilisateurSimpleRepository->save($utilisateurSimple, true);
 
-               }else{
-                   $utilisateurSimple->setContact($data->contact);
-                   $utilisateurSimple->setEmail($data->email);
-                   $utilisateurSimple->setNom($data->nom);
-                   $utilisateurSimple->setPrenoms($data->prenoms);
-                   $utilisateurSimple->setQuartier($quartierRepository->find($request->get('quartier')));
-                   $utilisateurSimple->setUsername($data->username);
-                   $utilisateurSimple->setPassword($this->hasher->hashPassword($utilisateurSimple, $data->password));
-                   // On sauvegarde en base
-                   $utilisateurSimpleRepository->save($utilisateurSimple,true);
-
-                   // On retourne la confirmation
-                   $response = $this->response($utilisateurSimple);
-               }
-
-
-           }else{
-               $this->setMessage("cette ressource est inexsitante");
-               $this->setStatusCode(300);
-               $response = $this->response(null);
-
-           }
-
-
-       }catch (\Exception $exception){
-           $this->setMessage($exception);
-           $response = $this->response(null);
-       }
+                    // On retourne la confirmation
+                    $response = $this->response($utilisateurSimple);
+                }
+            } else {
+                $this->setMessage("cette ressource est inexsitante");
+                $this->setStatusCode(300);
+                $response = $this->response(null);
+            }
+        } catch (\Exception $exception) {
+            $this->setMessage($exception);
+            $response = $this->response(null);
+        }
         return $response;
     }
 
@@ -202,26 +196,24 @@ class ApiUtilisateurSimpleController extends ApiInterface
      * @OA\Tag(name="UtilisateurSimple")
      * @Security(name="Bearer")
      */
-    public function delete(Request $request,UtilisateurSimpleRepository $utilisateurSimpleRepository,$id)
+    public function delete(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository, $id)
     {
-        try{
+        try {
             $data = json_decode($request->getContent());
 
-            $utilisateurSimple= $utilisateurSimpleRepository->find($id);
-            if($utilisateurSimple!= null){
+            $utilisateurSimple = $utilisateurSimpleRepository->find($id);
+            if ($utilisateurSimple != null) {
 
-                $utilisateurSimpleRepository->remove($utilisateurSimple,true);
+                $utilisateurSimpleRepository->remove($utilisateurSimple, true);
 
                 // On retourne la confirmation
                 $response = $this->response($utilisateurSimple);
-
-            }else{
+            } else {
                 $this->setMessage("cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
-
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -235,21 +227,21 @@ class ApiUtilisateurSimpleController extends ApiInterface
      * @OA\Tag(name="UtilisateurSimple")
      * @Security(name="Bearer")
      */
-    public function active(?UtilisateurSimple $utilisateurSimple,UtilisateurSimpleRepository $utilisateurSimpleRepository)
+    public function active(?UtilisateurSimple $utilisateurSimple, UtilisateurSimpleRepository $utilisateurSimpleRepository)
     {
         /*  $utilisateurSimple= $utilisateurSimpleRepository->find($id);*/
-        try{
-            if($utilisateurSimple){
+        try {
+            if ($utilisateurSimple) {
 
                 //$utilisateurSimple->setCode("555"); //TO DO nous ajouter un champs active
-                $utilisateurSimpleRepository->save($utilisateurSimple,true);
+                $utilisateurSimpleRepository->save($utilisateurSimple, true);
                 $response = $this->response($utilisateurSimple);
-            }else{
+            } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }
@@ -266,18 +258,19 @@ class ApiUtilisateurSimpleController extends ApiInterface
      * @OA\Tag(name="UtilisateurSimple")
      * @Security(name="Bearer")
      */
-    public function multipleActive(Request $request,UtilisateurSimpleRepository $utilisateurSimpleRepository){
-        try{
+    public function multipleActive(Request $request, UtilisateurSimpleRepository $utilisateurSimpleRepository)
+    {
+        try {
             $data = json_decode($request->getContent());
 
             $listeUtilisateurSimples = $utilisateurSimpleRepository->findAllByListId($data->ids);
             foreach ($listeUtilisateurSimples as $listeUtilisateurSimple) {
                 //$listeUtilisateurSimple->setCode("555");  //TO DO nous ajouter un champs active
-                $utilisateurSimpleRepository->save($listeUtilisateurSimple,true);
+                $utilisateurSimpleRepository->save($listeUtilisateurSimple, true);
             }
-            
+
             $response = $this->response(null);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->setMessage($exception);
             $response = $this->response(null);
         }

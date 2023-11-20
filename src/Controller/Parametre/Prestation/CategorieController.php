@@ -164,12 +164,15 @@ class CategorieController extends BaseController
     public function new(Request $request, CategorieRepository $categorieRepository, FormError $formError): Response
     {
         $categorie = new Categorie();
+
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(CategorieType::class, $categorie, [
             'method' => 'POST',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_categorie_new')
         ]);
         $form->handleRequest($request);
@@ -227,13 +230,14 @@ class CategorieController extends BaseController
     #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Categorie $categorie, CategorieRepository $categorieRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(CategorieType::class, $categorie, [
             'method' => 'POST',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
             ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_categorie_edit', [
                 'id' =>  $categorie->getId()
             ])

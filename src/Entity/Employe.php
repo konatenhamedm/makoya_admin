@@ -47,9 +47,11 @@ class Employe
     #[ORM\ManyToOne(inversedBy: 'employes')]
     private ?Service $service = null;
 
+    #[ORM\ManyToOne(inversedBy: 'employes')]
+    private ?Entreprise $entreprise = null;
+
     public function __construct()
     {
-
     }
 
 
@@ -134,9 +136,9 @@ class Employe
 
     public function getNomComplet(): ?string
     {
-        return $this->getNom().' '.$this->getPrenom();
+        return $this->getNom() . ' ' . $this->getPrenom();
     }
-    
+
     public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
@@ -178,5 +180,15 @@ class Employe
         return $this;
     }
 
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
 
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
 }

@@ -6,6 +6,8 @@
 parameters:
     locale: fr
     upload_dir: "%kernel.project_dir%/public/uploads"
+    font_dir: "%kernel.project_dir%/public/fonts"
+    mail_dsn: '%env(MAILER_DSN)%'
 
 services:
     # default Config for services in *this* file
@@ -39,7 +41,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onLexikJwtAuthenticationOnAuthenticationFailure }
         
-
     
     App\Service\FormErrorsSerializer:
         public: true

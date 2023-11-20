@@ -14,43 +14,41 @@ class ConfigApp
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Veuillez renseigner le nom de l'entreprise")]
-    private ?string $nomEntreprise = null;
-
-
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $logo= null;
+    private ?Fichier $logo = null;
 
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $favicon= null;
+    private ?Fichier $favicon = null;
 
 
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $imageLogin= null;
+    private ?Fichier $imageLogin = null;
 
-    #[ORM\ManyToOne(cascade:["persist"], fetch:"EAGER")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $logoLogin= null;
+    private ?Fichier $logoLogin = null;
 
-    #[ORM\Column(length: 255,nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez renseigner la couleur principale admin')]
     private ?string $mainColorAdmin = null;
 
-    #[ORM\Column(length: 255,nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez renseigner la couleur secondaire admin')]
     private ?string $defaultColorAdmin = null;
 
-    #[ORM\Column(length: 255,nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez renseigner la couleur principale login')]
     private ?string $mainColorLogin = null;
 
-    #[ORM\Column(length: 255,nullable: false)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez renseigner la couleur secondaire login')]
     private ?string $defaultColorLogin = null;
+
+    #[ORM\ManyToOne(inversedBy: 'configApps')]
+    private ?Entreprise $entreprise = null;
 
 
     public function getFavicon(): ?Fichier
@@ -80,18 +78,6 @@ class ConfigApp
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNomEntreprise(): ?string
-    {
-        return $this->nomEntreprise;
-    }
-
-    public function setNomEntreprise(string $nomEntreprise): self
-    {
-        $this->nomEntreprise = $nomEntreprise;
-
-        return $this;
     }
 
 
@@ -166,5 +152,15 @@ class ConfigApp
         return $this;
     }
 
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
 
+    public function setEntreprise(?Entreprise $entreprise): static
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
 }

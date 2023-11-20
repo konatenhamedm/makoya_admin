@@ -21,20 +21,23 @@ class UtilisateurEditType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['label' => 'Pseudo'])
-            ->add('roles', ChoiceType::class,
-            [
-                'placeholder' => 'Choisir un role',
-                'label' => 'Privilèges Supplémentaires',
-                'required'     => false,
-                'expanded'     => false,
-                'attr' => ['class' => 'has-select2'],
-                'multiple' => true,
-                'choices'  => array_flip([
-                    'ROLE_SUPER_ADMIN' => 'Super Administrateur',
-                    'ROLE_ADMIN' => 'Administrateur'
-                ]),
-            ])
-            ->add('groupes', EntityType::class, [
+            ->add(
+                'roles',
+                ChoiceType::class,
+                [
+                    'placeholder' => 'Choisir un role',
+                    'label' => 'Privilèges Supplémentaires',
+                    'required'     => false,
+                    'expanded'     => false,
+                    'attr' => ['class' => 'has-select2'],
+                    'multiple' => true,
+                    'choices'  => array_flip([
+                        'ROLE_SUPER_ADMIN' => 'Super Administrateur',
+                        'ROLE_ADMIN' => 'Administrateur'
+                    ]),
+                ]
+            )
+            /* ->add('groupes', EntityType::class, [
                 'label'        => 'Groupes',
                 'choice_label' => 'name',
                 'multiple'     => true,
@@ -42,8 +45,10 @@ class UtilisateurEditType extends AbstractType
                 'placeholder' => 'Choisir au moins groupe',
                 'attr' => ['class' => 'has-select2'],
                 'class'        => Groupe::class,
-            ])
-            ->add('password', RepeatedType::class, 
+            ]) */
+            ->add(
+                'password',
+                RepeatedType::class,
                 [
                     'type'            => PasswordType::class,
                     'invalid_message' => 'Les mots de passe doivent être identiques.',
@@ -60,8 +65,7 @@ class UtilisateurEditType extends AbstractType
                     return $er->withoutAccount();
                 }
             ]
-        )*/
-        ;
+        )*/;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -70,7 +74,6 @@ class UtilisateurEditType extends AbstractType
             'data_class' => Utilisateur::class,
             'passwordRequired' => false
         ]);
-
         $resolver->setRequired('passwordRequired');
     }
 }
