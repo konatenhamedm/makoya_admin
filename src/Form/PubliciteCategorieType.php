@@ -19,25 +19,22 @@ class PubliciteCategorieType extends AbstractType
     {
 
         $type = $options['type'];
-        if ($type == 'images') {
 
-            $builder->add('publiciteImages', CollectionType::class, [
-                'entry_type' => PubliciteImageType::class,
-                'entry_options' => [
-                    'label' => false,
-                    'doc_options' => $options['doc_options'],
-                    'doc_required' => $options['doc_required'],
-                    'validation_groups' => $options['validation_groups'],
-                ],
-                'allow_add' => true,
-                'label' => false,
-                'by_reference' => false,
-                'allow_delete' => true,
-                'prototype' => true,
-            ]);
-        } else {
             $builder
-
+     ->add('publiciteImages', CollectionType::class, [
+         'entry_type' => PubliciteImageType::class,
+         'entry_options' => [
+             'label' => false,
+             'doc_options' => $options['doc_options'],
+             'doc_required' => $options['doc_required'],
+             'validation_groups' => $options['validation_groups'],
+         ],
+         'allow_add' => true,
+         'label' => false,
+         'by_reference' => false,
+         'allow_delete' => true,
+         'prototype' => true,
+     ])
                 ->add('libelle')
                 ->add('dateDebut', DateType::class, [
                     'label' => 'Date debut',
@@ -70,13 +67,13 @@ class PubliciteCategorieType extends AbstractType
                     'choice_label' => 'libelle',
                     'placeholder' => 'Selectionnez une categorie',
                     'attr' => ['class' => 'categorie form-select'],
-                    'label' => false,
+                    'label' => "Catégorie",
                     'required' => true,
                     "constraints" => array(
                         new NotNull(null, "S'il vous veillez renseigner le champs categorie")
                     )
                 ]);
-        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

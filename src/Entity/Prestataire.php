@@ -50,6 +50,9 @@ class Prestataire extends UserFront
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Signaler::class)]
     private Collection $signalers;
 
+    #[ORM\Column(length: 5)]
+    private ?string $statut = null;
+
     public function __construct()
     {
         $this->prestataireServices = new ArrayCollection();
@@ -310,6 +313,18 @@ class Prestataire extends UserFront
                 $signaler->setPrestataire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

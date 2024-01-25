@@ -200,7 +200,7 @@ class PubliciteCategorieController extends BaseController
         $publiciteCategorie = new PubliciteCategorie();
         $form = $this->createForm(PubliciteCategorieType::class, $publiciteCategorie, [
             'method' => 'POST',
-            'type' => 'autre',
+            'type' => 'image',
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],

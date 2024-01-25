@@ -72,7 +72,7 @@ $res = $(this).closest('.card-container');
 $id = $(this).val();
 
 			$.ajax({
-					url: '/utilisateur/front/prestataire/liste/souscategorie',
+					url: '/ads/utilisateur/front/prestataire/liste/souscategorie',
 					type: 'get',
 					async: false,
 					data: {
@@ -94,7 +94,7 @@ console.log(json)
 			});
 
 $.ajax({
-url: '/utilisateur/front/prestataire/liste/service',
+url: '/ads/utilisateur/front/prestataire/liste/service',
 type: 'get',
 async: false,
 data: {

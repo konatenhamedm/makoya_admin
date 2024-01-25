@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuartierRepository::class)]
-#[ORM\Table(name:'decoupage_quartier')]
+#[ORM\Table(name: 'decoupage_quartier')]
 class Quartier
 {
     #[ORM\Id]
@@ -31,10 +31,14 @@ class Quartier
     #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: NombreClick::class)]
     private Collection $nombreClicks;
 
+    #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Pharmacie::class)]
+    private Collection $pharmacies;
+
     public function __construct()
     {
         $this->userFronts = new ArrayCollection();
         $this->nombreClicks = new ArrayCollection();
+        $this->pharmacies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,7 +57,10 @@ class Quartier
 
         return $this;
     }
-
+    public function  getNomComplet()
+    {
+        return $this->nom . ' - ' . $this->getCommune()->getNom();
+    }
     public function getNom(): ?string
     {
         return $this->nom;
@@ -132,6 +139,36 @@ class Quartier
             // set the owning side to null (unless already changed)
             if ($nombreClick->getQuartier() === $this) {
                 $nombreClick->setQuartier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pharmacie>
+     */
+    public function getPharmacies(): Collection
+    {
+        return $this->pharmacies;
+    }
+
+    public function addPharmacy(Pharmacie $pharmacy): static
+    {
+        if (!$this->pharmacies->contains($pharmacy)) {
+            $this->pharmacies->add($pharmacy);
+            $pharmacy->setQuartier($this);
+        }
+
+        return $this;
+    }
+
+    public function removePharmacy(Pharmacie $pharmacy): static
+    {
+        if ($this->pharmacies->removeElement($pharmacy)) {
+            // set the owning side to null (unless already changed)
+            if ($pharmacy->getQuartier() === $this) {
+                $pharmacy->setQuartier(null);
             }
         }
 

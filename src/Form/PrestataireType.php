@@ -16,6 +16,7 @@ use DoctrineExtensions\Query\Mysql\Quarter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -205,6 +206,19 @@ class PrestataireType extends AbstractType
 
                     ->add('email')
                     ->add('denominationSociale')
+                    ->add('statut', ChoiceType::class, [
+
+                        'placeholder' => 'Choisir un statut',
+                        'label' => 'Statut',
+                        'required'     => false,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            'Oui' => 'Certifié',
+                            'Non' => 'Non Certifié',
+                        ]),
+                    ])
                     ->add(
                         'logo',
                         FichierType::class,
@@ -370,6 +384,18 @@ class PrestataireType extends AbstractType
 
                     ->add('email')
                     ->add('denominationSociale')
+                    ->add('statut', ChoiceType::class, [
+                        'placeholder' => 'Choisir un statut',
+                        'label' => 'Statut',
+                        'required'     => false,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            'Oui' => 'Certifié',
+                            'Non' => 'Non Certifié',
+                        ]),
+                    ])
                     ->add(
                         'logo',
                         FichierType::class,

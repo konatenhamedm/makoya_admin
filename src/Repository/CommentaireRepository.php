@@ -39,28 +39,43 @@ class CommentaireRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Commentaire[] Returns an array of Commentaire objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getServicesAll()
+    {
+        return $this->createQueryBuilder('cm')
+            //->addSelect('cm.message,c.id,c.countVisite,i.path,i.alt,s.id sId,s.libelle sousCategorie,ser.id serId,ser.libelle service,p.id pId,p.denominationSociale,p.contactPrincipal,p.statut')
+            ->innerJoin('cm.service', 'ser')
+            ->innerJoin('ser.prestataireServices', 'c')
+            /* ->innerJoin('c.sousCategorie', 's')
+            ->innerJoin('c.image', 'i')
+            ->innerJoin('c.prestataire', 'p') */
+            /*  ->orderBy('c.countVisite', 'ASC') */
+            /* ->setMaxResults(5) */
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Commentaire
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Commentaire[] Returns an array of Commentaire objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Commentaire
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

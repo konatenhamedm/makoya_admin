@@ -20,8 +20,8 @@ class CategorieType extends AbstractType
                 'imageLaUne',
                 FichierType::class,
                 [
-                    'label' => 'Fichier',
-                    'label' => false,
+                    'label' => 'Icon catégorie',
+                /*    'label' => false,*/
                     'doc_options' => $options['doc_options'],
                     'required' => $options['doc_required'] ?? true,
                     'validation_groups' => $options['validation_groups'],
@@ -31,7 +31,23 @@ class CategorieType extends AbstractType
 
                     ], */
                 ]
-            );
+            )
+        ->add(
+        'image',
+        FichierType::class,
+        [
+            'label' => 'Image détails',
+            /*    'label' => false,*/
+            'doc_options' => $options['doc_options'],
+            'required' => $options['doc_required'] ?? true,
+            'validation_groups' => $options['validation_groups'],
+            /* 'constraints' => [
+
+                in_array('FileRequired', $options['validation_groups']) ? new NotBlank(null, "Veuillez renseigner le fichiesr") : "",
+
+            ], */
+        ]
+    );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

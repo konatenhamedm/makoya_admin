@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(['username'], message: 'Ce pseudo est déjà utilisé')]
+#[UniqueEntity(['slug'], message: 'Ce slug est déjà utilisé')]
 #[ORM\Table(name:'user_utilisateur')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 {

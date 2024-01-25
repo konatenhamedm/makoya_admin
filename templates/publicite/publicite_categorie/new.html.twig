@@ -1,4 +1,5 @@
 {% block page_content %}
+    {% from '_macros/macro_image_publicite.html.twig' import prototype_ligne_colonne %}
     {% form_theme form 'widget/fields-block.html.twig' %}
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Création PubliciteCategorie</h5>
@@ -14,7 +15,15 @@
     {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
     <div class="modal-body modal-reunion">
         {{ include('_includes/ajax/response.html.twig') }}
-        {{ form_widget(form) }}
+        <div class="row">
+            <div class="col-md-12">{{ form_row(form.libelle) }}</div>
+            <div class="col-md-6">{{ form_row(form.dateDebut) }}</div>
+            <div class="col-md-6">{{ form_row(form.dateFin) }}</div>
+            <div class="col-md-6">{{ form_row(form.jours) }}</div>
+            <div class="col-md-6">{{ form_row(form.categorie) }}</div>
+        </div><br>
+        {{ prototype_ligne_colonne(form) }}
+        <br>
     </div>
     <div class="modal-footer">
         {# {{ include('_includes/ajax/loader.html.twig') }} #}
@@ -25,6 +34,7 @@
 {% endblock %}
 
 {% block java %}
+    <script src="{{ asset('assets/universitaitre.js') }}"></script>
     <script> 
     $('.no-auto').each(function () {
            const $this = $(this);

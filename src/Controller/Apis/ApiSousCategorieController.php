@@ -49,44 +49,30 @@ class ApiSousCategorieController extends ApiInterface
     }
 
     #[Route('/sous_categories/{id}', name: 'api_sousCategorie_by_categorie_id', methods: ['GET'])]
-    /**
-     * Affiche toutes les sous categories d'une categorie d'une categorie.
-     * @OA\Response(
-     *     response=200,
-     *     description="Returns the rewards of an user",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=SousCategorie::class, groups={"full"}))
-     *     )
-     * )
-     * @OA\Tag(name="SousCategorie")
-     * @Security(name="Bearer")
-     */
+
     public function getSousCategoriesByCategorieId($id, SousCategorieRepository $sousCategorieRepository): Response
     {
-        try {
+        /* try { */
 
-            $sousCategories = $sousCategorieRepository->findBy(['categorie' => $id]);
+        $sousCategories = $sousCategorieRepository->getSousCategorie($id);
+
+        $tabSousCategorie = [];
+
+        $k = 0;
 
 
-            /*   if ($sousCategories == []) {
-                $response = $this->response([
-                    [
-                        'libelle' => "",
-                        'id' => null
-                    ]
-                ]);
-            } else { */
+        foreach ($sousCategories as $value) {
+            $tabSousCategorie[$k]['id'] = $value['id'];
+            $tabSousCategorie[$k]['libelle'] = $value['libelle'];
 
-            $response = $this->response($sousCategories);
-            /*  } */
-        } catch (\Exception $exception) {
-            $this->setMessage("");
-            $response = $this->response(null);
+            $k++;
         }
 
-        // On envoie la réponse
-        return $response;
+
+        return $this->json([
+            'data' => $tabSousCategorie,
+
+        ], 200);
     }
 
 

@@ -15,10 +15,16 @@
     <div class="modal-body">
         {{ include('_includes/ajax/response.html.twig') }}
       <div class="row">
-       <div class="col-md-2 ">
-					{% include '_includes/image_categorie.html.twig'  with {'image':form.imageLaUne,'data':null} %}
+       <div class="col-md-3 ">
+
+					{% include '_includes/image_categorie.html.twig'  with {'image':form.imageLaUne,'data':null,'titre':'Icon catégorie'} %}
 		</div>
-        <div class="col-md-10">
+        <div class="col-md-3">
+
+            {% include '_includes/image_categorie.html.twig'  with {'image':form.image,'data':null,'titre':'Image détails'} %}
+        </div>
+          <div class="col-md-6">
+
         </div>
       </div>
 	

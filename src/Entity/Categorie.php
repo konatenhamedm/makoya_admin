@@ -6,9 +6,12 @@ use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[UniqueEntity(['slug'], message: 'Ce slug est déjà utilisé')]
 class Categorie
 {
     #[ORM\Id]
@@ -42,11 +45,19 @@ class Categorie
 
     #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
-    #[Assert\NotBlank(message: "Veuillez renseigner le nom de l'entreprise")]
+    #[Assert\NotBlank(message: "Veuillez renseigner l'image de la catégorie")]
     private ?Fichier $imageLaUne = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: PropositionService::class)]
     private Collection $propositionServices;
+    /*@Gedmo\Slug(fields={"titre"})*/
+    #[ORM\Column(length: 255)]
+    #[Gedmo\Slug(fields: ["libelle"])]
+    private ?string $slug = null;
+
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Fichier $image = null;
 
     public function __construct()
     {
@@ -278,6 +289,30 @@ class Categorie
                 $propositionService->setCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getImage(): ?Fichier
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Fichier $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

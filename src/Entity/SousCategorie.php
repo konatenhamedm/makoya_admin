@@ -6,7 +6,7 @@ use App\Repository\SousCategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: SousCategorieRepository::class)]
 #[ORM\Table(name:'param_sous_categorie')]
 class SousCategorie
@@ -30,6 +30,10 @@ class SousCategorie
 
     #[ORM\OneToMany(mappedBy: 'sousCategorie', targetEntity: WorkflowServicePrestataire::class)]
     private Collection $workflowServicePrestataires;
+
+    #[ORM\Column(length: 255)]
+    #[Gedmo\Slug(fields: ["libelle"])]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -134,6 +138,18 @@ class SousCategorie
                 $workflowServicePrestataire->setSousCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
