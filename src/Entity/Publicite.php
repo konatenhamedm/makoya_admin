@@ -36,7 +36,7 @@ class Publicite
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateFin = null;
 
-    #[ORM\OneToMany(mappedBy: 'publicite', targetEntity: PubliciteImage::class)]
+    #[ORM\OneToMany(mappedBy: 'publicite', targetEntity: PubliciteImage::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $publiciteImages;
 
     #[ORM\ManyToMany(targetEntity: Jours::class, inversedBy: 'publicites')]

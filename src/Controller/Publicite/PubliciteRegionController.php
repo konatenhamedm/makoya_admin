@@ -177,8 +177,15 @@ class PubliciteRegionController extends BaseController
     public function new(Request $request, PubliciteRegionRepository $publiciteRegionRepository, FormError $formError): Response
     {
         $publiciteRegion = new PubliciteRegion();
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $form = $this->createForm(PubliciteRegionType::class, $publiciteRegion, [
             'method' => 'POST',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_region_new')
         ]);
         $form->handleRequest($request);
@@ -236,9 +243,15 @@ class PubliciteRegionController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_region_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PubliciteRegion $publiciteRegion, PubliciteRegionRepository $publiciteRegionRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PubliciteRegionType::class, $publiciteRegion, [
             'method' => 'POST',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_region_edit', [
                 'code' => $publiciteRegion->getCode()
             ])

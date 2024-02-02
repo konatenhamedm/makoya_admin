@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Controller\FileTrait;
 use App\Service\Menu;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -22,11 +23,13 @@ class BaseController extends AbstractController
     protected $menu;
     protected $hasher;
     protected $workflow;
+    protected $notificationService;
 
 
-    public function __construct(EntityManagerInterface $em, Menu $menu, Security $security, UserPasswordHasherInterface $hasher, Registry $workflow,)
+    public function __construct(EntityManagerInterface $em, Menu $menu, Security $security, UserPasswordHasherInterface $hasher, Registry $workflow, NotificationService $notificationService)
     {
         $this->em = $em;
+        $this->notificationService = $notificationService;
         $this->security = $security;
         $this->menu = $menu;
         $this->hasher = $hasher;

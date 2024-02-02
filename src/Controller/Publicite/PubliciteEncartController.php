@@ -176,9 +176,16 @@ class PubliciteEncartController extends BaseController
     #[Route('/pub/new', name: 'app_publicite_publicite_encart_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PubliciteEncartRepository $publiciteEncartRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $publiciteEncart = new PubliciteEncart();
         $form = $this->createForm(PubliciteEncartType::class, $publiciteEncart, [
             'method' => 'POST',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_encart_new')
         ]);
         $form->handleRequest($request);
@@ -236,9 +243,15 @@ class PubliciteEncartController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_encart_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PubliciteEncart $publiciteEncart, PubliciteEncartRepository $publiciteEncartRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PubliciteEncartType::class, $publiciteEncart, [
             'method' => 'POST',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_encart_edit', [
                 'code' => $publiciteEncart->getCode()
             ])

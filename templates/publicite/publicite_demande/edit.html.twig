@@ -1,7 +1,8 @@
 {% block page_content %}
+    {% from '_macros/macro_image_publicite.html.twig' import prototype_ligne_colonne %}
     {% form_theme form 'widget/fields-block.html.twig' %}
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modification Publicite demande prestataire</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Création demande publicité prestataire</h5>
         <div class="btn btn-icon btn-sm  ms-2" data-bs-dismiss="modal" aria-label="Close">
             <span class="svg-icon svg-icon-2x text-white">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,53 +13,17 @@
         </div>
     </div>
     {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
-    <div class="modal-body">
+    <div class="modal-body modal-reunion">
         {{ include('_includes/ajax/response.html.twig') }}
-       <div class="row">
-					<div class="col-md-12 ">
-                     <label class="sr-onl" for="userinput1" >
-					Libelle
-				    </label>
-						{{ form_widget(form.libelle) }}
-					</div>
-					
-				</div>
-                <div class="row">
-					<div class="col-md-12 ">
-                     <label class="sr-onl" for="userinput1" >
-					Date début
-				    </label>
-						{{ form_widget(form.dateDebut) }}
-					</div>
-					
-				</div>
-                <div class="row">
-					<div class="col-md-12 ">
-                     <label class="sr-onl" for="userinput1" >
-					Date Fin
-				    </label>
-						{{ form_widget(form.dateFin) }}
-					</div>
-					
-				</div>
-                     <div class="row">
-					<div class="col-md-12 ">
-                     <label class="sr-onl" for="userinput1" >
-					Jours
-				    </label>
-						{{ form_widget(form.jours) }}
-					</div>
-					
-				</div>
-                     <div class="row">
-					<div class="col-md-12 ">
-                     <label class="sr-onl" for="userinput1" >
-					Prestataire
-				    </label>
-						{{ form_widget(form.prestataire) }}
-					</div>
-					
-				</div>
+        <div class="row">
+            <div class="col-md-12">{{ form_row(form.libelle) }}</div>
+            <div class="col-md-6">{{ form_row(form.dateDebut) }}</div>
+            <div class="col-md-6">{{ form_row(form.dateFin) }}</div>
+            <div class="col-md-6">{{ form_row(form.jours) }}</div>
+            <div class="col-md-6">{{ form_row(form.prestataire) }}</div>
+        </div><br>
+        {{ prototype_ligne_colonne(form) }}
+        <br>
     </div>
     <div class="modal-footer">
      {{ form_widget(form.annuler) }}
@@ -77,6 +42,7 @@
 	{{ form_end(form, {render_rest: false}) }}
 {% endblock %}
 {% block java %}
+  <script src="{{ asset('assets/universitaitre.js') }}"></script>
     <script> 
     $(function () {
 	  var elements = Array.from(document.querySelectorAll("[data-bs-stacked-modal]"));

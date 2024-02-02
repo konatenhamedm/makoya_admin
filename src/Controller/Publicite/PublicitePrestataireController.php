@@ -17,12 +17,195 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
+use App\Entity\UserFront;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 #[Route('/ads/publicite/publicite/prestataire')]
 class PublicitePrestataireController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_publicite_publicite_prestataire_index';
+
+    #[Route('/suivi', name: 'app_publicite_publicite_prestataire_suivi_index',  methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function indexSuivi(Request $request, DataTableFactory $dataTableFactory): Response
+    {
+
+        $datetime = new \DateTime("now");
+        $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), "app_publicite_publicite_prestataire_suivi_index");
+
+        /*  $niveau = $request->query->get('niveau');*/
+        $user = $request->query->get('user');
+        $dateDebut = $request->query->get('dateDebut');
+        $dateFin = $request->query->get('dateFin');
+        //$mode = $request->query->get('mode');
+        //dd($niveau, $dateDebut);
+
+        $builder = $this->createFormBuilder(null, [
+            'method' => 'GET',
+            'action' => $this->generateUrl('app_publicite_publicite_prestataire_suivi_index', compact('dateDebut', 'dateFin', 'user'))
+        ])
+            ->add('user', EntityType::class, [
+                'class' => UserFront::class,
+                'choice_label' => 'username',
+                'label' => 'Mode paiement',
+                'placeholder' => '---',
+                'required' => false,
+                'attr' => ['class' => 'form-control-sm has-select2']
+            ])
+            ->add('dateDebut', DateType::class, [
+                'widget' => 'single_text',
+                'label'   => 'Date début',
+                'format'  => 'dd/MM/yyyy',
+                'required' => false,
+                'html5' => false,
+                'attr'    => ['autocomplete' => 'off', 'class' => 'form-control-sm datepicker no-auto'],
+            ])
+            ->add('dateFin', DateType::class, [
+                'widget' => 'single_text',
+                'label'   => 'Date fin',
+                'format'  => 'dd/MM/yyyy',
+                'required' => false,
+                'html5' => false,
+                'attr'    => ['autocomplete' => 'off', 'class' => 'form-control-sm datepicker no-auto'],
+            ]);
+
+
+        $table = $dataTableFactory->create()
+            ->add('type', TextColumn::class, ['label' => 'Type utilisateur'])
+            ->add('libelle', TextColumn::class, ['label' => 'Libelle'])
+            ->add('dateDebut', DateTimeColumn::class, ['label' => 'Date debut', 'format' => 'd-m-Y'])
+            ->add('dateFin', DateTimeColumn::class, ['label' => 'Date fin', 'format' => 'd-m-Y'])
+            ->add('utilisateur', TextColumn::class, ['label' => 'Utilisateur', 'field' => 'u.username'])
+            ->add('email', TextColumn::class, ['label' => 'Email', 'field' => 'u.email'])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => PublicitePrestataire::class,
+                'query' => function (QueryBuilder $qb) use ($dateDebut, $dateFin, $user) {
+                    $qb->select('e')
+                        ->from(PublicitePrestataire::class, 'e')
+                        ->leftJoin('e.utilisateur', 'u');
+                    /* 
+
+                    if ($etat == "terminer") {
+                        $qb->andWhere('e.dateFin = :current_date or DATE_DIFF(e.dateFin, :current_date) < 0')
+                            ->setParameter('current_date', new \DateTime($datetime->format("Y-m-d")));
+                    } elseif ($etat == "en_cours_peremption") {
+                        $qb->andWhere(" DATE_DIFF(e.dateFin, :current_date) < 8 and  DATE_DIFF(e.dateFin, :current_date) > 0")
+                            ->setParameter('current_date', new \DateTime($datetime->format("Y-m-d")));
+                    } else {
+                        $qb->andWhere(" DATE_DIFF(e.dateFin, :current_date) >= 8 ")
+                            ->setParameter('current_date', new \DateTime($datetime->format("Y-m-d")));
+                    } */
+                }
+            ])
+            ->setName('dt_app_publicite_publicite_prestataire_suivi_' . $user);
+        if ($permission != null) {
+            $renders = [
+                'edit' => new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return false;
+                    } elseif ($permission == 'RD') {
+                        return false;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return false;
+                    }
+                }),
+                'delete' => new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return false;
+                    } elseif ($permission == 'RD') {
+                        return true;
+                    } elseif ($permission == 'RU') {
+                        return false;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return false;
+                    } elseif ($permission == 'CR') {
+                        return false;
+                    }
+                }),
+                'show' => new ActionRender(function () use ($permission) {
+                    if ($permission == 'R') {
+                        return true;
+                    } elseif ($permission == 'RD') {
+                        return true;
+                    } elseif ($permission == 'RU') {
+                        return true;
+                    } elseif ($permission == 'CRUD') {
+                        return true;
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return true;
+                    }
+                }),
+
+            ];
+
+            $gridId = $user . '_' . $dateDebut;
+            // dd($gridId);
+
+            $hasActions = false;
+
+            foreach ($renders as $_ => $cb) {
+                if ($cb->execute()) {
+                    $hasActions = true;
+                    break;
+                }
+            }
+
+            if ($hasActions) {
+                $table->add('code', TextColumn::class, [
+                    'label' => 'Actions', 'orderable' => false, 'globalSearchable' => false, 'className' => 'grid_row_actions', 'render' => function ($value, PublicitePrestataire $context) use ($renders) {
+                        $options = [
+                            'default_class' => 'btn btn-xs btn-clean btn-icon mr-2 ',
+                            'target' => '#exampleModalSizeLg2',
+
+                            'actions' => [
+                                /* 'edit' => [
+                                'url' => $this->generateUrl('app_publicite_publicite_prestataire_edit', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-default'], 'render' => $renders['edit']
+                            ], */
+                                'show' => [
+                                    'url' => $this->generateUrl('app_publicite_publicite_prestataire_show', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
+                                ],
+                                /* 'delete' => [
+                                'target' => '#exampleModalSizeNormal',
+                                'url' => $this->generateUrl('app_publicite_publicite_prestataire_delete', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-main'], 'render' => $renders['delete']
+                            ] */
+                            ]
+
+                        ];
+                        return $this->renderView('_includes/default_actions.html.twig', compact('options', 'context'));
+                    }
+                ]);
+            }
+        }
+
+        $table->handleRequest($request);
+
+        if ($table->isCallback()) {
+            return $table->getResponse();
+        }
+
+
+        return $this->render('publicite/publicite_prestataire/index_suivi.html.twig', [
+            'datatable' => $table,
+            'form' => $builder->getForm(),
+            'grid_id' => $gridId
+        ]);
+    }
+
+
+
+
+
     #[Route('/{etat}', name: 'app_publicite_publicite_prestataire_index', methods: ['GET', 'POST'])]
     public function index(Request $request, string $etat, DataTableFactory $dataTableFactory): Response
     {
@@ -163,9 +346,16 @@ class PublicitePrestataireController extends BaseController
     #[Route('/pub/new', name: 'app_publicite_publicite_prestataire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PublicitePrestataireRepository $publicitePrestataireRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $publicitePrestataire = new PublicitePrestataire();
         $form = $this->createForm(PublicitePrestataireType::class, $publicitePrestataire, [
             'method' => 'POST',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_prestataire_new')
         ]);
         $form->handleRequest($request);
@@ -223,9 +413,15 @@ class PublicitePrestataireController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_prestataire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PublicitePrestataire $publicitePrestataire, PublicitePrestataireRepository $publicitePrestataireRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PublicitePrestataireType::class, $publicitePrestataire, [
             'method' => 'POST',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_prestataire_edit', [
                 'code' => $publicitePrestataire->getCode()
             ])

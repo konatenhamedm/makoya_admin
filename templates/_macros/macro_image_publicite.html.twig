@@ -7,23 +7,23 @@
             <div class="col-md-2 ">
                 {% include '_includes/image_service.html.twig'  with {'image':colonne.image,'data':colonne} %}
             </div>
-            <div class="col-md-10 ">
+            <div class="col-md-10 " >
+                <div class="row" style="margin-left: 12px;">
+                <div class="col-md-11 ">
+                 {{ form_row(colonne.lien) }}
+
+                </div>
+                </div>
+                <div class="row" style="margin-left: 12px;">
+               
+                    <div class="col-md-11 ">
+                        {{ form_row(colonne.description) }}
+                    </div>
+                
+                    <div class="col-md-1 del-col_universitaire" data-parent=".row-colonne_universitaire"></div>
+                </div>
             </div>
         </div>
-
-
-                <div class="row">
-                <div class="col-md-5 ">
-                    {{ form_row(colonne.lien) }}
-                </div>
-                <div class="col-md-6 ">
-                    {{ form_row(colonne.description) }}
-                </div>
-              
-                <div class="col-md-1 del-col_universitaire" data-parent=".row-colonne_universitaire"></div>
-            </div>
-
-     
     </div>
 
 {% endmacro  %}

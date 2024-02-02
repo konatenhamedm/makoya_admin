@@ -164,9 +164,9 @@ class PubliciteCategorieController extends BaseController
                                 'show' => [
                                     'url' => $this->generateUrl('app_publicite_publicite_categorie_show', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ],
-                                'image' => [
+                                /*  'image' => [
                                     'url' => $this->generateUrl('app_publicite_publicite_categorie_images', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-success'], 'render' => $renders['show']
-                                ],
+                                ], */
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
                                     'url' => $this->generateUrl('app_publicite_publicite_categorie_delete', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-main'], 'render' => $renders['delete']
@@ -196,7 +196,7 @@ class PubliciteCategorieController extends BaseController
     #[Route('/pub/new', name: 'app_publicite_publicite_categorie_new', methods: ['GET', 'POST'])]
     public function news(Request $request, PubliciteCategorieRepository $publiciteCategorieRepository, FormError $formError): Response
     {
-        $validationGroups = ['Default', 'FileRequired', 'autre'];
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $publiciteCategorie = new PubliciteCategorie();
         $form = $this->createForm(PubliciteCategorieType::class, $publiciteCategorie, [
             'method' => 'POST',
@@ -288,7 +288,7 @@ class PubliciteCategorieController extends BaseController
 
         if ($form->isSubmitted()) {
             $response = [];
-            $redirect = $this->generateUrl('app_publicite_publicite_categorie_index');
+            $redirect = $this->generateUrl('app_config_publicite_index');
 
 
             if ($form->isValid()) {

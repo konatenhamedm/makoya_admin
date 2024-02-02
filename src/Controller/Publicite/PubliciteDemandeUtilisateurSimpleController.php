@@ -168,10 +168,16 @@ class PubliciteDemandeUtilisateurSimpleController extends BaseController
     #[Route('/pubs/new', name: 'app_publicite_publicite_demande_utilisateur_simple_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PubliciteDemandeUtilisateurSimpleRepository $publiciteDemandeUtilisateurSimpleRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $publiciteDemandeUtilisateurSimple = new PubliciteDemandeUtilisateurSimple();
         $form = $this->createForm(PubliciteDemandeUtilisateurSimpleType::class, $publiciteDemandeUtilisateurSimple, [
             'method' => 'POST',
-            'type' => 'allData',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_demande_utilisateur_simple_new')
         ]);
         $form->handleRequest($request);
@@ -230,10 +236,16 @@ class PubliciteDemandeUtilisateurSimpleController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_demande_utilisateur_simple_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PubliciteDemandeUtilisateurSimple $publiciteDemandeUtilisateurSimple, PubliciteDemandeUtilisateurSimpleRepository $publiciteDemandeUtilisateurSimpleRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
 
         $form = $this->createForm(PubliciteDemandeUtilisateurSimpleType::class, $publiciteDemandeUtilisateurSimple, [
             'method' => 'POST',
-            'type' => 'allData',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_demande_utilisateur_simple_edit', [
                 'code' => $publiciteDemandeUtilisateurSimple->getCode()
             ])

@@ -2,30 +2,14 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\HistoriqueDemande;
-use App\Entity\LigneDemande;
-use App\Entity\LigneMouvement;
-use App\Entity\MouvementDemande;
-use App\Entity\Notification;
-use App\Entity\NotificationPrestataire;
-use App\Entity\NotificationUtilisateurSimple;
-use App\Entity\PrestataireService;
+
+use App\Entity\Prestataire;
 use App\Entity\PublicitePrestataire;
-use App\Entity\WorkflowServicePrestataire;
-use App\Repository\ArticleMagasinRepository;
-use App\Repository\MagasinRepository;
-use App\Repository\SensRepository;
 use App\Repository\UserFrontRepository;
-use DateTime;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Workflow\Event\Event;
 use Symfony\Component\Workflow\Event\TransitionEvent;
-use Symfony\Component\Workflow\Exception\LogicException;
-use Symfony\Component\Workflow\WorkflowInterface;
-use function Symfony\Component\Config\Definition\Builder\find;
 
 class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInterface
 {
@@ -36,6 +20,7 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
   protected $repo;
   protected  $service;
   protected  $workflow;
+  protected $notificationService;
 
   private function numero()
   {
@@ -53,12 +38,13 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
     return (date("y") . 'PUP' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
   }
 
-  public function __construct(EntityManagerInterface $em, \Symfony\Component\Workflow\Registry $workflow, UserFrontRepository $repo)
+  public function __construct(EntityManagerInterface $em, \Symfony\Component\Workflow\Registry $workflow, UserFrontRepository $repo, NotificationService $notificationService)
   {
     ///  $this->security = $security;
     $this->em = $em;
     $this->workflow = $workflow;
     $this->repo = $repo;
+    $this->notificationService = $notificationService;
   }
 
   public function handleValidation(TransitionEvent $event): void
@@ -83,7 +69,7 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
     $this->em->persist($publicite);
     $this->em->flush();
 
-    $notification = new Notification();
+    /*    $notification = new Notification();
     $notification->setDateCreation(new DateTime())
       ->setEtat(false)
       ->setTitre('Message validation')
@@ -97,7 +83,9 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
     $notifcationPrestataire->setUtilisateurSimple($entity->getUtilisateur());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
-    $this->em->flush();
+    $this->em->flush(); */
+
+    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicté  à été validée avec success nous vous contacterons pour plus de details", "Message validation", true, new Prestataire, $entity->getUtilisateur());
   }
 
   public function handleRejeter(TransitionEvent $event)
@@ -107,7 +95,7 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
     $entity->setDateValidation(new \DateTime());
     $this->em->flush();
 
-    $notification = new Notification();
+    /* $notification = new Notification();
     $notification->setDateCreation(new DateTime())
       ->setEtat(false)
       ->setTitre('Message')
@@ -121,7 +109,9 @@ class DemandePubliciteUtilisateurSimpleSubscriber implements EventSubscriberInte
     $notifcationPrestataire->setUtilisateurSimple($entity->getUtilisateur());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
-    $this->em->flush();
+    $this->em->flush(); */
+
+    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicité à été réjetée", "Message rejeter", true, new Prestataire, $entity->getUtilisateur());
   }
 
 

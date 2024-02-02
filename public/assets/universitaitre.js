@@ -1,4 +1,9 @@
 $(function () {
+
+   /*  KTImageInput.createInstances();
+    var imageInputElement = document.querySelector("#kt_image_input_control");
+    var imageInput = KTImageInput.getInstance(imageInputElement);
+ */
     const $container = $('.proto-container');
 
     var index = $container.find('.row-colonne_universitaire').length;
@@ -31,6 +36,9 @@ $(function () {
 
         addLine($container, name, proto_class);
 
+        KTImageInput.createInstances();
+        var imageInputElement = document.querySelector("#kt_image_input_control");
+        var imageInput = KTImageInput.getInstance(imageInputElement);
 
 
         e.preventDefault(); // évite qu'un # apparaisse dans l'URL

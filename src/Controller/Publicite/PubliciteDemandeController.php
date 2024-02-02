@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
+use App\Entity\Notification;
+use App\Entity\UtilisateurSimple;
+use App\Service\NotificationService;
 use Doctrine\ORM\QueryBuilder;
 
 #[Route('/ads/publicite/publicite/demande')]
@@ -168,10 +171,16 @@ class PubliciteDemandeController extends BaseController
     #[Route('/pubs/new', name: 'app_publicite_publicite_demande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PubliciteDemandeRepository $publiciteDemandeRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $publiciteDemande = new PubliciteDemande();
         $form = $this->createForm(PubliciteDemandeType::class, $publiciteDemande, [
             'method' => 'POST',
-            'type' => 'allData',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_demande_new')
         ]);
         $form->handleRequest($request);
@@ -230,10 +239,15 @@ class PubliciteDemandeController extends BaseController
     #[Route('/{code}/edit', name: 'app_publicite_publicite_demande_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, PubliciteDemande $publiciteDemande, PubliciteDemandeRepository $publiciteDemandeRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PubliciteDemandeType::class, $publiciteDemande, [
             'method' => 'POST',
-            'type' => 'allData',
+            'type' => 'autre',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_publicite_publicite_demande_edit', [
                 'code' => $publiciteDemande->getCode()
             ])
@@ -334,6 +348,8 @@ class PubliciteDemandeController extends BaseController
                     $workflow->apply($publiciteDemande, 'rejeter');
                     $this->em->flush();
                 }
+
+
                 $publiciteDemandeRepository->save($publiciteDemande, true);
                 // $demandeRepository->save($demande, true);
 
@@ -343,6 +359,7 @@ class PubliciteDemandeController extends BaseController
                 $message       = 'Opération effectuée avec succès';
                 $statut = 1;
                 $this->addFlash('success', $message);
+                $this->redirectToRoute("app_config_workflow_index");
             } else {
                 $message = $formError->all($form);
                 $statut = 0;

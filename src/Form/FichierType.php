@@ -43,22 +43,42 @@ class FichierType extends AbstractType
 
 
 
+        if (in_array('oui', $options['validation_groups'])) {
+            $builder
+                //->add('alt', UrlType::class, ['attr' => ['class' => 'input-alt', 'placeholder' => 'URL'], 'required' => false])*/
+                ->add('file', FileType::class, [
+                    'label' => false
+                    //,'data_class' => Fichier::class
+                    , 'required' => $options['required'],
+                    'attr' => $attr,
+                    'constraints' => [
+                        // $options['required'] ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
+                        //in_array('Autre', $options['validation_groups']) ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
+                        new NotBlank(null, "Veuillez renseigner le fichier"),
+                        new File(
+                            ['mimeTypes' => $mimeTypes]
+                        ),
+                    ],
+                ]);
+        } else {
+            $builder
+                //->add('alt', UrlType::class, ['attr' => ['class' => 'input-alt', 'placeholder' => 'URL'], 'required' => false])*/
+                ->add('file', FileType::class, [
+                    'label' => false
+                    //,'data_class' => Fichier::class
+                    , 'required' => $options['required'],
+                    'attr' => $attr,
+                    'constraints' => [
+                        // $options['required'] ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
+                        //in_array('Autre', $options['validation_groups']) ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
+                        //new NotBlank(null, "Veuillez renseigner le fichier") ,
+                        new File(
+                            ['mimeTypes' => $mimeTypes]
+                        ),
+                    ],
+                ]);
+        }
 
-        $builder
-            //->add('alt', UrlType::class, ['attr' => ['class' => 'input-alt', 'placeholder' => 'URL'], 'required' => false])*/
-            ->add('file', FileType::class, [
-                'label' => false
-                //,'data_class' => Fichier::class
-                , 'required' => $options['required'],
-                'attr' => $attr,
-                'constraints' => [
-                    // $options['required'] ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
-                    in_array('FileRequired', $options['validation_groups']) ? new NotBlank(null, "Veuillez devez renseigner le fichier") : "",
-                    new File(
-                        ['mimeTypes' => $mimeTypes]
-                    ),
-                ],
-            ]);
 
         if ($options['doc_options']) {
 

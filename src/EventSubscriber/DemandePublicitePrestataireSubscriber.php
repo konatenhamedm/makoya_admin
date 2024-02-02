@@ -2,29 +2,13 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\HistoriqueDemande;
-use App\Entity\LigneDemande;
-use App\Entity\LigneMouvement;
-use App\Entity\MouvementDemande;
-use App\Entity\Notification;
-use App\Entity\NotificationPrestataire;
-use App\Entity\PrestataireService;
 use App\Entity\PublicitePrestataire;
-use App\Entity\WorkflowServicePrestataire;
-use App\Repository\ArticleMagasinRepository;
-use App\Repository\MagasinRepository;
-use App\Repository\SensRepository;
+use App\Entity\UtilisateurSimple;
 use App\Repository\UserFrontRepository;
-use DateTime;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Workflow\Event\Event;
 use Symfony\Component\Workflow\Event\TransitionEvent;
-use Symfony\Component\Workflow\Exception\LogicException;
-use Symfony\Component\Workflow\WorkflowInterface;
-use function Symfony\Component\Config\Definition\Builder\find;
 
 class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
 {
@@ -35,6 +19,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
   protected $repo;
   protected  $service;
   protected  $workflow;
+  protected $notificationService;
 
   private function numero()
   {
@@ -53,12 +38,13 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
   }
 
 
-  public function __construct(EntityManagerInterface $em, \Symfony\Component\Workflow\Registry $workflow, UserFrontRepository $repo)
+  public function __construct(EntityManagerInterface $em, \Symfony\Component\Workflow\Registry $workflow, UserFrontRepository $repo, NotificationService $notificationService)
   {
     ///  $this->security = $security;
     $this->em = $em;
     $this->workflow = $workflow;
     $this->repo = $repo;
+    $this->notificationService = $notificationService;
   }
 
   public function handleValidation(TransitionEvent $event): void
@@ -83,7 +69,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $this->em->persist($publicite);
     $this->em->flush();
 
-    $notification = new Notification();
+    /*     $notification = new Notification();
     $notification->setDateCreation(new DateTime())
       ->setEtat(false)
       ->setTitre('Message validation')
@@ -97,7 +83,9 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $notifcationPrestataire->setPrestataire($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
-    $this->em->flush();
+    $this->em->flush(); */
+
+    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicté  à été validée avec success nous vous contacterons pour plus de details", "Message validation", false, $entity->getPrestataire(), new UtilisateurSimple);
   }
 
   public function handleRejeter(TransitionEvent $event)
@@ -106,7 +94,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $entity = $event->getSubject();
     $entity->setDateValidation(new \DateTime());
     $this->em->flush();
-
+    /* 
     $notification = new Notification();
     $notification->setDateCreation(new DateTime())
       ->setEtat(false)
@@ -121,7 +109,9 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $notifcationPrestataire->setPrestataire($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
-    $this->em->flush();
+    $this->em->flush(); */
+
+    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicité à été réjetée", "Message rejeter", false, $entity->getPrestataire(), new UtilisateurSimple);
   }
 
 
@@ -129,7 +119,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
   public static function getSubscribedEvents(): array
   {
     return [
-      'workflow.add_demande_publicite.transition.passer' ,
+      'workflow.add_demande_publicite.transition.passer' => 'handleValidation',
       'workflow.add_demande_publicite.transition.rejeter' => 'handleRejeter',
 
     ];

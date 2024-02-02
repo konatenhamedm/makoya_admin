@@ -7,6 +7,7 @@ use App\Entity\Prestataire;
 use App\Entity\PubliciteDemande;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,9 +26,27 @@ class PubliciteDemandeType extends AbstractType
 
 
         if ($type == "rejeter") {
-            $builder->add('messageRejeter', TextareaType::class, []);
+            $builder->add('messageRejeter', TextareaType::class, [
+                "constraints" => array(
+                    new NotNull(null, "S'il vous veillez renseigner le champs message")
+                )
+            ]);
         } else {
             $builder
+                ->add('publiciteImages', CollectionType::class, [
+                    'entry_type' => PubliciteImageType::class,
+                    'entry_options' => [
+                        'label' => false,
+                        'doc_options' => $options['doc_options'],
+                        'doc_required' => $options['doc_required'],
+                        'validation_groups' => $options['validation_groups'],
+                    ],
+                    'allow_add' => true,
+                    'label' => false,
+                    'by_reference' => false,
+                    'allow_delete' => true,
+                    'prototype' => true,
+                ])
                 ->add('libelle')
                 ->add('dateDebut', DateType::class, [
                     'label' => 'Date debut',
@@ -68,7 +87,7 @@ class PubliciteDemandeType extends AbstractType
                     'choice_label' => 'denominationSociale',
                     'placeholder' => 'Selectionnez un prestataire',
                     'attr' => ['class' => 'categorie form-select'],
-                    'label' => false,
+                    'label' => 'Prestataire',
                     'required' => true,
                     "constraints" => array(
                         new NotNull(null, "S'il vous veillez renseigner le champs prestataire")
@@ -85,7 +104,13 @@ class PubliciteDemandeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PubliciteDemande::class,
+            'doc_required' => true,
+            'doc_options' => [],
+            'validation_groups' => [],
         ]);
-        $resolver->setRequired('type');
+        $resolver->setRequired('doc_options');
+        $resolver->setRequired('doc_required');
+        $resolver->setRequired(['type']);
+        $resolver->setRequired(['validation_groups']);
     }
 }
