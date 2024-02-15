@@ -1,6 +1,0 @@
-/.*.cache
-/composer.lock
-/tmp
-/vendor
-/tests/Fixtures/var/
-*~
