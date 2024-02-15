@@ -22,3 +22,7 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+    session:
+    handler_id: ~
+    cookie_lifetime: 43200
+    gc_maxlifetime: 43200        

@@ -4,7 +4,11 @@ namespace App\Service;
 
 use App\Entity\ModuleGroupePermition;
 use App\Entity\ConfigApp;
+use App\Entity\Groupe;
 use App\Entity\Prestataire;
+use App\Entity\Publicite;
+use App\Entity\PubliciteCategorie;
+use App\Entity\PubliciteRegion;
 use App\Entity\UserFront;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,6 +99,20 @@ class Menu
             return $repo['code'];
         } else {
             return $repo;
+        }
+    }
+
+
+    public function getPubTypeLibelle($type, $id)
+    {
+
+
+        if ($type == "CAT") {
+            return $this->em->getRepository(Publicite::class)->findOneBy(array('code' => $id))->getCategorie()->getLibelle();
+        } elseif ($type == "ENC") {
+            return "Encart";
+        } elseif ($type == "RGP") {
+            return $this->em->getRepository(Publicite::class)->findOneBy(array('code' => $id))->getRegion()->getNom();
         }
     }
 

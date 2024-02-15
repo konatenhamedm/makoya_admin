@@ -34,11 +34,15 @@ class Quartier
     #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Pharmacie::class)]
     private Collection $pharmacies;
 
+    #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Sponsoring::class)]
+    private Collection $sponsorings;
+
     public function __construct()
     {
         $this->userFronts = new ArrayCollection();
         $this->nombreClicks = new ArrayCollection();
         $this->pharmacies = new ArrayCollection();
+        $this->sponsorings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,7 +63,7 @@ class Quartier
     }
     public function  getNomComplet()
     {
-        return $this->nom . ' - ' . $this->getCommune()->getNom();
+        return $this->nom . ' - ' . $this->getCommune()->getNom() . ' - ' . $this->getCommune()->getSousPrefecture()->getDepartement()->getRegion()->getNom();
     }
     public function getNom(): ?string
     {
@@ -169,6 +173,36 @@ class Quartier
             // set the owning side to null (unless already changed)
             if ($pharmacy->getQuartier() === $this) {
                 $pharmacy->setQuartier(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sponsoring>
+     */
+    public function getSponsorings(): Collection
+    {
+        return $this->sponsorings;
+    }
+
+    public function addSponsoring(Sponsoring $sponsoring): static
+    {
+        if (!$this->sponsorings->contains($sponsoring)) {
+            $this->sponsorings->add($sponsoring);
+            $sponsoring->setQuartier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSponsoring(Sponsoring $sponsoring): static
+    {
+        if ($this->sponsorings->removeElement($sponsoring)) {
+            // set the owning side to null (unless already changed)
+            if ($sponsoring->getQuartier() === $this) {
+                $sponsoring->setQuartier(null);
             }
         }
 

@@ -95,7 +95,7 @@ class ApiCategorieController extends ApiInterface
                 $categorie->setLibelle($data->libelle);
 
                 // On sauvegarde en base
-                $categorieRepository->add($categorie, true);
+                $categorieRepository->save($categorie, true);
 
                 // On retourne la confirmation
                 $response = $this->response($categorie);
@@ -133,7 +133,7 @@ class ApiCategorieController extends ApiInterface
                 $categorie->setLibelle($data->libelle);
 
                 // On sauvegarde en base
-                $categorieRepository->add($categorie, true);
+                $categorieRepository->save($categorie, true);
 
                 // On retourne la confirmation
                 $response = $this->response($categorie);
@@ -195,7 +195,7 @@ class ApiCategorieController extends ApiInterface
             if ($categorie) {
 
                 //$categorie->setCode("555"); //TO DO nous ajouter un champs active
-                $categorieRepository->add($categorie, true);
+                $categorieRepository->save($categorie, true);
                 $response = $this->response($categorie);
             } else {
                 $this->setMessage('Cette ressource est inexistante');
@@ -227,7 +227,7 @@ class ApiCategorieController extends ApiInterface
             $listeCategories = $categorieRepository->findAllByListId($data->ids);
             foreach ($listeCategories as $listeCategorie) {
                 //$listeCategorie->setCode("555");  //TO DO nous ajouter un champs active
-                $categorieRepository->add($listeCategorie, true);
+                $categorieRepository->save($listeCategorie, true);
             }
 
             $response = $this->response(null);

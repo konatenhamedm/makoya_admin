@@ -33,15 +33,13 @@ class Notification
     #[ORM\OneToMany(mappedBy: 'notification', targetEntity: NotificationPrestataire::class)]
     private Collection $notificationPrestataires;
 
-    #[ORM\OneToMany(mappedBy: 'notification', targetEntity: NotificationUtilisateurSimple::class)]
-    private Collection $notificationUtilisateurSimples;
+
 
 
 
     public function __construct()
     {
         $this->notificationPrestataires = new ArrayCollection();
-        $this->notificationUtilisateurSimples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,7 +99,7 @@ class Notification
     /**
      * @return Collection<int, NotificationPrestataire>
      */
-    public function getNotificationPrestataires(): Collection
+    public function sendNotificationPrestataires(): Collection
     {
         return $this->notificationPrestataires;
     }
@@ -120,38 +118,8 @@ class Notification
     {
         if ($this->notificationPrestataires->removeElement($notificationPrestataire)) {
             // set the owning side to null (unless already changed)
-            if ($notificationPrestataire->getNotification() === $this) {
+            if ($notificationPrestataire->sendNotification() === $this) {
                 $notificationPrestataire->setNotification(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, NotificationUtilisateurSimple>
-     */
-    public function getNotificationUtilisateurSimples(): Collection
-    {
-        return $this->notificationUtilisateurSimples;
-    }
-
-    public function addNotificationUtilisateurSimple(NotificationUtilisateurSimple $notificationUtilisateurSimple): static
-    {
-        if (!$this->notificationUtilisateurSimples->contains($notificationUtilisateurSimple)) {
-            $this->notificationUtilisateurSimples->add($notificationUtilisateurSimple);
-            $notificationUtilisateurSimple->setNotification($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotificationUtilisateurSimple(NotificationUtilisateurSimple $notificationUtilisateurSimple): static
-    {
-        if ($this->notificationUtilisateurSimples->removeElement($notificationUtilisateurSimple)) {
-            // set the owning side to null (unless already changed)
-            if ($notificationUtilisateurSimple->getNotification() === $this) {
-                $notificationUtilisateurSimple->setNotification(null);
             }
         }
 

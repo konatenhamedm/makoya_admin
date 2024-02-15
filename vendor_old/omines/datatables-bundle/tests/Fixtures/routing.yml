@@ -1,0 +1,46 @@
+home:
+    path:       /
+    controller: Tests\Fixtures\AppBundle\Controller\HomeController::showAction
+
+plain:
+    path:       /plain
+    controller: Tests\Fixtures\AppBundle\Controller\PlainController::tableAction
+
+type:
+    path:       /type
+    controller: Tests\Fixtures\AppBundle\Controller\TypeController::tableAction
+
+service:
+    path:       /service
+    controller: Tests\Fixtures\AppBundle\Controller\ServiceController::tableAction
+
+custom:
+    path:       /custom
+    controller: Tests\Fixtures\AppBundle\Controller\CustomQueryController::tableAction
+
+grouped:
+    path:       /grouped
+    controller: Tests\Fixtures\AppBundle\Controller\GroupedController::tableAction
+
+grouped2:
+    path:       /grouped2
+    controller: Tests\Fixtures\AppBundle\Controller\GroupedController::table2Action
+
+employee.edit:
+    path:       /employee/{id}
+
+translation:
+    path:       /{_locale}/translation
+    controller: Tests\Fixtures\AppBundle\Controller\TranslationController::tableAction
+
+orm_adapter_events.pre_query:
+    path: /orm-adapter-events/pre-query
+    controller: Tests\Fixtures\AppBundle\Controller\ORMAdapterEventsController::preQueryAction
+
+exporter:
+    path: /exporter
+    controller: Tests\Fixtures\AppBundle\Controller\ExporterController::exportAction
+
+exporter_empty_datatable:
+    path: /exporter-empty-datatable
+    controller: Tests\Fixtures\AppBundle\Controller\ExporterController::exportEmptyDataTableAction

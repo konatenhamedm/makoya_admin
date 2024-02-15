@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
-#[ORM\Table(name:'decoupage_regions')]
+#[ORM\Table(name: 'decoupage_regions')]
 class Region
 {
     #[ORM\Id]
@@ -31,14 +31,22 @@ class Region
     #[ORM\OneToMany(mappedBy: 'region', targetEntity: PubliciteRegion::class)]
     private Collection $publiciteRegions;
 
-    #[ORM\OneToMany(mappedBy: 'region', targetEntity: NombreClick::class)]
-    private Collection $nombreClicks;
+
+
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: PubliciteDemande::class)]
+    private Collection $publiciteDemandes;
+
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: PublicitePrestataire::class)]
+    private Collection $publicitePrestataires;
 
     public function __construct()
     {
         $this->departements = new ArrayCollection();
         $this->publiciteRegions = new ArrayCollection();
-        $this->nombreClicks = new ArrayCollection();
+
+        $this->publiciteDemandes = new ArrayCollection();
+
+        $this->publicitePrestataires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,30 +150,63 @@ class Region
         return $this;
     }
 
+
+
     /**
-     * @return Collection<int, NombreClick>
+     * @return Collection<int, PubliciteDemande>
      */
-    public function getNombreClicks(): Collection
+    public function getPubliciteDemandes(): Collection
     {
-        return $this->nombreClicks;
+        return $this->publiciteDemandes;
     }
 
-    public function addNombreClick(NombreClick $nombreClick): static
+    public function addPubliciteDemande(PubliciteDemande $publiciteDemande): static
     {
-        if (!$this->nombreClicks->contains($nombreClick)) {
-            $this->nombreClicks->add($nombreClick);
-            $nombreClick->setRegion($this);
+        if (!$this->publiciteDemandes->contains($publiciteDemande)) {
+            $this->publiciteDemandes->add($publiciteDemande);
+            $publiciteDemande->setRegion($this);
         }
 
         return $this;
     }
 
-    public function removeNombreClick(NombreClick $nombreClick): static
+    public function removePubliciteDemande(PubliciteDemande $publiciteDemande): static
     {
-        if ($this->nombreClicks->removeElement($nombreClick)) {
+        if ($this->publiciteDemandes->removeElement($publiciteDemande)) {
             // set the owning side to null (unless already changed)
-            if ($nombreClick->getRegion() === $this) {
-                $nombreClick->setRegion(null);
+            if ($publiciteDemande->getRegion() === $this) {
+                $publiciteDemande->setRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, PublicitePrestataire>
+     */
+    public function getPublicitePrestataires(): Collection
+    {
+        return $this->publicitePrestataires;
+    }
+
+    public function addPublicitePrestataire(PublicitePrestataire $publicitePrestataire): static
+    {
+        if (!$this->publicitePrestataires->contains($publicitePrestataire)) {
+            $this->publicitePrestataires->add($publicitePrestataire);
+            $publicitePrestataire->setRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublicitePrestataire(PublicitePrestataire $publicitePrestataire): static
+    {
+        if ($this->publicitePrestataires->removeElement($publicitePrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($publicitePrestataire->getRegion() === $this) {
+                $publicitePrestataire->setRegion(null);
             }
         }
 

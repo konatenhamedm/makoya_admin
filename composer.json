@@ -18,7 +18,7 @@
         "mpdf/mpdf": "^8.1",
         "nelmio/api-doc-bundle": "*",
         "nelmio/cors-bundle": "^2.3",
-        "omines/datatables-bundle": "^0.7.2",
+        "omines/datatables-bundle": "^0.7.0",
         "oselya/ip-geolocation-bundle": "^0.0.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "^1.24",
@@ -26,7 +26,7 @@
         "scheb/2fa-bundle": "^6.8",
         "scheb/2fa-email": "^6.8",
         "scheb/2fa-totp": "^6.8",
-        "sensio/framework-extra-bundle": "^6.2",
+        "sensio/framework-extra-bundle": "^6.1",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/asset": "6.0.*",
         "symfony/console": "6.0.*",
@@ -116,7 +116,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*",
+            "require": "6.2.*",
             "docker": true
         }
     },

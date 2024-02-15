@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\NewsletterRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NewsletterRepository::class)]
 class Newsletter
@@ -17,11 +19,17 @@ class Newsletter
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\Email(message: 'Veuillez renseigner un email valide')]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
+
+    public function __construct()
+    {
+        $this->dateCreation = new DateTime();
+    }
 
     public function getId(): ?int
     {

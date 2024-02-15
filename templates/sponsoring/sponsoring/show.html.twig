@@ -1,0 +1,57 @@
+{% block page_content %}
+    <div class="modal-header">
+        <h4 class="modal-title">Détails Sponsoring</h4>
+        <div class="btn btn-icon btn-sm  ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <span class="svg-icon svg-icon-2x text-white">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+					<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+				</svg>
+            </span>
+        </div>
+    </div>
+   
+    <div class="modal-body">
+        <table class="table table-bordered">
+        <tbody>
+                            <tr>
+                    <th>Id</th>
+                    <td>{{ sponsoring.id }}</td>
+                </tr>
+                            <tr>
+                    <th>Titre</th>
+                    <td>{{ sponsoring.titre }}</td>
+                </tr>
+                            <tr>
+                    <th>DateDebut</th>
+                    <td>{{ sponsoring.dateDebut ? sponsoring.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                            <tr>
+                    <th>DateFin</th>
+                    <td>{{ sponsoring.dateFin ? sponsoring.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                            <tr>
+                    <th>Description</th>
+                    <td>{{ sponsoring.description }}</td>
+                </tr>
+                            <tr>
+                    <th>Lien</th>
+                    <td>{{ sponsoring.lien }}</td>
+                </tr>
+                            <tr>
+                    <th>Entreprise</th>
+                    <td>{{ sponsoring.entreprise }}</td>
+                </tr>
+                    </tbody>
+    </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn dark btn-outline" data-bs-dismiss="modal">Fermer</button>
+    </div>
+
+{% endblock %}
+{% block java %}
+    <script>
+        
+    </script>
+{% endblock %}

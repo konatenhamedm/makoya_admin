@@ -59,6 +59,16 @@ class Categorie
     #[ORM\JoinColumn(nullable: true)]
     private ?Fichier $image = null;
 
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: PubliciteDemande::class)]
+    private Collection $publiciteDemandes;
+
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: PublicitePrestataire::class)]
+    private Collection $publicitePrestataires;
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->sousCategories = new ArrayCollection();
@@ -68,6 +78,9 @@ class Categorie
         $this->workflowServicePrestataires = new ArrayCollection();
         $this->publiciteCategories = new ArrayCollection();
         $this->propositionServices = new ArrayCollection();
+        $this->publiciteDemandes = new ArrayCollection();
+        $this->publicitePrestataires = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -313,6 +326,98 @@ class Categorie
     public function setImage(?Fichier $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PubliciteDemande>
+     */
+    public function getPubliciteDemandes(): Collection
+    {
+        return $this->publiciteDemandes;
+    }
+
+    public function addPubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if (!$this->publiciteDemandes->contains($publiciteDemande)) {
+            $this->publiciteDemandes->add($publiciteDemande);
+            $publiciteDemande->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removePubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if ($this->publiciteDemandes->removeElement($publiciteDemande)) {
+            // set the owning side to null (unless already changed)
+            if ($publiciteDemande->getCategorie() === $this) {
+                $publiciteDemande->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, PublicitePrestataire>
+     */
+    public function getPublicitePrestataires(): Collection
+    {
+        return $this->publicitePrestataires;
+    }
+
+    public function addPublicitePrestataire(PublicitePrestataire $publicitePrestataire): static
+    {
+        if (!$this->publicitePrestataires->contains($publicitePrestataire)) {
+            $this->publicitePrestataires->add($publicitePrestataire);
+            $publicitePrestataire->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublicitePrestataire(PublicitePrestataire $publicitePrestataire): static
+    {
+        if ($this->publicitePrestataires->removeElement($publicitePrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($publicitePrestataire->getCategorie() === $this) {
+                $publicitePrestataire->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getCategorie() === $this) {
+                $nombreClick->setCategorie(null);
+            }
+        }
 
         return $this;
     }

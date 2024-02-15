@@ -13,30 +13,21 @@ class NotificationPrestataire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notificationPrestataires')]
-    private ?Prestataire $prestataire = null;
 
     #[ORM\ManyToOne(inversedBy: 'notificationPrestataires')]
     private ?Notification $notification = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notificationPrestataires')]
+    private ?UserFront $utilisateur = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPrestataire(): ?Prestataire
-    {
-        return $this->prestataire;
-    }
 
-    public function setPrestataire(?Prestataire $prestataire): static
-    {
-        $this->prestataire = $prestataire;
 
-        return $this;
-    }
-
-    public function getNotification(): ?Notification
+    public function sendNotification(): ?Notification
     {
         return $this->notification;
     }
@@ -44,6 +35,18 @@ class NotificationPrestataire
     public function setNotification(?Notification $notification): static
     {
         $this->notification = $notification;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?UserFront
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?UserFront $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

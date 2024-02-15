@@ -6,6 +6,7 @@ use App\Entity\Jours;
 use App\Entity\PubliciteEncart;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -35,6 +36,23 @@ class PubliciteEncartType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
             ])
+            ->add(
+                'ordre',
+                ChoiceType::class,
+                [
+                    'placeholder' => 'Choisir un ordre',
+                    'label' => 'Ordre',
+                    'required'     => false,
+                    'expanded'     => false,
+                    'attr' => ['class' => 'has-select2'],
+                    'multiple' => false,
+                    'choices'  => array_flip([
+                        '1' => '1',
+                        '2' => '2',
+                        '3' => '3'
+                    ]),
+                ]
+            )
             ->add('libelle')
 
             ->add('dateDebut', DateType::class, [

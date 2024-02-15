@@ -22,6 +22,7 @@ use App\Repository\QuartierRepository;
 use App\Repository\RegionRepository;
 use App\Repository\ServicePrestataireRepository;
 use App\Repository\SousCategorieRepository;
+use DateTime;
 
 #[Route('/ads/utilisateur/front/prestataire')]
 class PrestataireController extends BaseController
@@ -261,6 +262,7 @@ class PrestataireController extends BaseController
             if ($form->isValid()) {
                 $prestataire->setPassword($this->hasher->hashPassword($prestataire, $password));
                 $prestataire->setReference($this->numero());
+                $prestataire->setDateCreation(new DateTime());
                 //$prestataire->setQuartier($quartier);
                 $prestataireRepository->save($prestataire, true);
                 $data = true;
@@ -541,19 +543,30 @@ class PrestataireController extends BaseController
     #[Route('/liste/souscategorie', name: 'get_souscategorie', methods: ['GET'])]
     public function getInfoSerie(Request $request, SousCategorieRepository $sousCategorieRepository, ServicePrestataireRepository $servicePrestataireRepository)
     {
-        $response = new Response();
+        /* $response = new Response(); */
         $tabEnsemblesSousCate = array();
-
+        $tabEnsemblesService = array();
         $id = '';
         $id = $request->get('id');
         //dd( $id);
+        // dd($sousCategorieRepository->getSousCategorie($id));
         if ($id) {
 
-            $dataSousCat = $sousCategorieRepository->findBy(array("categorie" => $id));
-
-
-            //dd($dataSousCat);
             $i = 0;
+            $j = 0;
+            $dataSousCat = $sousCategorieRepository->findBy(array('categorie' => $id));
+
+            $dataService = $servicePrestataireRepository->findBy(array('categorie' => $id));
+
+            //dd($ensembles);
+
+
+            foreach ($dataService as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
+                $tabEnsemblesService[$j]['id'] = $e->getId();
+                $tabEnsemblesService[$j]['libelle'] = $e->getLibelle();
+                $j++;
+            }
+
 
 
             foreach ($dataSousCat as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
@@ -562,17 +575,24 @@ class PrestataireController extends BaseController
                 $i++;
             }
 
-            $dataSousCategorie = json_encode($tabEnsemblesSousCate); // formater le résultat de la requête en json
+            $data = [
+                'categories' => $tabEnsemblesSousCate,
+                'services' => $tabEnsemblesService
+            ];
+
+            // dd($data);
+            /* 
+            $dataSousCategorie = json_encode($data); // formater le résultat de la requête en json
 
 
             $response->headers->set('Content-Type', 'application/json');
-            $response->setContent($dataSousCategorie);
+            $response->setContent($dataSousCategorie); */
         }
-        return $response;
+        return $this->json($data);
     }
 
     #[Route('/liste/service', name: 'get_service', methods: ['GET'])]
-    public function getService(Request $request, SousCategorieRepository $sousCategorieRepository, ServicePrestataireRepository $servicePrestataireRepository)
+    public function getService(Request $request, ServicePrestataireRepository $servicePrestataireRepository)
     {
         $response = new Response();
         $tabEnsemblesService = array();
@@ -583,7 +603,7 @@ class PrestataireController extends BaseController
         if ($id) {
 
 
-            $dataService = $servicePrestataireRepository->findBy(array("categorie" => $id));
+            $dataService = $servicePrestataireRepository->getServiceCategorie($id);
 
             //dd($ensembles);
 

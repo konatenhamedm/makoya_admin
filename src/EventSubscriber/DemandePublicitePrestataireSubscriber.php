@@ -55,10 +55,11 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
 
     //  dd($entity);
     $entity->setDateValidation(new \DateTime());
+    $entity->setCode(str_replace('DMP', 'UP', $entity->getCode()));
     $this->em->flush();
 
     //dd($entity->getPrestataire());
-    $publicite = new PublicitePrestataire();
+    /* $publicite = new PublicitePrestataire();
     $publicite->setCode($this->numero());
     $publicite->setLibelle($entity->getLibelle());
     $publicite->setDateCreation(new \DateTime());
@@ -67,7 +68,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $publicite->setDateDebut($entity->getDateDebut());
     $publicite->setUtilisateur($this->repo->findOneBy(array('reference' => $entity->getPrestataire()->getReference())));
     $this->em->persist($publicite);
-    $this->em->flush();
+    $this->em->flush(); */
 
     /*     $notification = new Notification();
     $notification->setDateCreation(new DateTime())
@@ -85,7 +86,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $this->em->persist($notifcationPrestataire);
     $this->em->flush(); */
 
-    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicté  à été validée avec success nous vous contacterons pour plus de details", "Message validation", false, $entity->getPrestataire(), new UtilisateurSimple);
+    $this->notificationService->sendNotification("Nous venons par ce message vous annoncer que votre demande de publicté  à été validée avec success nous vous contacterons pour plus de details", "Message validation", $entity->getUtilisateur());
   }
 
   public function handleRejeter(TransitionEvent $event)
@@ -111,7 +112,7 @@ class DemandePublicitePrestataireSubscriber implements EventSubscriberInterface
     $this->em->persist($notifcationPrestataire);
     $this->em->flush(); */
 
-    $this->notificationService->getNotification("Nous venons par ce message vous annoncer que votre demande de publicité à été réjetée", "Message rejeter", false, $entity->getPrestataire(), new UtilisateurSimple);
+    $this->notificationService->sendNotification("Nous venons par ce message vous annoncer que votre demande de publicité à été réjetée", "Message rejeter", $entity->getUtilisateur());
   }
 
 

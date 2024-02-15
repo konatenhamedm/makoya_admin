@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
-#[ORM\Table(name:'decoupage_departement')]
+#[ORM\Table(name: 'decoupage_departement')]
 class Departement
 {
     #[ORM\Id]
@@ -28,13 +28,11 @@ class Departement
     #[ORM\OneToMany(mappedBy: 'departement', targetEntity: SousPrefecture::class)]
     private Collection $sousPrefectures;
 
-    #[ORM\OneToMany(mappedBy: 'departement', targetEntity: NombreClick::class)]
-    private Collection $nombreClicks;
+
 
     public function __construct()
     {
         $this->sousPrefectures = new ArrayCollection();
-        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,36 +100,6 @@ class Departement
             // set the owning side to null (unless already changed)
             if ($sousPrefecture->getDepartement() === $this) {
                 $sousPrefecture->setDepartement(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, NombreClick>
-     */
-    public function getNombreClicks(): Collection
-    {
-        return $this->nombreClicks;
-    }
-
-    public function addNombreClick(NombreClick $nombreClick): static
-    {
-        if (!$this->nombreClicks->contains($nombreClick)) {
-            $this->nombreClicks->add($nombreClick);
-            $nombreClick->setDepartement($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNombreClick(NombreClick $nombreClick): static
-    {
-        if ($this->nombreClicks->removeElement($nombreClick)) {
-            // set the owning side to null (unless already changed)
-            if ($nombreClick->getDepartement() === $this) {
-                $nombreClick->setDepartement(null);
             }
         }
 

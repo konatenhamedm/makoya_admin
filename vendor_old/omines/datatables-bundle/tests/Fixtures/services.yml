@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Tests\Fixtures\AppBundle\:
+        resource: 'AppBundle/{DataTable}'
+
+    Tests\Fixtures\AppBundle\Controller\:
+        resource: 'AppBundle/Controller'
+        tags: ['controller.service_arguments']
+
+    twig.extension.string_loader:
+        class: Twig\Extension\StringLoaderExtension
+        tags:
+            - { name: twig.extension }
+
+    test.Omines\DataTablesBundle\Exporter\DataTableExporterCollection: '@Omines\DataTablesBundle\Exporter\DataTableExporterCollection'
+
+    Tests\Fixtures\AppBundle\DataTable\Exporter\TxtExporter:
+        tags:
+            - datatables.exporter

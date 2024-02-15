@@ -67,7 +67,7 @@ framework:
                     from: demande_initie
                     to: demande_rejeter
 
-        add_demande_publicite_utilisateur_simple:
+        add_demande_sponsoring:
             type: 'state_machine'
             audit_trail:
                 enabled: true
@@ -75,7 +75,7 @@ framework:
                 type: 'method'
                 property: 'etat'
             supports:
-                - App\Entity\PubliciteDemandeUtilisateurSimple
+                - App\Entity\Sponsoring
             initial_marking: demande_initie
             places:
                 - demande_initie
@@ -88,4 +88,5 @@ framework:
                 rejeter:
                     from: demande_initie
                     to: demande_rejeter
+
                

@@ -35,7 +35,7 @@ class PubliciteEncartController extends BaseController
         } else {
             $nb = $nb + 1;
         }
-        return (date("y") . 'UP' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
+        return (date("y") . 'ENC' . date("m", strtotime("now")) . str_pad($nb, 3, '0', STR_PAD_LEFT));
     }
 
     const INDEX_ROOT_NAME = 'app_publicite_publicite_encart_index';

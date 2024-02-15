@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FaqsRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FaqsRepository::class)]
@@ -22,6 +23,9 @@ class Faqs
 
     #[ORM\ManyToOne(inversedBy: 'faqs')]
     private ?TypeFaqs $type = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $reponse = null;
 
     public function getId(): ?int
     {
@@ -60,6 +64,18 @@ class Faqs
     public function setType(?TypeFaqs $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getReponse(): ?string
+    {
+        return $this->reponse;
+    }
+
+    public function setReponse(string $reponse): static
+    {
+        $this->reponse = $reponse;
 
         return $this;
     }

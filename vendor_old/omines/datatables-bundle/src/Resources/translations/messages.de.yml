@@ -1,0 +1,28 @@
+datatable:
+    common:
+        are_you_sure: "Bist du sicher?"
+        you_need_to_select_at_least_one_element: "Sie müssen mindestens ein Element auswählen."
+        search: Suchen
+        execute: "Ausführen"
+        ok: "OK"
+    datatable:
+        searchPlaceholder: ""
+        emptyTable:     "Keine Daten in der Tabelle vorhanden"
+        info:           "_START_ bis _END_ von _TOTAL_ Einträgen"
+        infoEmpty:      "0 bis 0 von 0 Einträgen"
+        infoFiltered:   " (gefiltert von _MAX_ Einträgen)"
+        infoPostFix:    ""
+        infoThousands:  "."
+        lengthMenu:     "_MENU_ Einträge anzeigen"
+        loadingRecords: "Wird geladen..."
+        processing:     "Bitte warten..."
+        search:         "Suchen"
+        zeroRecords:    "Keine Einträge vorhanden."
+        paginate:
+            first:    "Erste"
+            last:     "Letzte"
+            next:     "Nächste"
+            previous: "Vorherige"
+        aria:
+            sortAscending:  ": zu aktivieren, um Spalte aufsteigend zu sortieren"
+            sortDescending: ": zu aktivieren, um Spalte absteigend sortieren"

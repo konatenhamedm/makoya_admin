@@ -2,7 +2,14 @@
     {% from '_macros/macro_image_publicite.html.twig' import prototype_ligne_colonne %}
     {% form_theme form 'widget/fields-block.html.twig' %}
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Création demande publicité prestataire</h5>
+{% if publicite_demande.type == "Prestataire" %}
+    
+        <h5 class="modal-title" id="exampleModalLabel">Création demande publicité | {{ publicite_demande.utilisateur.denominationSociale ~ ' | ' ~ publicite_demande.utilisateur.contactPrincipal}}</h5>
+{% else %}
+        <h5 class="modal-title" id="exampleModalLabel">Création demande publicité | {{ publicite_demande.utilisateur.getNomComplet ~ ' | ' ~ publicite_demande.utilisateur.contact}}</h5>
+    
+{% endif %}
+        
         <div class="btn btn-icon btn-sm  ms-2" data-bs-dismiss="modal" aria-label="Close">
             <span class="svg-icon svg-icon-2x text-white">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,8 +26,12 @@
             <div class="col-md-12">{{ form_row(form.libelle) }}</div>
             <div class="col-md-6">{{ form_row(form.dateDebut) }}</div>
             <div class="col-md-6">{{ form_row(form.dateFin) }}</div>
-            <div class="col-md-6">{{ form_row(form.jours) }}</div>
-            <div class="col-md-6">{{ form_row(form.prestataire) }}</div>
+            <div class="col-md-4">{{ form_row(form.jours) }}</div>
+            <div class="col-md-4">{{ form_row(form.utilisateur) }}</div>
+            <div class="col-md-4">{{ form_row(form.nature) }}</div>
+            <div class="col-md-12 vue_categorie">{{ form_row(form.categorie) }}</div>
+            <div class="col-md-12 vue_region">{{ form_row(form.region) }}</div>
+            <div class="col-md-12 vue_ordre">{{ form_row(form.ordre) }}</div>
         </div><br>
         {{ prototype_ligne_colonne(form) }}
         <br>
@@ -45,6 +56,49 @@
   <script src="{{ asset('assets/universitaitre.js') }}"></script>
     <script> 
     $(function () {
+
+        $('.vue_categorie').hide()
+        $('.vue_region').hide()
+        $('.vue_ordre').hide()
+
+      const $nature = $('#{{ form.nature.vars.id }}');
+      const $categorie = $('#{{ form.categorie.vars.id }}');
+      const $region = $('#{{ form.region.vars.id }}');
+      const $ordre = $('#{{ form.ordre.vars.id }}');
+
+        $nature.on('change', function () {
+        const val = $(this).val();
+
+        if(val == "Region"){
+        $('.vue_categorie').hide()
+        $('.vue_region').show()
+        $('.vue_ordre').hide()
+        }else if(val == "Categorie"){
+        $('.vue_categorie').show()
+        $('.vue_region').hide()
+        $('.vue_ordre').hide()
+        }else if(val == "Encart"){
+
+        $('.vue_categorie').hide()
+        $('.vue_region').hide()
+        $('.vue_ordre').show()
+        }else{
+         $('.vue_categorie').hide()
+        $('.vue_region').hide()
+        $('.vue_ordre').hide()   
+        }
+
+      
+        
+         
+     
+      });
+      
+      
+      
+
+    
+
 	  var elements = Array.from(document.querySelectorAll("[data-bs-stacked-modal]"));
 
             if (elements && elements.length > 0) {

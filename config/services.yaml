@@ -56,6 +56,7 @@ services:
     App\Twig\CustomTwigExtension:
         arguments:
             $renderer: '@twig.form.renderer'
+     
 
     #datadog.event_subscriber.audit:
     #    class: App\EventSubscriber\AuditSubscriber

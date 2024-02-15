@@ -21,6 +21,9 @@ class PubliciteEncart extends Publicite
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $heureFin = null;
 
+    #[ORM\Column]
+    private ?int $ordre = null;
+
 
     public function getId(): ?int
     {
@@ -47,6 +50,18 @@ class PubliciteEncart extends Publicite
     public function setHeureFin($heureFin): static
     {
         $this->heureFin = $heureFin;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): static
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

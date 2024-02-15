@@ -30,17 +30,20 @@
 {% endblock %}
 {% block java %}
     <script>
+    
        $(function () {
            
             init_select2('select', null, '#exampleModalSizeLg2');
 
         });
+
+
            $('.categorie').on('change',function (e) {
                 
             const $this = $(this)
              $res = $this.closest('.row-colonne');
 
-             $id = $(this).val();
+             const $id = $(this).val();
           $.ajax({
             url:        '/ads/utilisateur/front/prestataire/liste/souscategorie',
             type:       'get',
@@ -48,12 +51,21 @@
             data:     {id:$id},
             dataType:   'json',
             success: function(json){
-               
+               console.log(json);
                 $res.find('#'+$res.find('.sousCategorie').attr("id")).html(''); //je vide la 2ème list
                 $res.find('#'+$res.find('.sousCategorie').attr("id")).append('<option value selected="default">Choisissez</option>');
-                $.each(json, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                $.each(json.categories, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
                      
                   $res.find("#"+$res.find('.sousCategorie').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
+             
+                });
+
+
+                 $res.find('#'+$res.find('.service').attr("id")).html(''); //je vide la 2ème list
+                $res.find('#'+$res.find('.service').attr("id")).append('<option value selected="default">Choisissez</option>');
+                $.each(json.services, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                    
+                  $res.find("#"+$res.find('.service').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
              
                 });
 
@@ -62,7 +74,7 @@
             }
         });
 
-            $.ajax({
+           /* $.ajax({
             url:        '/ads/utilisateur/front/prestataire/liste/service',
             type:       'get',
              async: false,
@@ -81,7 +93,7 @@
    
 
             }
-        });
+        });*/
         });
      
 
@@ -128,7 +140,7 @@
                const $this = $(this)
              $res = $this.closest('.row-colonne');
 
-             $id = $(this).val();
+            const $id = $(this).val();
           $.ajax({
             url:        '/ads/utilisateur/front/prestataire/liste/souscategorie',
             type:       'get',
@@ -139,9 +151,18 @@
                
                 $res.find('#'+$res.find('.sousCategorie').attr("id")).html(''); //je vide la 2ème list
                 $res.find('#'+$res.find('.sousCategorie').attr("id")).append('<option value selected="default">Choisissez</option>');
-                $.each(json, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                $.each(json.categories, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
                      
                   $res.find("#"+$res.find('.sousCategorie').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
+             
+                });
+
+
+                $res.find('#'+$res.find('.service').attr("id")).html(''); //je vide la 2ème list
+                $res.find('#'+$res.find('.service').attr("id")).append('<option value selected="default">Choisissez</option>');
+                $.each(json.services, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+                    
+                  $res.find("#"+$res.find('.service').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
              
                 });
 
@@ -150,7 +171,7 @@
             }
         });
 
-            $.ajax({
+           /* $.ajax({
             url:        '/ads/utilisateur/front/prestataire/liste/service',
             type:       'get',
              async: false,
@@ -169,7 +190,7 @@
    
 
             }
-        });
+        });*/
         });
 
         ///Finnnnnn

@@ -141,6 +141,16 @@ class WorkflowServicePrestataireController extends BaseController
                     'id' => 'param_cm',
                     'href' => $this->generateUrl('app_message_newsletter_index')
                 ],
+                [
+                    'label' => 'Type Faqs',
+                    'id' => 'param_cm_type_faq',
+                    'href' => $this->generateUrl('app_message_type_faqs_index')
+                ],
+                [
+                    'label' => 'Faqs',
+                    'id' => 'param_cm_faq',
+                    'href' => $this->generateUrl('app_message_faqs_index')
+                ],
 
 
 

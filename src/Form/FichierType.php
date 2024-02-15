@@ -52,7 +52,7 @@ class FichierType extends AbstractType
                     , 'required' => $options['required'],
                     'attr' => $attr,
                     'constraints' => [
-                        // $options['required'] ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
+                        //  $options['required'] ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
                         //in_array('Autre', $options['validation_groups']) ? new NotBlank(null, "Veuillez renseigner le fichier") : "",
                         new NotBlank(null, "Veuillez renseigner le fichier"),
                         new File(

@@ -57,7 +57,7 @@
         $(function() { 
               $('#grid_app_publicite_publicite_demande_utilisateur_simple').initDataTables({{ datatable_settings(datatable) }}, {
                   searching: true,
-                  ajaxUrl: "{{ path('app_publicite_publicite_demande_utilisateur_simple_index',{'etat':etat}) }}",
+                  ajaxUrl: "{{ path('app_publicite_publicite_demande_index',{'etat':etat}) }}",
                   language: {
                       url: asset_base_path + "/js/i18n/French.json"
                   }

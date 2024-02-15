@@ -46,20 +46,20 @@ class GestionPubliciteController extends BaseController
                 'href' => $this->generateUrl('app_config_publicite_ls', ['module' => 'encart'])
             ],
             [
-                'label' => 'Demande pubs prestataire',
+                'label' => 'Demande et gestion publicités des utilisateurs',
                 'icon' => 'bi bi-list',
                 'href' => $this->generateUrl('app_config_publicite_ls', ['module' => 'demande'])
-            ],
+            ]/*,
             [
                 'label' => 'Demande pubs utilisateur simple',
                 'icon' => 'bi bi-list',
                 'href' => $this->generateUrl('app_config_publicite_ls', ['module' => 'demande_utilisateur_simple'])
-            ],
+            ] ,
             [
                 'label' => 'Suivi publicités',
                 'icon' => 'bi bi-list',
                 'href' => $this->generateUrl('app_config_publicite_ls', ['module' => 'suivi'])
-            ],
+            ], */
 
 
 
@@ -205,7 +205,7 @@ class GestionPubliciteController extends BaseController
 
 
             ],
-            'demande_utilisateur_simple' => [
+            /*     'demande_utilisateur_simple' => [
                 [
                     'label' => 'En attente validation',
                     'id' => 'param_article',
@@ -221,7 +221,7 @@ class GestionPubliciteController extends BaseController
                     'id' => 'param_p',
                     'href' => $this->generateUrl('app_publicite_publicite_demande_utilisateur_simple_index', ['etat' => 'demande_rejeter'])
                 ]
-            ],
+            ], */
 
 
         ];

@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use App\Entity\Notification;
 use App\Entity\UtilisateurSimple;
+use App\Form\PubliciteDemandeSimpleType;
 use App\Service\NotificationService;
 use Doctrine\ORM\QueryBuilder;
 
@@ -47,20 +48,32 @@ class PubliciteDemandeController extends BaseController
     public function index(Request $request, string $etat, DataTableFactory $dataTableFactory): Response
     {
 
-
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
 
         $table = $dataTableFactory->create()
             ->add('libelle', TextColumn::class, ['label' => 'Libelle'])
             ->add('dateDebut', DateTimeColumn::class, ['label' => 'Date debut', 'format' => 'd-m-Y'])
             ->add('dateFin', DateTimeColumn::class, ['label' => 'Date fin', 'format' => 'd-m-Y'])
-            ->add('prestataire', TextColumn::class, ['label' => 'Prestatire', 'field' => 'p.denominationSociale'])
+            // ->add('utilisateur', TextColumn::class, ['label' => 'Prestatire', 'field' => 'p.denominationSociale'])
+
+            ->add('utilisateur', TextColumn::class, ['label' => 'Utilisateur', 'render' => function ($value, PubliciteDemande $context) {
+                // dd($context->getUtilisateur());
+                if (str_contains($context->getType(), "Prestataire") == true) {
+                    $label = $context->getUtilisateur()->getDenominationSociale();
+                    $color = 'danger';
+                } else {
+                    $label = $context->getUtilisateur()->getNomComplet();
+                    $color = 'warning';
+                }
+
+                return $label;
+            }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => PubliciteDemande::class,
                 'query' => function (QueryBuilder $qb) use ($etat) {
                     $qb->select('e, p')
                         ->from(PubliciteDemande::class, 'e')
-                        ->join('e.prestataire', 'p')
+                        ->join('e.utilisateur', 'p')
                         ->andWhere('e.etat = :etat')
                         ->setParameter('etat', $etat);
                 }
@@ -168,6 +181,67 @@ class PubliciteDemandeController extends BaseController
         ]);
     }
 
+    #[Route('/pubs/new', name: 'app_publicite_publicite_demande_utilisateur_simple_new', methods: ['GET', 'POST'])]
+    public function newUserSimple(Request $request, PubliciteDemandeRepository $publiciteDemandeRepository, FormError $formError): Response
+    {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
+        $publiciteDemande = new PubliciteDemande();
+        $form = $this->createForm(PubliciteDemandeSimpleType::class, $publiciteDemande, [
+            'method' => 'POST',
+            'type' => 'image',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
+            'action' => $this->generateUrl('app_publicite_publicite_demande_utilisateur_simple_new')
+        ]);
+        $form->handleRequest($request);
+
+        $data = null;
+        $statutCode = Response::HTTP_OK;
+
+        $isAjax = $request->isXmlHttpRequest();
+
+        if ($form->isSubmitted()) {
+            $response = [];
+            $redirect = $this->generateUrl('app_config_publicite_index');
+
+
+            if ($form->isValid()) {
+                $publiciteDemande->setCode($this->numero());
+                $publiciteDemande->setEtat('demande_initie');
+                $publiciteDemande->setType('Utilisateur simple');
+                $publiciteDemandeRepository->save($publiciteDemande, true);
+                $data = true;
+                $message = 'Opération effectuée avec succès';
+                $statut = 1;
+                $this->addFlash('success', $message);
+            } else {
+                $message = $formError->all($form);
+                $statut = 0;
+                $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+                if (!$isAjax) {
+                    $this->addFlash('warning', $message);
+                }
+            }
+
+
+            if ($isAjax) {
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
+            } else {
+                if ($statut == 1) {
+                    return $this->redirect($redirect, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return $this->renderForm('publicite/publicite_demande_utilisateur_simple/new.html.twig', [
+            'publicite_demande_utilisateur_simple' => $publiciteDemande,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/pubs/new', name: 'app_publicite_publicite_demande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, PubliciteDemandeRepository $publiciteDemandeRepository, FormError $formError): Response
     {
@@ -176,6 +250,7 @@ class PubliciteDemandeController extends BaseController
         $form = $this->createForm(PubliciteDemandeType::class, $publiciteDemande, [
             'method' => 'POST',
             'type' => 'image',
+            'nature' => "Prestataire",
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],
@@ -198,6 +273,7 @@ class PubliciteDemandeController extends BaseController
             if ($form->isValid()) {
                 $publiciteDemande->setCode($this->numero());
                 $publiciteDemande->setEtat('demande_initie');
+                $publiciteDemande->setType('Prestataire');
                 $publiciteDemandeRepository->save($publiciteDemande, true);
                 $data = true;
                 $message = 'Opération effectuée avec succès';
@@ -242,7 +318,8 @@ class PubliciteDemandeController extends BaseController
         $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(PubliciteDemandeType::class, $publiciteDemande, [
             'method' => 'POST',
-            'type' => 'autre',
+            'type' => 'edit',
+            'nature' => $publiciteDemande->getType(),
             'doc_options' => [
                 'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
                 'attrs' => ['class' => 'filestyle'],

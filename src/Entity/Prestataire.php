@@ -41,11 +41,8 @@ class Prestataire extends UserFront
     private Collection $workflowServicePrestataires;
 
 
-    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PubliciteDemande::class)]
-    private Collection $publiciteDemandes;
 
-    #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: NotificationPrestataire::class)]
-    private Collection $notificationPrestataires;
+
 
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Signaler::class)]
     private Collection $signalers;
@@ -59,8 +56,6 @@ class Prestataire extends UserFront
         $this->propositionServices = new ArrayCollection();
         $this->numeroPrestataires = new ArrayCollection();
         $this->workflowServicePrestataires = new ArrayCollection();
-        $this->publiciteDemandes = new ArrayCollection();
-        $this->notificationPrestataires = new ArrayCollection();
         $this->signalers = new ArrayCollection();
     }
 
@@ -227,65 +222,8 @@ class Prestataire extends UserFront
 
 
 
-    /**
-     * @return Collection<int, PubliciteDemande>
-     */
-    public function getPubliciteDemandes(): Collection
-    {
-        return $this->publiciteDemandes;
-    }
 
-    public function addPubliciteDemande(PubliciteDemande $publiciteDemande): static
-    {
-        if (!$this->publiciteDemandes->contains($publiciteDemande)) {
-            $this->publiciteDemandes->add($publiciteDemande);
-            $publiciteDemande->setPrestataire($this);
-        }
 
-        return $this;
-    }
-
-    public function removePubliciteDemande(PubliciteDemande $publiciteDemande): static
-    {
-        if ($this->publiciteDemandes->removeElement($publiciteDemande)) {
-            // set the owning side to null (unless already changed)
-            if ($publiciteDemande->getPrestataire() === $this) {
-                $publiciteDemande->setPrestataire(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, NotificationPrestataire>
-     */
-    public function getNotificationPrestataires(): Collection
-    {
-        return $this->notificationPrestataires;
-    }
-
-    public function addNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
-    {
-        if (!$this->notificationPrestataires->contains($notificationPrestataire)) {
-            $this->notificationPrestataires->add($notificationPrestataire);
-            $notificationPrestataire->setPrestataire($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
-    {
-        if ($this->notificationPrestataires->removeElement($notificationPrestataire)) {
-            // set the owning side to null (unless already changed)
-            if ($notificationPrestataire->getPrestataire() === $this) {
-                $notificationPrestataire->setPrestataire(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Signaler>

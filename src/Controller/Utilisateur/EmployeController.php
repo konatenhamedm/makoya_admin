@@ -36,80 +36,75 @@ class EmployeController extends BaseController
     #[Route('/ads/', name: 'app_utilisateur_employe_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
-        $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(),self::INDEX_ROOT_NAME);
+        $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
 
         $table = $dataTableFactory->create()
-        ->add('matricule', TextColumn::class, ['label' => 'Matricule'])
-        ->add('civilite', TextColumn::class, ['field' => 'civilite.code', 'label' => 'Civilité'])
-        ->add('nom', TextColumn::class, ['label' => 'Nom'])
-        ->add('prenom', TextColumn::class, ['label' => 'Prénoms'])
-        ->add('adresseMail', TextColumn::class, ['label' => 'Email'])
-        ->add('fonction', TextColumn::class, ['field' => 'fonction.libelle', 'label' => 'Fonction'])
-        ->createAdapter(ORMAdapter::class, [
-            'entity' => Employe::class,
-            'query' => function(QueryBuilder $qb){
-                $qb->select('e, civilite, fonction')
-                    ->from(Employe::class, 'e')
-                    ->join('e.civilite', 'civilite')
-                    ->join('e.fonction', 'fonction')
-                ;
-            }
-        ])
-        ->setName('dt_app_utilisateur_employe');
-        if($permission != null){
+            ->add('matricule', TextColumn::class, ['label' => 'Matricule'])
+            ->add('civilite', TextColumn::class, ['field' => 'civilite.code', 'label' => 'Civilité'])
+            ->add('nom', TextColumn::class, ['label' => 'Nom'])
+            ->add('prenom', TextColumn::class, ['label' => 'Prénoms'])
+            ->add('adresseMail', TextColumn::class, ['label' => 'Email'])
+            ->add('fonction', TextColumn::class, ['field' => 'fonction.libelle', 'label' => 'Fonction'])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => Employe::class,
+                'query' => function (QueryBuilder $qb) {
+                    $qb->select('e, civilite, fonction')
+                        ->from(Employe::class, 'e')
+                        ->join('e.civilite', 'civilite')
+                        ->join('e.fonction', 'fonction');
+                }
+            ])
+            ->setName('dt_app_utilisateur_employe');
+        if ($permission != null) {
             $renders = [
                 'edit' =>  new ActionRender(function () use ($permission) {
-                    if($permission == 'R'){
+                    if ($permission == 'R') {
                         return false;
-                    }elseif($permission == 'RD'){
+                    } elseif ($permission == 'RD') {
                         return false;
-                    }elseif($permission == 'RU'){
+                    } elseif ($permission == 'RU') {
                         return true;
-                    }elseif($permission == 'CRUD'){
+                    } elseif ($permission == 'CRUD') {
                         return true;
-                    }elseif($permission == 'CRU'){
+                    } elseif ($permission == 'CRU') {
+                        return true;
+                    } elseif ($permission == 'CR') {
+                        return false;
+                    } else {
                         return true;
                     }
-                    elseif($permission == 'CR'){
-                        return false;
-                    }else{
-                        return true;
-                    }
-
                 }),
                 'delete' => new ActionRender(function () use ($permission) {
-                    if($permission == 'R'){
+                    if ($permission == 'R') {
                         return false;
-                    }elseif($permission == 'RD'){
+                    } elseif ($permission == 'RD') {
                         return true;
-                    }elseif($permission == 'RU'){
+                    } elseif ($permission == 'RU') {
                         return false;
-                    }elseif($permission == 'CRUD'){
+                    } elseif ($permission == 'CRUD') {
                         return true;
-                    }elseif($permission == 'CRU'){
+                    } elseif ($permission == 'CRU') {
                         return false;
-                    }
-                    elseif($permission == 'CR'){
+                    } elseif ($permission == 'CR') {
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
                 }),
                 'show' => new ActionRender(function () use ($permission) {
-                    if($permission == 'R'){
+                    if ($permission == 'R') {
                         return true;
-                    }elseif($permission == 'RD'){
+                    } elseif ($permission == 'RD') {
                         return true;
-                    }elseif($permission == 'RU'){
+                    } elseif ($permission == 'RU') {
                         return true;
-                    }elseif($permission == 'CRUD'){
+                    } elseif ($permission == 'CRUD') {
                         return true;
-                    }elseif($permission == 'CRU'){
+                    } elseif ($permission == 'CRU') {
                         return true;
-                    }
-                    elseif($permission == 'CR'){
+                    } elseif ($permission == 'CR') {
                         return true;
-                    }else{
+                    } else {
                         return true;
                     }
                     return true;
@@ -128,38 +123,22 @@ class EmployeController extends BaseController
 
             if ($hasActions) {
                 $table->add('id', TextColumn::class, [
-                    'label' => 'Actions'
-                    , 'orderable' => false
-                    ,'globalSearchable' => false
-                    ,'className' => 'grid_row_actions'
-                    , 'render' => function ($value, Employe $context) use ($renders) {
+                    'label' => 'Actions', 'orderable' => false, 'globalSearchable' => false, 'className' => 'grid_row_actions', 'render' => function ($value, Employe $context) use ($renders) {
                         $options = [
                             'default_class' => 'btn btn-xs btn-clean btn-icon mr-2 ',
                             'target' => '#exampleModalSizeLg2',
 
                             'actions' => [
                                 'edit' => [
-                                    'target'=>'#exampleModalSizeSm2',
-                                    'url' => $this->generateUrl('app_utilisateur_employe_edit', ['id' => $value])
-                                    , 'ajax' => true
-                                    , 'icon' => '%icon% bi bi-pen'
-                                    , 'attrs' => ['class' => 'btn-default']
-                                    , 'render' => $renders['edit']
+                                    'target' => '#exampleModalSizeSm2',
+                                    'url' => $this->generateUrl('app_utilisateur_employe_edit', ['id' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-default'], 'render' => $renders['edit']
                                 ],
                                 'show' => [
-                                    'url' => $this->generateUrl('app_utilisateur_employe_show', ['id' => $value])
-                                    , 'ajax' => true
-                                    , 'icon' => '%icon% bi bi-eye'
-                                    , 'attrs' => ['class' => 'btn-primary']
-                                    , 'render' => $renders['show']
+                                    'url' => $this->generateUrl('app_utilisateur_employe_show', ['id' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-eye', 'attrs' => ['class' => 'btn-primary'], 'render' => $renders['show']
                                 ],
                                 'delete' => [
                                     'target' => '#exampleModalSizeNormal',
-                                    'url' => $this->generateUrl('app_utilisateur_employe_delete', ['id' => $value])
-                                    , 'ajax' => true
-                                    , 'icon' => '%icon% bi bi-trash'
-                                    , 'attrs' => ['class' => 'btn-danger']
-                                    ,  'render' => $renders['delete']
+                                    'url' => $this->generateUrl('app_utilisateur_employe_delete', ['id' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-trash', 'attrs' => ['class' => 'btn-danger'],  'render' => $renders['delete']
                                 ]
                             ]
 
@@ -203,38 +182,33 @@ class EmployeController extends BaseController
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_employe_index');
 
-           
+
 
 
             if ($form->isValid()) {
-                
+
                 $employeRepository->add($employe, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
                 $statut = 1;
                 $this->addFlash('success', $message);
-
-                
             } else {
                 $message = $formError->all($form);
                 $statut = 0;
                 $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
                 if (!$isAjax) {
-                  $this->addFlash('warning', $message);
+                    $this->addFlash('warning', $message);
                 }
-                
             }
 
 
             if ($isAjax) {
-                return $this->json( compact('statut', 'message', 'redirect', 'data'), $statutCode);
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
             } else {
                 if ($statut == 1) {
                     return $this->redirect($redirect, Response::HTTP_OK);
                 }
             }
-
-            
         }
 
         return $this->renderForm('utilisateur/employe/new.html.twig', [
@@ -254,11 +228,11 @@ class EmployeController extends BaseController
     #[Route('/ads/{id}/edit', name: 'app_utilisateur_employe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Employe $employe, EmployeRepository $employeRepository, FormError $formError): Response
     {
-        
+
         $form = $this->createForm(EmployeType::class, $employe, [
             'method' => 'POST',
             'action' => $this->generateUrl('app_utilisateur_employe_edit', [
-                    'id' =>  $employe->getId()
+                'id' =>  $employe->getId()
             ])
         ]);
 
@@ -274,29 +248,26 @@ class EmployeController extends BaseController
             $response = [];
             $redirect = $this->generateUrl('app_utilisateur_employe_index');
 
-           
+
             if ($form->isValid()) {
-                
+
                 $employeRepository->add($employe, true);
                 $data = true;
                 $message       = 'Opération effectuée avec succès';
                 $statut = 1;
                 $this->addFlash('success', $message);
-
-                
             } else {
                 $message = $formError->all($form);
                 $statut = 0;
                 $statutCode = Response::HTTP_INTERNAL_SERVER_ERROR;
                 if (!$isAjax) {
-                  $this->addFlash('warning', $message);
+                    $this->addFlash('warning', $message);
                 }
-                
             }
 
 
             if ($isAjax) {
-                return $this->json( compact('statut', 'message', 'redirect', 'data'), $statutCode);
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
             } else {
                 if ($statut == 1) {
                     return $this->redirect($redirect, Response::HTTP_OK);
@@ -316,14 +287,14 @@ class EmployeController extends BaseController
         $form = $this->createFormBuilder()
             ->setAction(
                 $this->generateUrl(
-                'app_utilisateur_employe_delete'
-                ,   [
+                    'app_utilisateur_employe_delete',
+                    [
                         'id' => $employe->getId()
                     ]
                 )
             )
             ->setMethod('DELETE')
-        ->getForm();
+            ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = true;
@@ -358,10 +329,10 @@ class EmployeController extends BaseController
 
 
     #[Route('/ads/employe/addFile', name: 'employe_addFile_new', methods: ['GET', 'POST'])]
-    public function addFile(Request $request,FormError $formError,EmployeRepository $employeRepository, EntityManagerInterface $entityManager,CiviliteRepository $civiliteRepository,FonctionRepository $fonctionRepository)
+    public function addFile(Request $request, FormError $formError, EmployeRepository $employeRepository, EntityManagerInterface $entityManager, CiviliteRepository $civiliteRepository, FonctionRepository $fonctionRepository)
     {
         $dossier = new UploadFile();
-        $form = $this->createForm(UploadFileType::class,$dossier, [
+        $form = $this->createForm(UploadFileType::class, $dossier, [
             'method' => 'POST',
             'action' => $this->generateUrl('employe_addFile_new')
         ]);
@@ -401,23 +372,21 @@ class EmployeController extends BaseController
                 $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
 
 
-                foreach ($sheetData as $Row)
-                {
+                foreach ($sheetData as $Row) {
 
                     $matricule = $Row['A'];     // store the first_name on each iteration
                     $nom = $Row['B'];     // store the first_name on each iteration
                     $prenom = $Row['C'];   // store the last_name on each iteration
-                    $fonction= $Row['D'];  // store the email on each iteration
+                    $fonction = $Row['D'];  // store the email on each iteration
                     $contact = $Row['E']; // store the phone on each iteration
-                    $adresse=$Row['F']; // store the phone on each iteration
+                    $adresse = $Row['F']; // store the phone on each iteration
                     $civilite = $Row['G']; // store the phone on each iteration
 
                     $employe_existant = $employeRepository->findOneBy(array('matricule' => $matricule));
 
 
                     // make sure that the user does not already exists in your db
-                    if (!$employe_existant)
-                    {
+                    if (!$employe_existant) {
 
                         $employe = new Employe();
                         $employe->setNom($nom);
@@ -432,7 +401,7 @@ class EmployeController extends BaseController
                         $entityManager->persist($employe);
                         $entityManager->flush();
                         // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
-                    }else{
+                    } else {
 
                         $employe_existant->setNom($nom);
                         $employe_existant->setMatricule($matricule);
@@ -443,7 +412,7 @@ class EmployeController extends BaseController
                             $employe_existant->setCivilite($civiliteRepository->findOneBy(array('libelle' => $civilite)));
                         if ($fonction)
                             $employe_existant->setFonction($fonctionRepository->findOneBy(array('libelle' => $fonction)));
-                        $entityManager->persist( $employe_existant);
+                        $entityManager->persist($employe_existant);
                         $entityManager->flush();
                     }
                 }
@@ -452,19 +421,16 @@ class EmployeController extends BaseController
                 $message       = 'Opération effectuée avec succès';
                 $statut = 1;
                 $this->addFlash('success', $message);
-
-
             }
 
 
             if ($isAjax) {
-                return $this->json( compact('statut', 'message', 'redirect', 'data'), $statutCode);
+                return $this->json(compact('statut', 'message', 'redirect', 'data'), $statutCode);
             } else {
                 if ($statut == 1) {
                     return $this->redirect($redirect, Response::HTTP_OK);
                 }
             }
-
         }
         return $this->renderForm('parametre/uploadFile/upload_file_new.html.twig', [
             'form' => $form,

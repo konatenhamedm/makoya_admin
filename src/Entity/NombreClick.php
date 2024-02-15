@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NombreClickRepository;
+use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NombreClickRepository::class)]
@@ -24,16 +26,25 @@ class NombreClick
     private ?int $nombre = null;
 
     #[ORM\ManyToOne(inversedBy: 'nombreClicks')]
-    private ?Commune $commune = null;
+    private ?Categorie $categorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'nombreClicks')]
-    private ?SousPrefecture $sousPrefecture = null;
+    private ?SousCategorie $sousCategorie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'nombreClicks')]
-    private ?Departement $departement = null;
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'nombreClicks')]
-    private ?Region $region = null;
+    #[ORM\Column(length: 255)]
+    private ?string $mac = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateModification = null;
+
+
+    public function __construct()
+    {
+        $this->dateModification = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -76,50 +87,62 @@ class NombreClick
         return $this;
     }
 
-    public function getCommune(): ?Commune
+    public function getCategorie(): ?Categorie
     {
-        return $this->commune;
+        return $this->categorie;
     }
 
-    public function setCommune(?Commune $commune): static
+    public function setCategorie(?Categorie $categorie): static
     {
-        $this->commune = $commune;
+        $this->categorie = $categorie;
 
         return $this;
     }
 
-    public function getSousPrefecture(): ?SousPrefecture
+    public function getSousCategorie(): ?SousCategorie
     {
-        return $this->sousPrefecture;
+        return $this->sousCategorie;
     }
 
-    public function setSousPrefecture(?SousPrefecture $sousPrefecture): static
+    public function setSousCategorie(?SousCategorie $sousCategorie): static
     {
-        $this->sousPrefecture = $sousPrefecture;
+        $this->sousCategorie = $sousCategorie;
 
         return $this;
     }
 
-    public function getDepartement(): ?Departement
+    public function getType(): ?string
     {
-        return $this->departement;
+        return $this->type;
     }
 
-    public function setDepartement(?Departement $departement): static
+    public function setType(string $type): static
     {
-        $this->departement = $departement;
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getRegion(): ?Region
+    public function getMac(): ?string
     {
-        return $this->region;
+        return $this->mac;
     }
 
-    public function setRegion(?Region $region): static
+    public function setMac(string $mac): static
     {
-        $this->region = $region;
+        $this->mac = $mac;
+
+        return $this;
+    }
+
+    public function getDateModification(): ?\DateTimeInterface
+    {
+        return $this->dateModification;
+    }
+
+    public function setDateModification(\DateTimeInterface $dateModification): static
+    {
+        $this->dateModification = $dateModification;
 
         return $this;
     }

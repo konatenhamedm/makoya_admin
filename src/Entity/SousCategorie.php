@@ -35,10 +35,14 @@ class SousCategorie
     #[Gedmo\Slug(fields: ["libelle"])]
     private ?string $slug = null;
 
+    #[ORM\OneToMany(mappedBy: 'sousCategorie', targetEntity: NombreClick::class)]
+    private Collection $nombreClicks;
+
     public function __construct()
     {
         $this->prestataireServices = new ArrayCollection();
         $this->workflowServicePrestataires = new ArrayCollection();
+        $this->nombreClicks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,6 +154,36 @@ class SousCategorie
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NombreClick>
+     */
+    public function getNombreClicks(): Collection
+    {
+        return $this->nombreClicks;
+    }
+
+    public function addNombreClick(NombreClick $nombreClick): static
+    {
+        if (!$this->nombreClicks->contains($nombreClick)) {
+            $this->nombreClicks->add($nombreClick);
+            $nombreClick->setSousCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNombreClick(NombreClick $nombreClick): static
+    {
+        if ($this->nombreClicks->removeElement($nombreClick)) {
+            // set the owning side to null (unless already changed)
+            if ($nombreClick->getSousCategorie() === $this) {
+                $nombreClick->setSousCategorie(null);
+            }
+        }
 
         return $this;
     }

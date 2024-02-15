@@ -2,11 +2,15 @@
 
 namespace App\Form;
 
+use App\Entity\Categorie;
 use App\Entity\Jours;
 use App\Entity\Prestataire;
 use App\Entity\PubliciteDemande;
+use App\Entity\Region;
+use App\Entity\UtilisateurSimple;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,9 +26,68 @@ class PubliciteDemandeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $type = $options['type'];
+        $nature = $options['nature'];
 
 
+        if ($type == "edit") {
+            $builder
+                ->add(
+                    'ordre',
+                    ChoiceType::class,
+                    [
+                        'placeholder' => 'Choisir un ordre',
+                        'label' => 'Ordre',
+                        'required'     => false,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2 ordre'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            '1' => '1',
+                            '2' => '2',
+                            '3' => '3'
+                        ]),
+                    ]
+                )
 
+                ->add(
+                    'nature',
+                    ChoiceType::class,
+                    [
+                        'placeholder' => 'Choisir une nature',
+                        'label' => 'Nature',
+                        'required'     => true,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            'Categorie' => 'Catégorie',
+                            'Region' => 'Région',
+                            'Encart' => 'Encart'
+                        ]),
+                        "constraints" => array(
+                            new NotNull(null, "S'il vous veillez renseigner le champs nature")
+                        )
+                    ]
+                )
+                ->add('categorie', EntityType::class, [
+                    'class' => Categorie::class,
+                    'choice_label' => 'libelle',
+                    'placeholder' => 'Selectionnez une categorie',
+                    'attr' => ['class' => 'categorie form-select'],
+                    'label' => "Catégorie",
+                    'required' => false,
+
+                ])
+                ->add('region', EntityType::class, [
+                    'class' => Region::class,
+                    'choice_label' => 'nom',
+                    'placeholder' => 'Selectionnez une région',
+                    'attr' => ['class' => 'region form-select'],
+                    'label' => "Région",
+                    'required' => false,
+
+                ]);
+        }
         if ($type == "rejeter") {
             $builder->add('messageRejeter', TextareaType::class, [
                 "constraints" => array(
@@ -81,8 +144,10 @@ class PubliciteDemandeType extends AbstractType
                     'placeholder' => 'Choisir des jours',
                     'attr' => ['class' => 'has-select2 jours'],
                     'class'        => Jours::class,
-                ])
-                ->add('prestataire', EntityType::class, [
+                ]);
+
+            if ($nature == 'Prestataire') {
+                $builder->add('utilisateur', EntityType::class, [
                     'class' => Prestataire::class,
                     'choice_label' => 'denominationSociale',
                     'placeholder' => 'Selectionnez un prestataire',
@@ -93,6 +158,19 @@ class PubliciteDemandeType extends AbstractType
                         new NotNull(null, "S'il vous veillez renseigner le champs prestataire")
                     )
                 ]);
+            } else {
+                $builder->add('utilisateur', EntityType::class, [
+                    'class' => UtilisateurSimple::class,
+                    'choice_label' => 'nom',
+                    'placeholder' => 'Selectionnez un utilisateur',
+                    'attr' => ['class' => 'categorie form-select'],
+                    'label' => 'Utilisateur simple',
+                    'required' => true,
+                    "constraints" => array(
+                        new NotNull(null, "S'il vous veillez renseigner le champs utilisateur simple")
+                    )
+                ]);
+            }
         }
         $builder->add('annuler', SubmitType::class, ['label' => 'Annuler', 'attr' => ['class' => 'btn btn-default btn-sm', 'data-bs-dismiss' => 'modal']])
             ->add('save', SubmitType::class, ['label' => 'Valider', 'attr' => ['class' => 'btn btn-main btn-ajax btn-sm']])
@@ -111,6 +189,7 @@ class PubliciteDemandeType extends AbstractType
         $resolver->setRequired('doc_options');
         $resolver->setRequired('doc_required');
         $resolver->setRequired(['type']);
+        $resolver->setRequired(['nature']);
         $resolver->setRequired(['validation_groups']);
     }
 }

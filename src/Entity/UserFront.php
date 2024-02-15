@@ -39,6 +39,7 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Veuillez le mail')]
+    #[Assert\Unique(message: 'Le mail existe deja')]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'userFronts')]
@@ -74,6 +75,15 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDesactivation = null;
 
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: PubliciteDemande::class)]
+    private Collection $publiciteDemandes;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: NotificationPrestataire::class)]
+    private Collection $notificationPrestataires;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Sponsoring::class)]
+    private Collection $sponsorings;
+
     public function __construct()
     {
         $this->publicitePrestataires = new ArrayCollection();
@@ -82,9 +92,15 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commentaires = new ArrayCollection();
         $this->signalers = new ArrayCollection();
         $this->dateCreation = new \DateTime();
+        $this->publiciteDemandes = new ArrayCollection();
+        $this->notificationPrestataires = new ArrayCollection();
+        $this->sponsorings = new ArrayCollection();
     }
 
-
+    public function getEmailUser()
+    {
+        return $this->username . '-' . $this->email;
+    }
 
 
     public function getId(): ?int
@@ -387,6 +403,96 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateDesactivation(\DateTimeInterface $dateDesactivation): static
     {
         $this->dateDesactivation = $dateDesactivation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PubliciteDemande>
+     */
+    public function getPubliciteDemandes(): Collection
+    {
+        return $this->publiciteDemandes;
+    }
+
+    public function addPubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if (!$this->publiciteDemandes->contains($publiciteDemande)) {
+            $this->publiciteDemandes->add($publiciteDemande);
+            $publiciteDemande->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePubliciteDemande(PubliciteDemande $publiciteDemande): static
+    {
+        if ($this->publiciteDemandes->removeElement($publiciteDemande)) {
+            // set the owning side to null (unless already changed)
+            if ($publiciteDemande->getUtilisateur() === $this) {
+                $publiciteDemande->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NotificationPrestataire>
+     */
+    public function sendNotificationPrestataires(): Collection
+    {
+        return $this->notificationPrestataires;
+    }
+
+    public function addNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
+    {
+        if (!$this->notificationPrestataires->contains($notificationPrestataire)) {
+            $this->notificationPrestataires->add($notificationPrestataire);
+            $notificationPrestataire->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotificationPrestataire(NotificationPrestataire $notificationPrestataire): static
+    {
+        if ($this->notificationPrestataires->removeElement($notificationPrestataire)) {
+            // set the owning side to null (unless already changed)
+            if ($notificationPrestataire->getUtilisateur() === $this) {
+                $notificationPrestataire->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sponsoring>
+     */
+    public function getSponsorings(): Collection
+    {
+        return $this->sponsorings;
+    }
+
+    public function addSponsoring(Sponsoring $sponsoring): static
+    {
+        if (!$this->sponsorings->contains($sponsoring)) {
+            $this->sponsorings->add($sponsoring);
+            $sponsoring->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSponsoring(Sponsoring $sponsoring): static
+    {
+        if ($this->sponsorings->removeElement($sponsoring)) {
+            // set the owning side to null (unless already changed)
+            if ($sponsoring->getUtilisateur() === $this) {
+                $sponsoring->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

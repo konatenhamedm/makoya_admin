@@ -2,11 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\Categorie;
 use App\Entity\Jours;
-use App\Entity\PubliciteDemandeUtilisateurSimple;
+use App\Entity\PubliciteDemande;
+use App\Entity\Region;
 use App\Entity\UtilisateurSimple;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -24,6 +27,62 @@ class PubliciteDemandeUtilisateurSimpleType extends AbstractType
         $type = $options['type'];
 
 
+        if ($type == "edit") {
+            $builder
+                ->add(
+                    'ordre',
+                    ChoiceType::class,
+                    [
+                        'placeholder' => 'Choisir un ordre',
+                        'label' => 'Ordre',
+                        'required'     => false,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            '1' => '1',
+                            '2' => '2',
+                            '3' => '3'
+                        ]),
+                    ]
+                )
+
+                ->add(
+                    'nature',
+                    ChoiceType::class,
+                    [
+                        'placeholder' => 'Choisir une nature',
+                        'label' => 'Ordre',
+                        'required'     => false,
+                        'expanded'     => false,
+                        'attr' => ['class' => 'has-select2'],
+                        'multiple' => false,
+                        'choices'  => array_flip([
+                            'Categorie' => 'Catégorie',
+                            'Region' => 'Région',
+                            'Encart' => 'Encart'
+                        ]),
+                    ]
+                )
+                ->add('categorie', EntityType::class, [
+                    'class' => Categorie::class,
+                    'choice_label' => 'libelle',
+                    'placeholder' => 'Selectionnez une categorie',
+                    'attr' => ['class' => 'categorie form-select'],
+                    'label' => "Catégorie",
+                    'required' => false,
+
+                ])
+                ->add('region', EntityType::class, [
+                    'class' => Region::class,
+                    'choice_label' => 'nom',
+                    'placeholder' => 'Selectionnez une région',
+                    'attr' => ['class' => 'categorie form-select'],
+                    'label' => "Région",
+                    'required' => false,
+
+                ]);
+        }
 
         if ($type == "rejeter") {
             $builder->add('messageRejeter', TextareaType::class, [
@@ -103,7 +162,7 @@ class PubliciteDemandeUtilisateurSimpleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => PubliciteDemandeUtilisateurSimple::class,
+            'data_class' => PubliciteDemande::class,
             'doc_required' => true,
             'doc_options' => [],
             'validation_groups' => [],

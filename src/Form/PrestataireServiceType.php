@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -30,23 +31,31 @@ class PrestataireServiceType extends AbstractType
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /*  $builder->get('categorie')->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
+            dd($data);
+        }); */
+
         $builder
 
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /* ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+
                 //$departement = $event->getData()['departement'] ?? null;
 
                 $dataSousCategorie = $this->repoSousCategorie->createQueryBuilder('s')
                     ->innerJoin('s.categorie', 'c')
                     ->andWhere('c.code =:categorie')
-                    ->setParameter('categorie', "Cat01")
+                    ->setParameter('categorie', "ff")
                     ->orderBy('s.id', 'ASC')
                     ->getQuery()
                     ->getResult();
+                // dd($event->getData());
 
                 $dataService = $this->repoService->createQueryBuilder('s')
                     ->innerJoin('s.categorie', 'c')
                     ->andWhere('c.code =:categorie')
-                    ->setParameter('categorie', "Cat01")
+                    ->setParameter('categorie',  "fff")
                     ->orderBy('s.id', 'ASC')
                     ->getQuery()
                     ->getResult();
@@ -58,7 +67,7 @@ class PrestataireServiceType extends AbstractType
                     'disabled' => false,
                     'attr' => ['class' => 'has-select2 form-select service'],
                     'placeholder' => 'Selectionnez un service',
-                    'constraints' => new NotBlank(['message' => 'Selectionnez un service']),
+                    //'constraints' => new NotBlank(['message' => 'Selectionnez un service']),
                 ]);
                 $event->getForm()->add('sousCategorie', EntityType::class, [
                     'class' => SousCategorie::class,
@@ -68,7 +77,7 @@ class PrestataireServiceType extends AbstractType
                     'attr' => ['class' => 'has-select2 form-select sousCategorie'],
                     'placeholder' => 'Selectionnez une sous categorie',
                 ]);
-            })
+            }) */
             ->add('etat', CheckboxType::class, [
                 'label' => 'dependre logo principal', 'required' => false,
                 'attr' => [
@@ -110,7 +119,8 @@ class PrestataireServiceType extends AbstractType
                     return $er->createQueryBuilder('m')
                         ->orderBy('m.id', 'ASC');
                 },
-                'attr' => ['class' => 'has-select2 form-select service']
+                'attr' => ['class' => 'has-select2 form-select service'],
+                'constraints' => new NotBlank(['message' => 'Selectionnez un service']),
             ])
             ->add(
                 'image',

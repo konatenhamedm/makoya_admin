@@ -16,8 +16,7 @@ class PubliciteDemande extends Publicite
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'publiciteDemandes')]
-    private ?Prestataire $prestataire = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $etat = null;
@@ -29,6 +28,24 @@ class PubliciteDemande extends Publicite
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $messageRejeter = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $ordre = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nature = null;
+
+    #[ORM\ManyToOne(inversedBy: 'publiciteDemandes')]
+    private ?Categorie $categorie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'publiciteDemandes')]
+    private ?Region $region = null;
+
+    #[ORM\ManyToOne(inversedBy: 'publiciteDemandes')]
+    private ?UserFront $utilisateur = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
     /* 
     public function __construct()
     {
@@ -39,17 +56,6 @@ class PubliciteDemande extends Publicite
         return $this->id;
     }
 
-    public function getPrestataire(): ?Prestataire
-    {
-        return $this->prestataire;
-    }
-
-    public function setPrestataire(?Prestataire $prestataire): static
-    {
-        $this->prestataire = $prestataire;
-
-        return $this;
-    }
 
 
     public function getEtat(): ?string
@@ -85,6 +91,78 @@ class PubliciteDemande extends Publicite
     public function setMessageRejeter(string $messageRejeter): static
     {
         $this->messageRejeter = $messageRejeter;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(?int $ordre): static
+    {
+        $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    public function getNature(): ?string
+    {
+        return $this->nature;
+    }
+
+    public function setNature(string $nature): static
+    {
+        $this->nature = $nature;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?UserFront
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?UserFront $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

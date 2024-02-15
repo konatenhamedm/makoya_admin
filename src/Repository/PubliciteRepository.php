@@ -39,28 +39,58 @@ class PubliciteRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Publicite[] Returns an array of Publicite objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findPubliciteBy()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.code LIKE :cat or e.code LIKE :rgp or e.code LIKE :enc')
+            ->setParameter('cat', '%CAT%')
+            ->setParameter('rgp', '%RGP%')
+            ->setParameter('enc', '%ENC%')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Publicite
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getPubTypeLibelle($type, $id)
+    {
+
+        $data =    $this->createQueryBuilder('p')
+            ->andWhere('p.code = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+        if ($type == "CAT") {
+            return $data->getCategorie()->getLibelle();
+        } elseif ($type == "ENC") {
+            return "Encart";
+        } elseif ($type == "RGP") {
+            return $data->getRegion()->getNom();
+        }
+    }
+
+    //    /**
+    //     * @return Publicite[] Returns an array of Publicite objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Publicite
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
