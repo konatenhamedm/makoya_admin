@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PubliciteEncart;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,28 +40,45 @@ class PubliciteEncartRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return PubliciteEncart[] Returns an array of PubliciteEncart objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getPubliciteEncart($ordre): array
+    {
+        $date = new DateTime();
+        $result = $date->format('Y-m-d');
 
-//    public function findOneBySomeField($value): ?PubliciteEncart
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
+        return $this->createQueryBuilder('s')
+            ->andWhere('DATE_DIFF(s.dateDebut , :datedebut) < 0 or DATE_DIFF(s.dateDebut , :datedebut) =0')
+            ->andWhere('DATE_DIFF(s.dateFin , :datedebut) >= 0 ')
+            ->andWhere('s.ordre = :ordre')
+            ->setParameter('ordre', $ordre)
+            ->setParameter('datedebut', new \DateTime($result))
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    /**
+    //     * @return PubliciteEncart[] Returns an array of PubliciteEncart objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?PubliciteEncart
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

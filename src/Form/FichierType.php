@@ -18,7 +18,7 @@ class FichierType extends AbstractType
 {
 
     const DEFAULT_MIME_TYPES = [
-        'text/plain', 'application/octet-stream', 'application/pdf', 'image/svg+xml', 'font/svg+xml', 'application/svg+xml', 'image/jpg', 'image/jpeg', 'image/png', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/webp', 'text/plain', 'application/octet-stream', 'application/pdf', 'image/svg+xml', 'font/svg+xml', 'application/svg+xml', 'image/jpg', 'image/jpeg', 'image/png', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     ];
     /**
      * {@inheritdoc}
@@ -41,9 +41,9 @@ class FichierType extends AbstractType
             unset($options['doc_options']['attrs']);
         }
 
+        $etat = in_array('oui',  (array) $options['validation_groups']);
 
-
-        if (in_array('oui', $options['validation_groups'])) {
+        if ($etat == true) {
             $builder
                 //->add('alt', UrlType::class, ['attr' => ['class' => 'input-alt', 'placeholder' => 'URL'], 'required' => false])*/
                 ->add('file', FileType::class, [

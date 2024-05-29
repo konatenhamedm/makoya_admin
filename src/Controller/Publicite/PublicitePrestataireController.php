@@ -21,8 +21,10 @@ use App\Controller\FileTrait;
 use App\Entity\Publicite;
 use App\Entity\PubliciteDemande;
 use App\Entity\UserFront;
+use App\Repository\NombreClickRepository;
 use App\Repository\PubliciteDemandeRepository;
 use App\Repository\PubliciteRepository;
+use App\Repository\SponsoringRepository;
 use App\Service\Menu;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -40,6 +42,8 @@ class PublicitePrestataireController extends BaseController
     public function imprimer(PubliciteDemandeRepository $publicitePrestataireRepository): Response
     {
         //dd($publicitePrestataireRepository->findAll());
+
+
         $imgFiligrame = "uploads/" . 'logo' . "/" . 'logo.png';
         return $this->renderPdf("publicite/publicite_prestataire/imprime_all.html.twig", [
             'data' => $publicitePrestataireRepository->findAll(),
@@ -59,14 +63,71 @@ class PublicitePrestataireController extends BaseController
         //return $this->renderForm("stock/sortie/imprime.html.twig");
 
     }
-
-    #[Route('/imprime/autre/all', name: 'app_suivi_autre_print_all', methods: ['GET'])]
-    public function imprimerSuiviAutre(PubliciteRepository $publiciteRepository): Response
+    #[Route('/imprime/sponsoring/all', name: 'app_suivi_print_sponsoring_all', methods: ['GET'])]
+    public function imprimerSponsoring(PubliciteDemandeRepository $publicitePrestataireRepository, SponsoringRepository $sponsoringRepository): Response
     {
-        //dd($publiciteRepository->findAll());
+        //dd($publicitePrestataireRepository->findAll());
+
+        // dd($sponsoringRepository->findAll());
+        $imgFiligrame = "uploads/" . 'logo' . "/" . 'logo.png';
+        return $this->renderPdf("sponsoring/sponsoring/imprime_all.html.twig", [
+            'data' => $sponsoringRepository->findAll(),
+            //'data_info'=>$infoPreinscriptionRepository->findOneByPreinscription($preinscription)
+        ], [
+            'orientation' => 'L',
+            'protected' => true,
+
+            'format' => 'A5',
+
+            'showWaterkText' => true,
+            'fontDir' => [
+                $this->getParameter('font_dir') . '/arial',
+                $this->getParameter('font_dir') . '/trebuchet',
+            ]
+        ], true, "", $imgFiligrame);
+        //return $this->renderForm("stock/sortie/imprime.html.twig");
+
+    }
+    #[Route('/imprime/classement/entreprise/all', name: 'app_suivi_print_classment_entreprie_all', methods: ['GET'])]
+    public function imprimeClassementEntreprieParLocaliteCategorie(NombreClickRepository $nombreClickRepository): Response
+    {
+        //dd($publicitePrestataireRepository->findAll());
+
+        //  dd($nombreClickRepository->getImprimeClassementEntreprise());
+        $imgFiligrame = "uploads/" . 'logo' . "/" . 'logo.png';
+        return $this->renderPdf("statistique_administrative/imprime/imprime_classement_entreprise.html.twig", [
+            'data' => $nombreClickRepository->getImprimeClassementEntreprise(),
+            //'data_info'=>$infoPreinscriptionRepository->findOneByPreinscription($preinscription)
+        ], [
+            'orientation' => 'L',
+            'protected' => true,
+
+            'format' => 'A5',
+
+            'showWaterkText' => true,
+            'fontDir' => [
+                $this->getParameter('font_dir') . '/arial',
+                $this->getParameter('font_dir') . '/trebuchet',
+            ]
+        ], true, "", $imgFiligrame);
+        //return $this->renderForm("stock/sortie/imprime.html.twig");
+
+    }
+
+    //#[Route('/imprime/autre/all/data/{id}', name: 'app_suivi_autre_print_all_id', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Route('/imprime/autre/all', name: 'app_suivi_autre_print_all', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function imprimerSuiviAutre(PubliciteRepository $publiciteRepository, Request $request, $id = null): Response
+    {
+        // dd($id);
+        $etat = $request->get('id');
+
+
+
+
         $imgFiligrame = "uploads/" . 'logo' . "/" . 'logo.png';
         return $this->renderPdf("publicite/publicite_prestataire/imprime_autre_all.html.twig", [
             'data' => $publiciteRepository->findPubliciteBy(),
+            'id' => $etat
             //'data_info'=>$infoPreinscriptionRepository->findOneByPreinscription($preinscription)
         ], [
             'orientation' => 'L',

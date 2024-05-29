@@ -141,6 +141,7 @@ class PubliciteEncartController extends BaseController
 
                             'actions' => [
                                 'edit' => [
+                                    'target' => '#exampleModalSizeSm2',
                                     'url' => $this->generateUrl('app_publicite_publicite_encart_edit', ['code' => $value]), 'ajax' => true, 'icon' => '%icon% bi bi-pen', 'attrs' => ['class' => 'btn-default'], 'render' => $renders['edit']
                                 ],
                                 'show' => [

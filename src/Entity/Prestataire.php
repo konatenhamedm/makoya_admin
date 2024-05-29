@@ -47,7 +47,7 @@ class Prestataire extends UserFront
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Signaler::class)]
     private Collection $signalers;
 
-    #[ORM\Column(length: 5)]
+    #[ORM\Column(length: 5, nullable: true)]
     private ?string $statut = null;
 
     public function __construct()

@@ -21,7 +21,7 @@ class UtilisateurType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['label' => 'Pseudo'])
-            ->add('roles', ChoiceType::class,
+            /*  ->add('roles', ChoiceType::class,
             [
                 'placeholder' => 'Choisir un role',
                 'label' => 'Privilèges Supplémentaires',
@@ -33,7 +33,7 @@ class UtilisateurType extends AbstractType
                     'ROLE_SUPER_ADMIN' => 'Super Administrateur',
                     'ROLE_ADMIN' => 'Administrateur'
                 ]),
-            ])
+            ]) */
             ->add('groupe', EntityType::class, [
                 'label'        => 'Groupe',
                 'choice_label' => 'name',
@@ -43,7 +43,9 @@ class UtilisateurType extends AbstractType
                 'attr' => ['class' => 'has-select2 element'],
                 'class'        => Groupe::class,
             ])
-            ->add('password', RepeatedType::class, 
+            ->add(
+                'password',
+                RepeatedType::class,
                 [
                     'type'            => PasswordType::class,
                     'invalid_message' => 'Les mots de passe doivent être identiques.',
@@ -52,16 +54,17 @@ class UtilisateurType extends AbstractType
                     'second_options'  => ['label' => 'Répétez le mot de passe'],
                 ]
             )
-            ->add('employe', EntityType::class, 
-            [
-                'class' => Employe::class,
-                'choice_label' => 'nomComplet',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->withoutAccount();
-                }
-            ]
-        )
-        ;
+            ->add(
+                'employe',
+                EntityType::class,
+                [
+                    'class' => Employe::class,
+                    'choice_label' => 'nomComplet',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->withoutAccount();
+                    }
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

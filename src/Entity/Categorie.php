@@ -160,6 +160,12 @@ class Categorie
         return $this;
     }
 
+
+    public function getNombre(): ?int
+    {
+        return count($this->prestataireServices);
+    }
+
     public function removePrestataireService(PrestataireService $prestataireService): static
     {
         if ($this->prestataireServices->removeElement($prestataireService)) {

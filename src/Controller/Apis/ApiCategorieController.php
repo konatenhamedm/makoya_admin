@@ -35,17 +35,26 @@ class ApiCategorieController extends ApiInterface
      */
     public function getAll(CategorieRepository $categorieRepository): Response
     {
-        try {
+        $categories = $categorieRepository->getCategories();
+        $tabCategorie = [];
+        $k = 0;
+        foreach ($categories as $value) {
 
-            $categories = $categorieRepository->findAll();
-            $response = $this->response($categories);
-        } catch (\Exception $exception) {
-            $this->setMessage("");
-            $response = $this->response(null);
+            $tabCategorie[$k]['id'] = $value['id'];
+            $tabCategorie[$k]['libelle'] = $value['libelle'];
+            //    . $utilisateur->getPhoto()->getFileNamePath()
+            $tabCategorie[$k]['imageLaUne'] = [
+                'fileNamePath' =>  $value['path'] . '/' . $value['alt']
+            ];
+            $k++;
         }
 
-        // On envoie la réponse
-        return $response;
+        return $this->response($tabCategorie);
+
+        /* return $this->json([
+            'data' => $tabCategorie,
+
+        ], 200); */
     }
 
 
@@ -100,7 +109,7 @@ class ApiCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($categorie);
             } else {
-                $this->setMessage("cette ressource existe deja en base");
+                $this->setMessage("Cette ressource existe deja en base");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -138,7 +147,7 @@ class ApiCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($categorie);
             } else {
-                $this->setMessage("cette ressource est inexsitante");
+                $this->setMessage("Cette ressource est inexsitante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -170,7 +179,7 @@ class ApiCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($categorie);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

@@ -4,6 +4,7 @@
 namespace App\Events;
 
 use App\Controller\ApiInterface;
+use App\Entity\Prestataire;
 use App\Entity\UserFront;
 use App\Entity\Utilisateur;
 use App\Entity\UtilisateurSimple;
@@ -68,6 +69,41 @@ class AuthenticationSuccessListener extends ApiInterface
             ];
             $event->setData($data);
         }
+        if ($user instanceof Prestataire) {
+            $userData = $this->userFrontRepository->findOneBy(array('reference' => $user->getReference()));
+
+            //dd($userData["reference"]);$response->getContent();
+
+            $type = str_contains($userData->getReference(), 'PR') ? "prestataire" : "simple";
+
+
+            $data['user'] =   [
+                'id' =>    $userData->getReference(),
+                'name' =>    $user->getDenominationSociale(),
+                "type" => $type,
+                "email" => $userData->getEmail(),
+                'image' => 'http://localhost:8000/uploads/' . $userData->getLogo()->getPath() . '/' . $userData->getLogo()->getAlt()
+            ];
+            $event->setData($data);
+        }
+
+        /* else {
+            $userData = $this->userFrontRepository->findOneBy(array('reference' => $user->getReference()));
+
+            //dd($userData["reference"]);$response->getContent();
+
+            $type = str_contains($userData->getReference(), 'PR') ? "prestataire" : "simple";
+
+
+            $data['user'] =   [
+                'id' =>    $userData->getReference(),
+                'name' =>    $user->getDenominationSociale(),
+                "type" => $type,
+                "email" => $userData->getEmail(),
+                'image' => 'http://localhost:8000/uploads/' . $userData->getPhoto()->getPath() . '/' . $userData->getPhoto()->getAlt()
+            ];
+            $event->setData($data);
+        } */
 
         /*if($user instanceof Utilisateur ){
             $data['data'] = array(

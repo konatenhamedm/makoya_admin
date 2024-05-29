@@ -65,9 +65,14 @@
 
 {% block javascripts_inline %}
     <script>
-        $(function () {
-            init_select2('select');
-        }); 
+       $(function () {
+init_select2('select');
+KTImageInput.createInstances();
+var imageInputElement = document.querySelector("#kt_image_input_control");
+var imageInput = KTImageInput.getInstance(imageInputElement);
+})
+   
+
 
         
 	  var elements = Array.from(document.querySelectorAll("[data-bs-stacked-modal]"));

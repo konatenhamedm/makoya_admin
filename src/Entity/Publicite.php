@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -16,6 +17,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Table(name: 'publicite')]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
+/* #[DiscriminatorMap([
+    'publicitedemande' => PubliciteDemande::class, 'publiciteregion' => PubliciteRegion::class, 'publicitecategorie' => PubliciteCategorie::class, 'publicitecategorie' => PubliciteCategorie::class, 'publiciteencart' => PubliciteEncart::class, 'publiciteprestataire' => PublicitePrestataire::class
+])] */
 #[UniqueEntity(fields: 'code', message: 'Une publicité existe deja avec ce code')]
 class Publicite
 {

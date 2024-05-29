@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\ModuleGroupePermition;
 use App\Entity\ConfigApp;
 use App\Entity\Groupe;
+use App\Entity\NombreClick;
 use App\Entity\Prestataire;
 use App\Entity\Publicite;
 use App\Entity\PubliciteCategorie;
@@ -114,6 +115,11 @@ class Menu
         } elseif ($type == "RGP") {
             return $this->em->getRepository(Publicite::class)->findOneBy(array('code' => $id))->getRegion()->getNom();
         }
+    }
+    public function getNbreVue($id)
+    {
+
+        return $this->em->getRepository(NombreClick::class)->getNombreVue($id);
     }
 
     public function getPermissionIfDifferentNull($group, $route)

@@ -27,7 +27,7 @@ class ApiCiviliteController extends ApiInterface
      *     description="Returns the rewards of an user",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Civilite::class, groups={"full"}))
+     *        @OA\Items(ref=@Model(type=Civilite::class, groups={"assurance_read"}))
      *     )
      * )
      * @OA\Tag(name="Civilite")
@@ -38,7 +38,17 @@ class ApiCiviliteController extends ApiInterface
         try {
 
             $civilites = $civiliteRepository->findAll();
-            $response = $this->response($civilites);
+            //dd($civilites);
+            $tabCivilite = [];
+            $i = 0;
+            foreach ($civilites as $key => $value) {
+                $tabCivilite[$i]['id'] = $value->getId();
+                $tabCivilite[$i]['libelle'] = $value->getLibelle();
+                $tabCivilite[$i]['code'] = $value->getCode();
+
+                $i++;
+            }
+            $response = $this->response($tabCivilite);
         } catch (\Exception $exception) {
             $this->setMessage("");
             $response = $this->response(null);
@@ -100,7 +110,7 @@ class ApiCiviliteController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($civilite);
             } else {
-                $this->setMessage("cette ressource existe deja en base");
+                $this->setMessage("Cette ressource existe deja en base");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -138,7 +148,7 @@ class ApiCiviliteController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($civilite);
             } else {
-                $this->setMessage("cette ressource est inexsitante");
+                $this->setMessage("Cette ressource est inexsitante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -170,7 +180,7 @@ class ApiCiviliteController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($civilite);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

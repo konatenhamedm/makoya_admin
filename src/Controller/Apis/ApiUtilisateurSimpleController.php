@@ -124,7 +124,7 @@ class ApiUtilisateurSimpleController extends ApiInterface
                     $response = $this->response($utilisateurSimple);
                 }
             } else {
-                $this->setMessage("cette ressource existe deja en base");
+                $this->setMessage("Cette ressource existe deja en base");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -177,7 +177,7 @@ class ApiUtilisateurSimpleController extends ApiInterface
                     $response = $this->response($utilisateurSimple);
                 }
             } else {
-                $this->setMessage("cette ressource est inexsitante");
+                $this->setMessage("Cette ressource est inexsitante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -209,7 +209,7 @@ class ApiUtilisateurSimpleController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($utilisateurSimple);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

@@ -1,0 +1,251 @@
+  {% block style %}
+  <style>
+  
+  #container {
+    height: 400px;
+}
+  #container2 {
+    height: 400px;
+}
+  </style>
+  {% endblock %} 
+ {% block body %}
+     {% form_theme form 'widget/fields-block.html.twig' %}
+    <div class="card card-tabs card-stretch card-custom card-sticky">
+        <div class="card-header card-header-stretch card-header-custom">
+        
+            <h3 class="card-title">Statistique des catégories </h3>   
+            <h3 class="card-title"><span  style="font-size: 20px;" class="badge badge-light-danger">{{ data|length  }}</span> Catégorie(s) actuellement enregistrées</h3>   
+        </div> 
+        <div class="card-body">
+        {{ form_start(form)}}
+                            <div class="row">
+                                <div class="col-md-5">{{ form_row(form.dateDebut) }}</div>
+                                <div class="col-md-5">{{ form_row(form.dateFin) }}</div>
+                                <div class="col-md-2 pt-5">
+                  <button class="btn btn-main btn-filter btn-sm " type="button"> Rechercher</button>
+                </div>
+                            </div>
+                        {{ form_end(form, {render_rest: false}) }}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="filter-block d-flex justify-content-center">
+                       
+                        
+                    </div>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert-error"></div>
+                    <div id="container"></div>
+                </div>
+                
+            </div>
+            <div style="border-top:15px solid black"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert-error"></div>
+                    <div id="container2"></div>
+                </div>
+                
+            </div>
+               
+        </div> 
+    </div>
+{% endblock %}
+
+{% block java %}
+    
+     <script>
+      $(function () {
+            init_select2('select', null, '#exampleModalSizeLg2');
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+     </script>
+    <script>
+        $(function () {
+            init_select2();
+ 
+      const $dateDebut = $('#{{ form.dateDebut.vars.id }}');
+      const $dateFin = $('#{{ form.dateFin.vars.id }}');
+
+        $('.btn-filter').on('click', function (e) {
+        e.preventDefault();
+        const $this = $(this);
+        const $form = $this.closest('form');
+
+       load_data({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+       //load_data_vue({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+         
+      });
+
+
+
+      
+            load_data({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+            //load_data_vue({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+
+       
+
+            function load_data(filters = []) {
+
+            
+                $.getJSON("{{ path('app_statistique_categorie_requete') }}", {filters: filters}, function (data) {
+                  // alert(parseInt(data.series2))
+                        Highcharts.setOptions({
+                        lang: {
+                                loading: 'Chargement...',
+                                months: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+                                weekdays: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+                                shortMonths: ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'aoû', 'sep', 'oct', 'nov', 'déc'],
+                                exportButtonTitle: "Exporter",
+                                printButtonTitle: "Imprimer",
+                                rangeSelectorFrom: "Du",
+                                rangeSelectorTo: "au",
+                                rangeSelectorZoom: "Période",
+                                downloadPNG: 'Télécharger en PNG',
+                                downloadJPEG: 'Télécharger en JPEG',
+                                downloadPDF: 'Télécharger en PDF',
+                                downloadSVG: 'Télécharger en SVG',
+                                resetZoom: "Réinitialiser le zoom",
+                                resetZoomTitle: "Réinitialiser le zoom",
+                                thousandsSep: " ",
+                                decimalPoint: ',' 
+                            }        
+                    });
+            
+                    Highcharts.chart('container', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Classement des catégories par nombre de fournisseurs de services'
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: {
+                            type: 'category',
+                            labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif'
+                                }
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Nombres de fournisseurs de service'
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{point.y:.1f} Prestataire(s) </b>'
+                        },
+                        series: [{
+                            name: 'Population',
+                            colors: [
+                                '#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                                '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                                '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                                '#03c69b',  '#00f194'
+                            ],
+                            colorByPoint: true,
+                            groupPadding: 0,
+                            data: data.series.prestataire ,
+                            dataLabels: {
+                                enabled: true,
+                                rotation: -90,
+                                color: '#FFFFFF',
+                                align: 'right',
+                                format: '{point.y:.1f}', // one decimal
+                                y: 10, // 10 pixels down from the top
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif'
+                                }
+                            }
+                        }]
+                    });
+
+                     Highcharts.chart('container2', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Classement des catégories par nombre de vues'
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: {
+                            type: 'category',
+                            labels: {
+                                autoRotation: [-45, -90],
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif'
+                                }
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Nombres de vues'
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            pointFormat: '<b>{point.y:.1f} Vue(s)</b>'
+                        },
+                        series: [{
+                            name: 'Population',
+                            colors: [
+                                '#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                                '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                                '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                                '#03c69b'
+                            ],
+                            colorByPoint: true,
+                            groupPadding: 0,
+                            data: data.series.vue,
+                            dataLabels: {
+                                enabled: true,
+                                rotation: -90,
+                                color: '#FFFFFF',
+                                align: 'right',
+                                format: '{point.y:.1f}', // one decimal
+                                y: 10, // 10 pixels down from the top
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif'
+                                }
+                            }
+                        }]
+                    });
+
+                 })
+            }
+           
+
+
+        });
+    </script>
+{% endblock %}

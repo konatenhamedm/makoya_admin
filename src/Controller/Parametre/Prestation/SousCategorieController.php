@@ -162,9 +162,15 @@ class SousCategorieController extends BaseController
     #[Route('/ads/new', name: 'app_parametre_prestation_sous_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SousCategorieRepository $sousCategorieRepository, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $sousCategorie = new SousCategorie();
         $form = $this->createForm(SousCategorieType::class, $sousCategorie, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_sous_categorie_new')
         ]);
         $form->handleRequest($request);
@@ -222,9 +228,14 @@ class SousCategorieController extends BaseController
     #[Route('/ads/{id}/edit', name: 'app_parametre_prestation_sous_categorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, SousCategorie $sousCategorie, SousCategorieRepository $sousCategorieRepository, FormError $formError): Response
     {
-
+        $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(SousCategorieType::class, $sousCategorie, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_parametre_prestation_sous_categorie_edit', [
                 'id' =>  $sousCategorie->getId()
             ])

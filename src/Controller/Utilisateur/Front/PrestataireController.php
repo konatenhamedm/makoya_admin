@@ -45,7 +45,7 @@ class PrestataireController extends BaseController
     }
     const INDEX_ROOT_NAME = 'app_utilisateur_front_prestataire_index';
 
-    #[Route('/ads/', name: 'app_utilisateur_front_prestataire_index', methods: ['GET', 'POST'])]
+    #[Route('/index/', name: 'app_utilisateur_front_prestataire_index', methods: ['GET', 'POST'])]
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);

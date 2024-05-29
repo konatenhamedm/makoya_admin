@@ -7,8 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+
 #[ORM\Entity(repositoryClass: SousCategorieRepository::class)]
-#[ORM\Table(name:'param_sous_categorie')]
+#[ORM\Table(name: 'param_sous_categorie')]
 class SousCategorie
 {
     #[ORM\Id]
@@ -21,6 +22,10 @@ class SousCategorie
 
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
+
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Fichier $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'sousCategories')]
     private ?Categorie $categorie = null;
@@ -67,6 +72,17 @@ class SousCategorie
         return $this->libelle;
     }
 
+    public function getImage(): ?Fichier
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Fichier $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;

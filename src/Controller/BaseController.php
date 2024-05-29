@@ -26,6 +26,7 @@ class BaseController extends AbstractController
     protected $menu;
     protected $hasher;
     protected $workflow;
+    protected $entreprise;
     protected $notificationService;
 
 
@@ -33,7 +34,14 @@ class BaseController extends AbstractController
     {
         $this->em = $em;
         $this->notificationService = $notificationService;
-        $this->security = $security;
+        if ($security->getUser()) {
+
+            $this->entreprise = $security->getUser()->getEmploye()->getEntreprise();
+            $this->security = $security;
+        } else {
+            $this->redirectToRoute('app_login');
+        }
+
         $this->menu = $menu;
         $this->hasher = $hasher;
         $this->workflow = $workflow;

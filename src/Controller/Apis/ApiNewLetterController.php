@@ -107,7 +107,7 @@ class ApiNewLetterController extends ApiInterface
                     // On retourne la confirmation
                     $response = $this->response($newsletter);
                 } else {
-                    $this->setMessage("cette ressource existe deja en base");
+                    $this->setMessage("Cette ressource existe deja en base");
                     $this->setStatusCode(300);
                     $response = $this->response(null);
                 }
@@ -152,7 +152,7 @@ class ApiNewLetterController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($newsletter);
             } else {
-                $this->setMessage("cette ressource est inexsitante");
+                $this->setMessage("Cette ressource est inexsitante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -184,7 +184,7 @@ class ApiNewLetterController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($newsletter);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

@@ -181,7 +181,7 @@ class ApiNoteController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($note);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

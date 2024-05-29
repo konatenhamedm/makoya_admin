@@ -181,7 +181,7 @@ class PubliciteDemandeController extends BaseController
         ]);
     }
 
-    #[Route('/pubs/new', name: 'app_publicite_publicite_demande_utilisateur_simple_new', methods: ['GET', 'POST'])]
+    #[Route('/pubs/new/user/simple', name: 'app_publicite_publicite_demande_utilisateur_simple_new', methods: ['GET', 'POST'])]
     public function newUserSimple(Request $request, PubliciteDemandeRepository $publiciteDemandeRepository, FormError $formError): Response
     {
         $validationGroups = ['Default', 'FileRequired', 'oui'];

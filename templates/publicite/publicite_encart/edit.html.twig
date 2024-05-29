@@ -39,7 +39,10 @@
     <script src="{{ asset('assets/universitaitre.js') }}"></script>
     <script> 
     
-     
+      KTImageInput.createInstances();
+    var imageInputElement = document.querySelector("#kt_image_input_control");
+    var imageInput = KTImageInput.getInstance(imageInputElement);
+ 
     $('.no-auto').each(function () {
            const $this = $(this);
            const $id = $('#' + $this.attr('id'));
@@ -53,7 +56,7 @@
        });
     $(function () {
       
-           init_select2('select', null,  '#exampleModalSizeLg2');
+           init_select2('select', null,  '#exampleModalSizeSm2');
        });
 
        

@@ -14,7 +14,20 @@
     {{ form_start(form, {'attr': {'role':'form', 'class': 'form'}}) }}
     <div class="modal-body">
         {{ include('_includes/ajax/response.html.twig') }}
-        {{ form_widget(form) }}
+        <div class="row p-0">
+                        <div class="col-md-10 p-0">
+                            <div class="row" style="margin-left: 0px;">
+                                <div class="col-md-12">{{ form_row(form.libelle) }}</div>
+                            </div>
+                            <div class="row" style="margin-left:0px;">
+                                <div class="col-md-12">{{ form_row(form.categorie) }}</div>
+                               
+                            </div>
+                        </div>
+                        <div class="col-md-2 pr-3 text-end">
+                            {% include '_includes/photo.html.twig'  with {'image':form.image,'data':sous_categorie,'titre':'Image'} %}
+                        </div>
+                </div>
     </div>
     <div class="modal-footer">
         {# {{ include('_includes/ajax/loader.html.twig') }} #}
@@ -24,11 +37,14 @@
     {{ form_end(form) }}
 {% endblock %}
 
-{% block javascripts_inline %}
+{% block java %}
     <script>
         $(function () {
             init_select2('select');
-        }); 
-        
+             KTImageInput.createInstances();
+        var imageInputElement = document.querySelector("#kt_image_input_control");
+        var imageInput = KTImageInput.getInstance(imageInputElement);
+        });
+       
     </script>
 {% endblock %}

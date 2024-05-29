@@ -6,6 +6,7 @@ use App\Controller\ApiInterface;
 use App\Entity\Favorie;
 use App\Entity\ServicePrestataire;
 use App\Repository\FavorieRepository;
+use App\Repository\PrestataireServiceRepository;
 use App\Repository\ServicePrestataireRepository;
 use App\Repository\UserFrontRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,8 +40,8 @@ class ApiFavorieController extends ApiInterface
     public function getAll(FavorieRepository $favorieRepository): Response
     {
         try {
-
             $favories = $favorieRepository->findAll();
+
             $response = $this->response($favories);
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -52,22 +53,31 @@ class ApiFavorieController extends ApiInterface
     }
 
 
-    #[Route('/getOne/{id}', name: 'api_favorie_get_one', methods: ['GET'])]
+    #[Route('/getOne/{service}/{user}', name: 'api_favorie_get_one', methods: ['GET'])]
     /**
      * Affiche une civilte en offrant un identifiant.
      * @OA\Tag(name="Favorie")
      * @Security(name="Bearer")
      */
-    public function getOne(?Favorie $favorie)
+    public function getOne($user, $service, FavorieRepository $favorieRepository,)
     {
         /*  $favorie = $favorieRepository->find($id);*/
         try {
+
+            $favorie = $favorieRepository->findOneBy(array('utilisateur' => $user, 'service' => $service));
+
+
+
             if ($favorie) {
-                $response = $this->response($favorie);
+                if ($favorie->isEtat() == true) {
+                    $response = $this->response(true);
+                } else {
+                    $response = $this->response(false);
+                }
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
-                $response = $this->response($favorie);
+                $response = $this->response(false);
             }
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -89,26 +99,34 @@ class ApiFavorieController extends ApiInterface
     public function create(
         Request $request,
         FavorieRepository $favorieRepository,
-        ServicePrestataireRepository $servicePrestataireRepository,
+        PrestataireServiceRepository $servicePrestataireRepository,
         UserFrontRepository $userFrontRepository
     ) {
         try {
             $data = json_decode($request->getContent());
 
-            $favorie = $favorieRepository->findOneBy(array('utilisateur' => $data->user, 'service' => $data->service));
+            //dd($servicePrestataireRepository->find($data->service));
+
+            $user = $userFrontRepository->findOneByEmail($data->user);
+
+            $favorie = $favorieRepository->findOneBy(array('utilisateur' => $user, 'service' => $data->service));
+
+            //dd($data->user, $data->service, $userFrontRepository->findOneByEmail($data->user));
             if ($favorie == null) {
                 $favorie = new Favorie();
-                $favorie->setUtilisateur($userFrontRepository->find($data->user));
+                $favorie->setUtilisateur($user);
                 $favorie->setEtat(true);
                 $favorie->setService($servicePrestataireRepository->find($data->service));
                 $favorieRepository->save($favorie, true);
 
                 // On retourne la confirmation
-                $response = $this->response($favorie);
+                $response = $this->response(true);
             } else {
-                $favorie->isEtat() ? $favorie->setEtat(false) : $favorie->setEtat(true);
+
+                //dd($favorie->isEtat());
+                $favorie->isEtat() == true ? $favorie->setEtat(false) : $favorie->setEtat(true);
                 $favorieRepository->save($favorie, true);
-                $response = $this->response($favorie);
+                $response = $this->response($favorie->isEtat());
             }
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -181,7 +199,7 @@ class ApiFavorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($favorie);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

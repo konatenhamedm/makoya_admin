@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NoteRepository;
+use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
@@ -23,9 +25,13 @@ class Note
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?PrestataireService $service = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateCreation = null;
+
     public function __construct()
     {
-        $this->note = 0;
+        // $this->note = 0;
+        $this->dateCreation = new DateTime();
     }
 
     public function getId(): ?int
@@ -65,6 +71,18 @@ class Note
     public function setService(?PrestataireService $service): static
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(?\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }

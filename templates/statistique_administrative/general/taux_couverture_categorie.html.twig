@@ -1,0 +1,242 @@
+  {% block style %}
+  <style>
+  
+  #container {
+    height: 400px;
+}
+  #container2 {
+    height: 400px;
+}
+  </style>
+  {% endblock %} 
+ {% block body %}
+     {% form_theme form 'widget/fields-block.html.twig' %}
+    <div class="card card-tabs card-stretch card-custom card-sticky">
+        <div class="card-header card-header-stretch card-header-custom">
+        
+            <h3 class="card-title">Taux de couverture des catégories par localite </h3>   
+           
+        </div> 
+        <div class="card-body">
+           {{ form_start(form)}}
+                            <div class="row">
+                                <div class="col-md-4">{{ form_row(form.localite) }}</div>
+                                <div class="col-md-3">{{ form_row(form.dateDebut) }}</div>
+                                <div class="col-md-3">{{ form_row(form.dateFin) }}</div>
+                                <div class="col-md-2 pt-5">
+                  <button class="btn btn-main btn-filter btn-sm " type="button"> Rechercher</button>
+                </div>
+                            </div>
+                        {{ form_end(form, {render_rest: false}) }}
+                        <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="filter-block d-flex justify-content-center">
+                       
+                        
+                    </div>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert-error"></div>
+                    <div id="container"></div>
+                </div>
+                
+            </div><br>
+         <div style="border-top:15px solid black"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert-error"></div>
+                    <div id="container1"></div>
+                </div>
+                
+            </div>
+         
+               
+        </div> 
+    </div>
+
+{% endblock %}
+
+{% block java %}
+      {# <script src="{{ asset('assets/js/datatables.js') }}"></script> #}
+     <script>
+      $(function () {
+            init_select2('select', null, '#exampleModalSizeLg2');
+            $('.no-auto').each(function () {
+                const $this = $(this);
+                const $id = $('#' + $this.attr('id'));
+                init_date_picker($id,  'down', (start, e) => {
+                    //$this.val(start.format('DD/MM/YYYY'));
+                }, null, null, false);
+
+                $id.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                });
+            });
+        });
+     </script>
+    <script>
+        $(function () {
+            init_select2();
+ 
+      const $localite = $('#{{ form.localite.vars.id }}');
+      const $dateDebut = $('#{{ form.dateDebut.vars.id }}');
+      const $dateFin = $('#{{ form.dateFin.vars.id }}');
+
+         /*$entreprise.on('change', function () {
+                const $this = $(this);
+               
+                const current_value = $this.find('option:selected').attr('value');
+               
+                $error.html('');
+                if ($this.val()) {
+                     load_data(current_value, {entreprise: $this.val()});
+                } else {
+                    $error.html('Veuillez sélectionner un type de contrat');
+                }
+               
+            });*/
+
+        $('.btn-filter').on('click', function (e) {
+        e.preventDefault();
+        const $this = $(this);
+        const $form = $this.closest('form');
+
+        //alert($localite.val())
+
+       load_data({localite: $localite.val(),dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+       //load_data_vue({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+         
+      });
+
+
+
+      
+            load_data({localite: $localite.val(),dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+            //load_data_vue({dateDebut: $dateDebut.val(),dateFin: $dateFin.val()});
+
+       
+
+            function load_data(filters = []) {
+
+            
+                $.getJSON("{{ path('app_statistique_taux_categorie_categorie_requete') }}", {filters: filters}, function (data) {
+                 console.log(data.series)
+
+                
+                        Highcharts.setOptions({
+                        lang: {
+                                loading: 'Chargement...',
+                                months: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+                                weekdays: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+                                shortMonths: ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'aoû', 'sep', 'oct', 'nov', 'déc'],
+                                exportButtonTitle: "Exporter",
+                                printButtonTitle: "Imprimer",
+                                rangeSelectorFrom: "Du",
+                                rangeSelectorTo: "au",
+                                rangeSelectorZoom: "Période",
+                                downloadPNG: 'Télécharger en PNG',
+                                downloadJPEG: 'Télécharger en JPEG',
+                                downloadPDF: 'Télécharger en PDF',
+                                downloadSVG: 'Télécharger en SVG',
+                                resetZoom: "Réinitialiser le zoom",
+                                resetZoomTitle: "Réinitialiser le zoom",
+                                thousandsSep: " ",
+                                decimalPoint: ',' 
+                            }        
+                    });
+        
+
+        Highcharts.chart('container', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Taux de couverture des catégories par localité',
+                    align: 'center'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Taux',
+                    colorByPoint: true,
+                    data: data.series
+                }]
+            });
+
+            Highcharts.chart('container1', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: ''
+    },
+    tooltip: {
+        valueSuffix: '%'
+    },
+    subtitle: {
+        text:
+        ''
+    },
+    plotOptions: {
+        series: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: [{
+                enabled: true,
+                distance: 20
+            }, {
+                enabled: true,
+                distance: -40,
+                format: '{point.percentage:.1f}%',
+                style: {
+                    fontSize: '1.2em',
+                    textOutline: 'none',
+                    opacity: 0.7
+                },
+                filter: {
+                    operator: '>',
+                    property: 'percentage',
+                    value: 10
+                }
+            }]
+        }
+    },
+    series: [
+        {
+            name: 'Taux couverture',
+            colorByPoint: true,
+            data: data.series
+        }
+    ]
+});
+
+                 })
+            }
+           
+
+
+        });
+    </script>
+{% endblock %}

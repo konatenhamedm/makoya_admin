@@ -49,30 +49,52 @@ class ApiSousCategorieController extends ApiInterface
     }
 
     #[Route('/sous_categories/{id}', name: 'api_sousCategorie_by_categorie_id', methods: ['GET'])]
-
     public function getSousCategoriesByCategorieId($id, SousCategorieRepository $sousCategorieRepository): Response
     {
         /* try { */
 
         $sousCategories = $sousCategorieRepository->getSousCategorie($id);
-
         $tabSousCategorie = [];
 
         $k = 0;
 
-
         foreach ($sousCategories as $value) {
             $tabSousCategorie[$k]['id'] = $value['id'];
             $tabSousCategorie[$k]['libelle'] = $value['libelle'];
-
             $k++;
         }
 
-
-        return $this->json([
+        return $this->response($tabSousCategorie);
+        /*  return $this->json([
             'data' => $tabSousCategorie,
 
-        ], 200);
+        ], 200); */
+    }
+
+    #[Route('/sous_categories/categorie/{code}', name: 'api_sousCategorie_by_categorie_code', methods: ['GET'])]
+    public function getAllSousCategorieByCategorie($code, SousCategorieRepository $sousCategorieRepository): Response
+    {
+        /* try { */
+
+        $sousCategories = $sousCategorieRepository->getSousCategorieByVisite($code);
+        $tabSousCategorie = [];
+        $k = 0;
+
+        foreach ($sousCategories as $value) {
+            $tabSousCategorie[$k]['total'] = $value['_total'] ? (int)$value['_total'] : 0;
+            $tabSousCategorie[$k]['id'] = $value['id'];
+            $tabSousCategorie[$k]['libelle'] = $value['libelle'];
+            $tabSousCategorie[$k]['image'] = [
+                'fileNamePath' =>  $value['image']
+            ];
+            $k++;
+        }
+
+        return $this->response($tabSousCategorie);
+        /* return $this->json([
+            'data' => $tabSousCategorie,
+
+        ], 200); */
     }
 
 
@@ -89,11 +111,11 @@ class ApiSousCategorieController extends ApiInterface
 
         try {
             if ($sousCategorie) {
-                $response = $this->response($sousCategorie);
+                $response = $this->response($sousCategorie->getCategorie()->getLibelle() . ' | ' . $sousCategorie->getLibelle());
             } else {
                 $this->setMessage('Cette ressource est inexistante');
                 $this->setStatusCode(300);
-                $response = $this->response($sousCategorie);
+                $response = $this->response(null);
             }
         } catch (\Exception $exception) {
             $this->setMessage("");
@@ -129,7 +151,7 @@ class ApiSousCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($sousCategorie);
             } else {
-                $this->setMessage("cette ressource existe deja en base");
+                $this->setMessage("Cette ressource existe deja en base");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -167,7 +189,7 @@ class ApiSousCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($sousCategorie);
             } else {
-                $this->setMessage("cette ressource est inexsitante");
+                $this->setMessage("Cette ressource est inexsitante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }
@@ -199,7 +221,7 @@ class ApiSousCategorieController extends ApiInterface
                 // On retourne la confirmation
                 $response = $this->response($sousCategorie);
             } else {
-                $this->setMessage("cette ressource est inexistante");
+                $this->setMessage("Cette ressource est inexistante");
                 $this->setStatusCode(300);
                 $response = $this->response(null);
             }

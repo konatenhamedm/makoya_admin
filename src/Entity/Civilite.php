@@ -9,11 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Attribute\Source;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
 
 
 #[ORM\Entity(repositoryClass: CiviliteRepository::class)]
 #[UniqueEntity(['code'], message: 'Ce code est déjà utilisé')]
-#[ORM\Table(name:'param_civilite')]
+#[ORM\Table(name: 'param_civilite')]
 #[Source]
 class Civilite
 {
@@ -22,8 +25,10 @@ class Civilite
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 15)]
     private ?string $libelle = null;
+
 
     #[ORM\Column(length: 5)]
     private ?string $code = null;
@@ -95,6 +100,4 @@ class Civilite
 
         return $this;
     }
-
-    
 }

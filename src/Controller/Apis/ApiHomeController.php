@@ -8,6 +8,7 @@ use App\Entity\Pays;
 use App\Repository\CategorieRepository;
 use App\Repository\NombreClickRepository;
 use App\Repository\PaysRepository;
+use App\Repository\PrestataireServiceRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\SousCategorieRepository;
 use App\Repository\UserFrontRepository;
@@ -36,7 +37,7 @@ class ApiHomeController extends ApiInterface
 
     #[Route('/{id}/{type}/{user}', name: 'api_home', methods: ['GET'])]
     /**
-     * Affiche toutes les civiltes.
+     * Permet .
      * @OA\Response(
      *     response=200,
      *     description="Returns the rewards of an user",
@@ -52,7 +53,7 @@ class ApiHomeController extends ApiInterface
         Request $request,
         UserFrontRepository $userFrontRepository,
         NombreClickRepository $nombreClickRepository,
-        ServiceRepository $serviceRepository,
+        PrestataireServiceRepository $serviceRepository,
         CategorieRepository $categorieRepository,
         SousCategorieRepository $sousCategorieRepository,
         SessionInterface $session,
@@ -69,17 +70,33 @@ class ApiHomeController extends ApiInterface
         $sessionStorage->setOptions(['cookie_lifetime' => 1234]);
  */
         // $sessionId = $request->getSession()->getId();
-        $sessionId = $session->getId();
+        // $sessionId = $session->getId();
+
+        $sessionId = $session->get('sessionId', []);
+        /* unset($sessionId["10-service"]); */
+        //dd($sessionId);
+
+        if (empty($sessionId[$id . $type])) {
+            $sessionId[$id . $type] = $id . $type . $session->getId();
+        }
+
+        $sessionId[$id . $type] == $id . $type . $session->getId();
+
+        $session->set('sessionId', $sessionId);
+
+
+
+        //Je recupere par type afin de savoir
         // dd($sessionId);
         if ($userFrontRepository->find($user)) {
 
-            $dataNombreClick = $nombreClickRepository->getData($sessionId, $type, $id, $userFrontRepository->find($user)->getQuartier()->getId());
+            $dataNombreClick = $nombreClickRepository->getData($id . $type . $session->getId(), $type, $id, $userFrontRepository->find($user)->getQuartier()->getId());
 
             if ($dataNombreClick != null) {
-
+                // dd('pp1');
                 $nombreHeure = intval($dataNombreClick->getDateModification()->diff(new DateTime())->format('%h'));
 
-                if ($nombreHeure >= 1) {
+                if ($nombreHeure >= 1 && in_array($dataNombreClick->getMac(), $sessionId)) {
                     $dataNombreClick->setNombre($dataNombreClick->getNombre() + 1);
                     $dataNombreClick->setDateModification(new DateTime());
                     $nombreClickRepository->save($dataNombreClick, true);
@@ -99,7 +116,7 @@ class ApiHomeController extends ApiInterface
 
                 $newClick->setQuartier($userFrontRepository->find($user)->getQuartier());
                 $newClick->setNombre(1);
-                $newClick->setMac($sessionId);
+                $newClick->setMac($id . $type . $session->getId());
                 //dd($newClick);
                 // $newClick->setDateModification(new DateTime());
                 $nombreClickRepository->save($newClick, true);
@@ -111,7 +128,7 @@ class ApiHomeController extends ApiInterface
 
                 $nombreHeure = intval($dataNombreClick->getDateModification()->diff(new DateTime())->format('%h'));
 
-                if ($nombreHeure >= 1) {
+                if ($nombreHeure >= 1 && in_array($dataNombreClick->getMac(), $sessionId)) {
                     $dataNombreClick->setNombre($dataNombreClick->getNombre() + 1);
                     $dataNombreClick->setDateModification(new DateTime());
                     $nombreClickRepository->save($dataNombreClick, true);
@@ -127,16 +144,16 @@ class ApiHomeController extends ApiInterface
                     $newClick->setSousCategorie($sousCategorieRepository->find($id));
                 }
 
-                $newClick->setQuartier($userFrontRepository->find($user)->getQuartier());
+                // $newClick->setQuartier($userFrontRepository->find($user)->getQuartier());
                 $newClick->setNombre(1);
-                $newClick->setMac($sessionId);
+                $newClick->setMac($id . $type . $session->getId());
                 $newClick->setDateModification(new DateTime());
                 $nombreClickRepository->save($newClick, true);
             }
         }
-        dd(200);
-        /*  $response = $this->response('ok');
-        return  $response; */
+
+        $response = $this->response('ok');
+        return  $response;
     }
 
 

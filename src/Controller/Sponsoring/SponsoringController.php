@@ -46,7 +46,7 @@ class SponsoringController extends BaseController
 
 
         $builder = $this->createFormBuilder(null, [
-            'method' => 'GET',
+            'method' => 'POST',
             'action' => $this->generateUrl('app_sponsoring_sponsoring_index', compact('dateDebut', 'dateFin', 'type', 'etat'))
         ])
 
@@ -63,10 +63,7 @@ class SponsoringController extends BaseController
                     'choices'  => array_flip([
                         'EN_COURS' => 'En cours',
                         'PRESQUE' => 'Presque terminer',
-                        'TERMINER' => 'Terminer',
-                        'demande_initie' => 'Demande initie',
-                        'demande_valider' => 'demande valider',
-                        'demande_rejeter' => 'demande rejeter',
+
                     ]),
                 ]
             )
@@ -408,7 +405,7 @@ class SponsoringController extends BaseController
     public function edit(Request $request, Sponsoring $sponsoring, EntityManagerInterface $entityManager, FormError $formError, NotificationService $notificationService): Response
     {
 
-        dd($_SERVER['REMOTE_HOST']);
+
         $validationGroups = ['Default', 'FileRequired', 'autre'];
         $form = $this->createForm(SponsoringType::class, $sponsoring, [
             'method' => 'POST',

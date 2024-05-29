@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use App\Form\PrestataireServiceType;
+use App\Repository\NombreClickRepository;
 use Doctrine\ORM\QueryBuilder;
 
 #[Route('/ads/parametre/prestation/prestataire/service')]
@@ -25,17 +26,20 @@ class PrestataireServiceController extends BaseController
 {
     const INDEX_ROOT_NAME = 'app_parametre_prestation_prestataire_service_index';
     #[Route('/ads/{reference}', name: 'app_parametre_prestation_prestataire_service_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, string $reference, DataTableFactory $dataTableFactory): Response
+    public function index(Request $request, string $reference, DataTableFactory $dataTableFactory, NombreClickRepository $nombreClickRepository): Response
     {
 
 
         $permission = $this->menu->getPermissionIfDifferentNull($this->security->getUser()->getGroupe()->getId(), self::INDEX_ROOT_NAME);
 
         $table = $dataTableFactory->create()
-            ->add('dateCreation', DateTimeColumn::class, ['format' => 'Y-d-m', 'label' => 'Date  création'])
+            ->add('dateCreation', DateTimeColumn::class, ['format' => 'Y-d-m', 'label' => 'Date  création', 'searchable' => false])
             ->add('categorie', TextColumn::class, ['field' => 'categorie.libelle', 'label' => 'Categorie'])
             ->add('service', TextColumn::class, ['field' => 'service.libelle', 'label' => 'Service'])
-            ->add('countVisite', TextColumn::class, ['field' => 'e.countVisite', 'label' => 'Nombre visite'])
+            /* ->add('countVisite', TextColumn::class, ['field' => 'e.countVisite', 'label' => 'Nombre visite']) */
+            ->add('countVisites', TextColumn::class, ['label' => 'Nombre visite', 'render' => function ($value, PrestataireService $context) use ($nombreClickRepository) {
+                return $nombreClickRepository->getNombreVue($context->getCategorie()->getId()) ? $nombreClickRepository->getNombreVue($context->getCategorie()->getId()) : 0;
+            }])
 
             ->createAdapter(ORMAdapter::class, [
                 'entity' => PrestataireService::class,

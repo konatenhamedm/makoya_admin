@@ -7,16 +7,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+
 #[ORM\Entity(repositoryClass: UserFrontRepository::class)]
 #[ORM\Table(name: 'user_front_utilisateur')]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
-#[UniqueEntity(fields: 'username', message: 'Ce nom utilisateur est déjà associé à un compte')]
+/* #[DiscriminatorMap(['prestataire' => Prestataire::class, 'utilisateursimple' => UtilisateurSimple::class])] */
+#[UniqueEntity(fields: 'email', message: 'Cet email utilisateur est déjà associé à un compte')]
 class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -39,7 +43,6 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Veuillez le mail')]
-    #[Assert\Unique(message: 'Le mail existe deja')]
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'userFronts')]
@@ -83,6 +86,13 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Sponsoring::class)]
     private Collection $sponsorings;
+
+    #[ORM\ManyToOne]
+    #[Gedmo\Blameable(on: 'create')]
+    private ?Utilisateur $userAdd = null;
+
+
+
 
     public function __construct()
     {
@@ -493,6 +503,18 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
                 $sponsoring->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserAdd(): ?Utilisateur
+    {
+        return $this->userAdd;
+    }
+
+    public function setUserAdd(?Utilisateur $userAdd): static
+    {
+        $this->userAdd = $userAdd;
 
         return $this;
     }

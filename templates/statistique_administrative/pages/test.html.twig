@@ -1164,7 +1164,7 @@
                             <div class="col-md-6 d-inline-flex  mb-1">
                                 <div style="height: 2rem; width: 2rem;" class="rounded levelOne"></div>
                                 <div class="pl-2 pt-1">
-                                    0 (prestataires + clients)
+                                    0 (prestataires + utilisateurs simples)
                                 </div>
                             </div>
                             {# </div>
@@ -1172,7 +1172,7 @@
                             <div class="col-md-6 d-inline-flex  mb-1">
                                 <div style="height: 2rem; width: 2rem;" class="rounded levelTwo"></div>
                                 <div class="pl-2 pt-1">
-                                    1-2 (prestataires + clients)
+                                    1-2 (prestataires + utilisateurs simples)
                                 </div>
                             </div>
                         </div>
@@ -1180,7 +1180,7 @@
                             <div class="col-md-6 d-inline-flex  mb-1">
                                 <div style="height: 2rem; width: 2rem;" class="rounded levelThree"></div>
                                 <div class="pl-2 pt-1">
-                                    3-5 (prestataires + clients)
+                                    3-5 (prestataires + utilisateurs simples)
                                 </div>
                             </div>
                             {# </div>
@@ -1188,7 +1188,7 @@
                             <div class="col-md-6 d-inline-flex  mb-1">
                                 <div style="height: 2rem; width: 2rem;" class="rounded levelFour"></div>
                                 <div class="pl-2 pt-1">
-                                    > 5 (prestataires + clients)
+                                    > 5 (prestataires + utilisateurs simples)
                                 </div>
                             </div>
                         </div>
@@ -1400,7 +1400,7 @@
     }
 
      $(document).ready(function(){
-refreshMap();
+         refreshMap();
          $('#anneeSelect, #partenaireSelect, #intituleSelect').change(function(){
             $('#infos').html('<p class="text-center">Veuillez selectionner une région sur la carte</p>');
             requestInt();
@@ -1433,7 +1433,7 @@ refreshMap();
                 resDistrict = `
                     <div class="container-fluid p-0">
                         <a class="unstyledLink rounded border p-0 px-1 mr-1 text-center collapsed" data-toggle="collapse" href="#collapseDistrict${$i}" role="button" aria-expanded="false" aria-controls="collapseDistrict${$i}">+</a>
-                        District ${district.titre} : ${district.data.length} ${label}
+                        Nombre ${district.titre} : ${district.data.length} ${label}
                     </div>
                     <div class="container">
                         <div class="collapse" id="collapseDistrict${$i}">
