@@ -89,7 +89,7 @@ class PropositionServiceSubscriber implements EventSubscriberInterface
     $this->em->flush();
 
     $notifcationPrestataire = new NotificationPrestataire();
-    $notifcationPrestataire->setPrestataire($entity->getPrestataire());
+    $notifcationPrestataire->setUtilisateur($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
     $this->em->flush();
@@ -113,7 +113,7 @@ class PropositionServiceSubscriber implements EventSubscriberInterface
     $this->em->flush();
 
     $notifcationPrestataire = new NotificationPrestataire();
-    $notifcationPrestataire->setPrestataire($entity->getPrestataire());
+    $notifcationPrestataire->setUtilisateur($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
     $this->em->flush();

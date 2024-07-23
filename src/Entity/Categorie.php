@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
-#[UniqueEntity(['slug'], message: 'Ce slug est déjà utilisé')]
+#[UniqueEntity(['libelle'], message: 'Ce slug est déjà utilisé')]
 class Categorie
 {
     #[ORM\Id]

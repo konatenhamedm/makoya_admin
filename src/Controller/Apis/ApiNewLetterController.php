@@ -97,6 +97,7 @@ class ApiNewLetterController extends ApiInterface
                     $newsletter = new Newsletter();
                     $newsletter->setEmail($data->email);
                     $newsletter->setNom($data->nom);
+                    $newsletter->setDateCreation(new \DateTime());
 
 
 
@@ -105,6 +106,7 @@ class ApiNewLetterController extends ApiInterface
                     $newsletterRepository->save($newsletter, true);
 
                     // On retourne la confirmation
+                    $this->setMessage("La ressource a bien ete ajouter");
                     $response = $this->response($newsletter);
                 } else {
                     $this->setMessage("Cette ressource existe deja en base");
@@ -117,7 +119,7 @@ class ApiNewLetterController extends ApiInterface
                 $response = $this->response(null);
             }
         } catch (\Exception $exception) {
-            $this->setMessage("");
+            $this->setMessage("erreur interne du serveur");
             $response = $this->response(null);
         }
 

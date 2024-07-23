@@ -71,9 +71,11 @@ var imageInput = KTImageInput.getInstance(imageInputElement);
 })
 $('.categorie').on('change', function (e) {
 
-$res = $(this).closest('.card-container');
+			$res = $(this).closest('.card-container');
 
-const $id = $(this).val();
+			const $id = $(this).val();
+
+			
 
 			$.ajax({
 					url: '/ads/utilisateur/front/prestataire/liste/souscategorie',
@@ -94,14 +96,17 @@ const $id = $(this).val();
 					});
 
 					 $res.find('#'+$res.find('.service').attr("id")).html(''); //je vide la 2ème list
-                $res.find('#'+$res.find('.service').attr("id")).append('<option value selected="default">Choisissez</option>');
-                $.each(json.services, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
-                    
-                  $res.find("#"+$res.find('.service').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
-             
-                });
+					$res.find('#'+$res.find('.service').attr("id")).append('<option value selected="default">Choisissez</option>');
+					$.each(json.services, function(index, value) { // et une boucle sur la réponse contenu dans la variable passé à la function du success "json"       
+						
+					$res.find("#"+$res.find('.service').attr("id")).append('<option value="'+ value.id +'"  >' + value.libelle +'</option>');
+				
+					});
 
-
+					}
+					,
+					error: function (ajaxContext) {
+						alert(ajaxContext.responseText)
 					}
 			});
 

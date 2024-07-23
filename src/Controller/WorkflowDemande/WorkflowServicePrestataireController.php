@@ -194,9 +194,9 @@ class WorkflowServicePrestataireController extends BaseController
             $response = [];
             $redirect = $this->generateUrl('app_config_workflow_index');
             $workflow = $this->workflow->get($workflowServicePrestataire, 'add_prestation_service');
-
             if ($form->isValid()) {
                 if ($form->getClickedButton()->getName() === 'passer') {
+                    //dd('sdsd');
                     $workflow->apply($workflowServicePrestataire, 'passer');
 
 

@@ -45,6 +45,7 @@ class DemandeSubscriber implements EventSubscriberInterface
   public function handleValidation(TransitionEvent $event): void
   {
 
+    dd("lklsj");
     $transition_name = $event->getTransition()->getName();
     $entity = $event->getSubject();
 
@@ -53,14 +54,19 @@ class DemandeSubscriber implements EventSubscriberInterface
     $this->em->flush();
 
 
+
     $demande = new PrestataireService();
-    $demande->setEtat("demande_valider");
+    $demande->setEtat(true);
     $demande->setCategorie($entity->getCategorie());
     $demande->setPrestataire($entity->getPrestataire());
     $demande->setImage($entity->getImage());
     if ($entity->getSousCategorie() != null)
       $demande->setSousCategorie($entity->getSousCategorie());
     $demande->setService($entity->getService());
+
+
+    $this->em->persist($demande);
+    $this->em->flush();
 
     $notification = new Notification();
     $notification->setDateCreation(new DateTime())
@@ -73,7 +79,7 @@ class DemandeSubscriber implements EventSubscriberInterface
     $this->em->flush();
 
     $notifcationPrestataire = new NotificationPrestataire();
-    $notifcationPrestataire->setPrestataire($entity->getPrestataire());
+    $notifcationPrestataire->setUtilisateur($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
     $this->em->flush();
@@ -97,7 +103,7 @@ class DemandeSubscriber implements EventSubscriberInterface
     $this->em->flush();
 
     $notifcationPrestataire = new NotificationPrestataire();
-    $notifcationPrestataire->setPrestataire($entity->getPrestataire());
+    $notifcationPrestataire->setUtilisateur($entity->getPrestataire());
     $notifcationPrestataire->setNotification($notification);
     $this->em->persist($notifcationPrestataire);
     $this->em->flush();

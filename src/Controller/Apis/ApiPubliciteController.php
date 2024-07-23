@@ -133,10 +133,10 @@ class ApiPubliciteController extends ApiInterface
      */
     public function getCategorie(PubliciteImageRepository $publiciteRepository, $id): Response
     {
-        ///dd('');
         try {
 
             $publiciteImages = $publiciteRepository->getPublicitecategorie($id);
+            // dd($publiciteImages);
 
             $tabPubliciteEncart = [];
             $i = 0;

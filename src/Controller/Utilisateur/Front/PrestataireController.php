@@ -558,7 +558,7 @@ class PrestataireController extends BaseController
 
             $dataService = $servicePrestataireRepository->findBy(array('categorie' => $id));
 
-            //dd($ensembles);
+            /*     dd($dataSousCat); */
 
 
             foreach ($dataService as $e) { // transformer la réponse de la requete en tableau qui remplira le select pour ensembles
@@ -588,6 +588,7 @@ class PrestataireController extends BaseController
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent($dataSousCategorie); */
         }
+        // dd($this->json($data));
         return $this->json($data);
     }
 

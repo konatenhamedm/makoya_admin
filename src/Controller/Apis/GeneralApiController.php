@@ -132,9 +132,6 @@ class GeneralApiController extends ApiInterface
             $i++;
         }
 
-
-
-
         return $this->response($tabQuartier);
     }
 
@@ -158,7 +155,7 @@ class GeneralApiController extends ApiInterface
         $services = $prestataireServiceRepository->getServices($id);
 
 
-        // dd($noteRepository->noteSerice(5));
+        // dd($noteRepository->noteService(5));
         $tabService = [];
 
         $k = 0;
@@ -168,7 +165,76 @@ class GeneralApiController extends ApiInterface
         foreach ($services as $value) {
 
             $tabService[$k]['id'] = $value['id'];
-            $tabService[$k]['note'] = $noteRepository->noteSerice($value['id']);
+            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
+            $tabService[$k]['countVisite'] = $value['countVisite'];
+            //    . $utilisateur->getPhoto()->getFileNamePath()
+            $tabService[$k]['image'] = [
+                'fileNamePath' =>  $value['path'] . '/' . $value['alt']
+            ];
+            $tabService[$k]['sousCategorie'] = [
+                'id' =>  $value['sId'],
+                'libelle' =>  $value['sousCategorie'],
+            ];
+            $tabService[$k]['prestataire'] = [
+                'id' =>  $value['pId'],
+                'denominationSociale' =>  $value['denominationSociale'],
+                'contactPrincipal' => substr(strrev(trim(chunk_split(strrev($value['contactPrincipal']), 2, '-'))), 1),
+                'statut' =>  $value['statut'],
+                'quartier' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' .  $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getNom(),
+                'ville' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom(),
+            ];
+            $tabService[$k]['service'] = [
+                'id' =>  $value['serId'],
+                'libelle' =>  $value['service'],
+            ];
+
+            $k++;
+        }
+
+        $response = [
+            "services" => $tabService,
+            'sousCategories' => $sousCategorie->getCategorie()->getLibelle() . ' / ' . $sousCategorie->getLibelle(),
+
+        ];
+        return $this->response($response);
+
+
+        /*$this->json([
+            'data' => $response,
+
+        ], 200);*/
+    }
+    #[Route('/services/search/{idCategorie}/{idVille}/{search}', name: 'api_gener_service_search', methods: ['GET'])]
+    /**
+     * Affiche toutes les service optimise.
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns the rewards of an user",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Quartier::class, groups={"full"}))
+     *     )
+     * )
+     * @OA\Tag(name="PrestataireService")
+     * @Security(name="Bearer")
+     */
+    public function getServiceBySearch($idCategorie, $idVille, $search = "", PrestataireServiceRepository $prestataireServiceRepository,  NoteRepository $noteRepository, QuartierRepository $quartierRepository, UserFrontRepository $utilisateurSimpleRepository): Response
+    {
+        $services = $prestataireServiceRepository->getServicesBySearch($idCategorie,  $search, $idVille);
+
+
+        /*  dd($idCategorie, $search, $idVille);
+        dd($services); */
+        $tabService = [];
+
+        $k = 0;
+        $countNombre = 0;
+
+
+        foreach ($services as $value) {
+
+            $tabService[$k]['id'] = $value['id'];
+            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
             $tabService[$k]['countVisite'] = $value['countVisite'];
             //    . $utilisateur->getPhoto()->getFileNamePath()
             $tabService[$k]['image'] = [
@@ -195,7 +261,7 @@ class GeneralApiController extends ApiInterface
 
         $response = [
             "services" => $tabService,
-            'sousCategories' => $sousCategorie->getCategorie()->getLibelle() . ' / ' . $sousCategorie->getLibelle(),
+            'sousCategories' => "ddd",
 
         ];
         return $this->response($response);
@@ -226,7 +292,7 @@ class GeneralApiController extends ApiInterface
         $services = $prestataireServiceRepository->getServicesAll();
 
 
-        // dd($noteRepository->noteSerice(5));
+        // dd($noteRepository->noteService(5));
         $tabService = [];
 
         $k = 0;
@@ -261,7 +327,7 @@ class GeneralApiController extends ApiInterface
         foreach ($services as $value) {
 
             $tabService[$k]['id'] = $value['id'];
-            $tabService[$k]['note'] = $noteRepository->noteSerice($value['id']);
+            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
             $tabService[$k]['countVisite'] = $value['countVisite'];
             //    . $utilisateur->getPhoto()->getFileNamePath()
             $tabService[$k]['image'] = [
@@ -322,20 +388,15 @@ class GeneralApiController extends ApiInterface
         $services_All = $prestataireServiceRepository->getServicesAllC(false);
         //$pharmacies = $pharmacieRepository->findAll();
 
-
-
         $tabService = [];
         $tabServiceAll = [];
-
         $k = 0;
         $j = 0;
-
-
 
         foreach ($services as $value) {
 
             $tabService[$k]['id'] = $value['id'];
-            $tabService[$k]['note'] = $noteRepository->noteSerice($value['id']);
+            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
             $tabService[$k]['countVisite'] = $value['countVisite'];
             $tabService[$k]['message'] = $value['message'];
             //    . $utilisateur->getPhoto()->getFileNamePath()
@@ -353,6 +414,7 @@ class GeneralApiController extends ApiInterface
                 'statut' =>  $value['statut'],
                 'quartier' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' .  $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getNom(),
                 'quartierService' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' . $value['service'],
+                'ville' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom(),
             ];
             $tabService[$k]['service'] = [
                 'id' =>  $value['serId'],
@@ -375,7 +437,7 @@ class GeneralApiController extends ApiInterface
                 if ($tab['id'] != $value['id']) {
 
                     $tabServiceAll[$j]['id'] = $value['id'];
-                    $tabServiceAll[$j]['note'] = $noteRepository->noteSerice($value['id']);
+                    $tabServiceAll[$j]['note'] = $noteRepository->noteService($value['id']);
                     $tabServiceAll[$j]['countVisite'] = $value['countVisite'];
                     $tabServiceAll[$j]['message'] = $value['message'];
                     //    . $utilisateur->getPhoto()->getFileNamePath()
@@ -393,6 +455,7 @@ class GeneralApiController extends ApiInterface
                         'statut' =>  $value['statut'],
                         'quartier' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' .  $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getNom(),
                         'quartierService' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' . $value['service'],
+                        'ville' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom(),
                     ];
                     $tabServiceAll[$j]['service'] = [
                         'id' =>  $value['serId'],

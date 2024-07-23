@@ -39,28 +39,39 @@ class NotificationPrestataireRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return NotificationPrestataire[] Returns an array of NotificationPrestataire objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('n')
-//            ->andWhere('n.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('n.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findNotifications($email)
+    {
 
-//    public function findOneBySomeField($value): ?NotificationPrestataire
-//    {
-//        return $this->createQueryBuilder('n')
-//            ->andWhere('n.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->createQueryBuilder('n')
+            ->innerJoin('n.utilisateur', 'u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    /**
+    //     * @return NotificationPrestataire[] Returns an array of NotificationPrestataire objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('n')
+    //            ->andWhere('n.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('n.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?NotificationPrestataire
+    //    {
+    //        return $this->createQueryBuilder('n')
+    //            ->andWhere('n.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

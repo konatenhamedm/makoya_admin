@@ -47,7 +47,7 @@ class NoteRepository extends ServiceEntityRepository
     }
 
 
-    public function noteSerice($service)
+    public function noteService($service)
     {
         return $this->createQueryBuilder('n')
             ->select('count(n.id) nombre')

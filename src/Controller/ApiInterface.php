@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+use App\Controller\FileTrait;
 use App\Service\Menu;
 use App\Service\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+/* #[Route('/apis')] */
 
 class ApiInterface extends AbstractController
 {
@@ -23,17 +28,21 @@ class ApiInterface extends AbstractController
     protected $security;
     protected $userInterface;
     protected  $hasher;
-    protected  $utils;
+    //protected  $utils;
     protected $em;
 
-    public function __construct(UserPasswordHasherInterface $hasher, Utils $utils, EntityManagerInterface $em,)
+    protected $client;
+
+    protected $serializer;
+
+    public function __construct(EntityManagerInterface $em, HttpClientInterface $client, SerializerInterface $serializer)
     {
 
-        // $this->security = $security;
-        // $this->userInterface = $userInterface;
-        $this->hasher = $hasher;
-        $this->utils = $utils;
+
+        //$this->utils = $utils;
+        $this->client = $client;
         $this->em = $em;
+        $this->serializer = $serializer;
     }
 
 
@@ -78,6 +87,11 @@ class ApiInterface extends AbstractController
         return $this;
     }
 
+    /*  public function serializer(){
+        $context = [AbstractNormalizer::GROUPS => 'group1'];
+        $json = $this->serializer->serialize($batis, 'json', $context);
+    } */
+
     public function response($data, $headers = [])
     {
         // On spécifie qu'on utilise l'encodeur JSON
@@ -92,7 +106,7 @@ class ApiInterface extends AbstractController
 
         if ($data == null) {
             $arrayData = [
-                'data' => null,
+                'data' => '[]',
                 'message' => $this->getMessage(),
                 'status' => $this->getStatusCode()
             ];
@@ -122,17 +136,62 @@ class ApiInterface extends AbstractController
         }
         // dd($this->json($data));
         // On convertit en json
-
-
-
-
-
-
         // On ajoute l'entête HTTP
 
         return $response;
         //return new JsonResponse($response, $this->getStatusCode(), $headers);
     }
+    public function responseTrue($data, $headers = [])
+    {
+        // On spécifie qu'on utilise l'encodeur JSON
+        $encoders = [new JsonEncoder()];
+
+        // On instancie le "normaliseur" pour convertir la collection en tableau
+        $normalizers = [new ObjectNormalizer()];
+
+        // On instancie le convertisseur
+        $serializer = new Serializer($normalizers, $encoders);
+
+
+        if ($data == null) {
+            $arrayData = [
+                'data' => '[]',
+                'message' => $this->getMessage(),
+                'status' => $this->getStatusCode()
+            ];
+            $response = $this->json([
+                'data' => $data,
+                'message' => $this->getMessage(),
+                'status' => $this->getStatusCode()
+
+            ], 200);
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+        } else {
+            $arrayData = [
+                'data' => $data,
+                'message' => $this->getMessage(),
+                'status' => $this->getStatusCode()
+            ];
+            $jsonContent = $serializer->serialize($arrayData, 'json', [
+                'circular_reference_handler' => function ($object) {
+                    return  $object->getId();
+                },
+
+            ]);
+            // On instancie la réponse
+            $response = new Response($jsonContent);
+            //$response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+        }
+        // dd($this->json($data));
+        // On convertit en json
+        // On ajoute l'entête HTTP
+
+        return $response;
+        //return new JsonResponse($response, $this->getStatusCode(), $headers);
+    }
+
+
 
     public function responseAdd($data, $headers = [])
     {
@@ -142,5 +201,37 @@ class ApiInterface extends AbstractController
             'status' => $this->getStatusCode()
 
         ], 200);
+    }
+
+
+    public function responseNew($data = [], $group, $headers = [])
+    {
+        if ($data) {
+            //dd('');
+            $context = [AbstractNormalizer::GROUPS => $group];
+            $json = $this->serializer->serialize($data, 'json', $context);
+            $response = new JsonResponse(['code' => 200,   'message' => $this->getMessage(), 'data' => json_decode($json)]);
+        } else {
+            //dd('');
+            $response = new JsonResponse(['code' => 200,  'message' => $this->getMessage(), 'data' => json_decode('[]')]);;
+        }
+
+        return $response;
+    }
+
+
+    public function sendNotification($data = [])
+    {
+        $body = [
+            "title" => $data['title'],
+            "body" => $data['body'],
+            "user_id" => $data['userId']
+        ];
+
+        $this->client->request(
+            'POST',
+            'https://api.freewan.store/auth-center/api/notifications/create',
+            $body
+        );
     }
 }

@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 class Notification
@@ -14,18 +16,23 @@ class Notification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group("group1")]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Group("group1")]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\Column]
+    #[Group("group1")]
     private ?bool $etat = null;
 
     #[ORM\Column(length: 255)]
+    #[Group("group1")]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
+    #[Group("group1")]
     private ?string $message = null;
 
 

@@ -122,6 +122,36 @@ class PrestataireServiceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function getServicesBySearch($idCategorie, $search, $ville)
+    {
+        $sql = $this->createQueryBuilder('c')
+            ->addSelect('c.id,c.countVisite,i.path,i.alt,s.id sId,s.libelle sousCategorie,ser.id serId,ser.libelle service,p.id pId,p.denominationSociale,p.contactPrincipal,p.statut')
+            ->innerJoin('c.categorie', 's')
+            ->innerJoin('c.image', 'i')
+            ->innerJoin('c.service', 'ser')
+            ->innerJoin('c.prestataire', 'p')
+            ->innerJoin('p.quartier', 'q')
+            ->innerJoin('q.commune', 'co');
+        /*    ->andWhere('s.id = :id')
+            ->andWhere('ser.libelle LIKE :search'); */
+        ///dd($search);
+        if ($search != "null") {
+            $sql->andWhere('ser.libelle LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+        if ($idCategorie != "null") {
+            $sql->andWhere('s.id = :id')
+                ->setParameter('id', $idCategorie);
+        }
+        if ($ville != "null") {
+            $sql->andWhere('co.id = :ville')
+                ->setParameter('ville', $ville);
+        }
+
+        return  $sql->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     public function getServicesAll()
     {
         return $this->createQueryBuilder('c')
