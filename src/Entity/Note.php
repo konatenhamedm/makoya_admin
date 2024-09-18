@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use App\Repository\NoteRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
 #[ORM\Table(name: 'reseau_note')]
@@ -14,24 +18,24 @@ class Note
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $note = null;
-
-    #[ORM\ManyToOne(inversedBy: 'notes')]
-    private ?UserFront $utilisateur = null;
-
-    #[ORM\ManyToOne(inversedBy: 'notes')]
-    private ?PrestataireService $service = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\OneToMany(mappedBy: 'note', targetEntity: Commentaire::class)]
+    private Collection $commentaires;
 
     public function __construct()
     {
         // $this->note = 0;
         $this->dateCreation = new DateTime();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,29 +55,6 @@ class Note
         return $this;
     }
 
-    public function getUtilisateur(): ?UserFront
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?UserFront $utilisateur): static
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
-    public function getService(): ?PrestataireService
-    {
-        return $this->service;
-    }
-
-    public function setService(?PrestataireService $service): static
-    {
-        $this->service = $service;
-
-        return $this;
-    }
 
     public function getDateCreation(): ?\DateTimeInterface
     {
@@ -83,6 +64,36 @@ class Note
     public function setDateCreation(?\DateTimeInterface $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setNote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getNote() === $this) {
+                $commentaire->setNote(null);
+            }
+        }
 
         return $this;
     }

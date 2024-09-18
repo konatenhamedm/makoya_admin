@@ -37,7 +37,7 @@ class ApiHomeController extends ApiInterface
 
     #[Route('/{id}/{type}/{user}', name: 'api_home', methods: ['GET'])]
     /**
-     * Permet .
+     * Permet de compter les nombre de click sur une categorie ,une sous categorie ou  un service.
      * @OA\Response(
      *     response=200,
      *     description="Returns the rewards of an user",
@@ -88,7 +88,7 @@ class ApiHomeController extends ApiInterface
 
         //Je recupere par type afin de savoir
         // dd($sessionId);
-        if ($userFrontRepository->find($user)) {
+        if ($userFrontRepository->findOneByEmail($user)) {
 
             $dataNombreClick = $nombreClickRepository->getData($id . $type . $session->getId(), $type, $id, $userFrontRepository->find($user)->getQuartier()->getId());
 

@@ -26,6 +26,17 @@ services:
 
     # add more service definitions when explicit Config is needed
     # please note that last definitions always *replace* previous ones
+    App\EventSubscriber\DemandeSubscriber:
+        tags:
+        - { name: 'kernel.event_subscriber' }
+
+    App\EventSubscriber\PropositionServiceSubscriber:
+        tags:
+        - { name: 'kernel.event_subscriber' }
+
+    App\EventSubscriber\DemandePublicitePrestataireSubscriber:
+        tags:
+        - { name: 'kernel.event_subscriber' }
 
     App\Maker\MakeCrudController:
         arguments:

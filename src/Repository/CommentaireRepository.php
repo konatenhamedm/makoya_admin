@@ -54,6 +54,17 @@ class CommentaireRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function noteService($service)
+    {
+        return $this->createQueryBuilder('n')
+            ->select('count(n.id) nombre')
+            ->innerJoin('n.service', 's')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $service)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return Commentaire[] Returns an array of Commentaire objects
     //     */

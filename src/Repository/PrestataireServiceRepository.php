@@ -173,18 +173,20 @@ class PrestataireServiceRepository extends ServiceEntityRepository
                 ->innerJoin('c.sousCategorie', 's')
                 ->innerJoin('c.image', 'i')
                 ->innerJoin('c.commentaires', 'cm')
+                ->innerJoin('cm.utilisateur', 'u')
                 ->innerJoin('c.service', 'ser')
                 ->innerJoin('c.prestataire', 'p')
                 /* ->orderBy('c.countVisite', 'ASC') */
-                ->setMaxResults(4)
+                /* ->setMaxResults(4) */
                 ->getQuery()
                 ->getResult();
         } else {
             $data = $this->createQueryBuilder('c')
-                ->addSelect('cm.message,c.id,c.countVisite,i.path,i.alt,s.id sId,s.libelle sousCategorie,ser.id serId,ser.libelle service,p.id pId,p.denominationSociale,p.contactPrincipal,p.statut')
+                ->addSelect('cm.message,c.id,c.countVisite,i.path,i.alt,s.id sId,s.libelle sousCategorie,ser.id serId,ser.libelle service,p.id pId,p.denominationSociale,p.contactPrincipal,p.statut,u.username')
                 ->innerJoin('c.sousCategorie', 's')
                 ->innerJoin('c.image', 'i')
                 ->innerJoin('c.commentaires', 'cm')
+                ->innerJoin('cm.utilisateur', 'u')
                 ->innerJoin('c.service', 'ser')
                 ->innerJoin('c.prestataire', 'p')
                 ->getQuery()

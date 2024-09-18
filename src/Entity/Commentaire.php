@@ -6,6 +6,8 @@ use App\Repository\CommentaireRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 #[ORM\Table(name: 'reseau_commentaire')]
@@ -14,19 +16,27 @@ class Commentaire
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Group(["groupe_commentaire"])]
     private ?string $message = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[Group(["groupe_commentaire"])]
     private ?PrestataireService $service = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[Group(["groupe_commentaire"])]
     private ?UserFront $utilisateur = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[Group(["groupe_commentaire"])]
+    private ?Note $note = null;
 
     public function __construct()
     {
@@ -81,6 +91,18 @@ class Commentaire
     public function setDateCreation(\DateTimeInterface $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): static
+    {
+        $this->note = $note;
 
         return $this;
     }

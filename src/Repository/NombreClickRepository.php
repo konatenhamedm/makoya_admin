@@ -48,6 +48,50 @@ class NombreClickRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllServices($sousCategorie)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('sum(a.nombre) as nombre, service.id as id, concat(ser.libelle, \' - \', p.denominationSociale) as libelle')
+            ->innerJoin('a.service', 'service')
+            ->innerJoin('service.prestataire', 'p')
+            ->innerJoin('service.sousCategorie', 'sc')
+            ->andWhere('sc.id = :sousCategorie')
+            ->setParameter('sousCategorie', $sousCategorie)
+            ->innerJoin('service.service', 'ser')
+            ->groupBy('id, libelle')
+            ->orderBy('nombre', 'DESC')
+            ->setMaxResults(6)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
+    public function getAllSousCategories()
+    {
+
+        return $this->createQueryBuilder('a')
+            ->select('sum(a.nombre) nombre,cat.id id,cat.libelle libelle')
+            ->innerJoin('a.sousCategorie', 'cat')
+            ->groupBy('id,libelle')
+            ->orderBy('nombre', 'DESC')
+            ->setMaxResults(6)
+            ->getQuery()
+            ->getResult();
+    }
+    public function getAllCategories()
+    {
+
+        return $this->createQueryBuilder('a')
+            ->select('sum(a.nombre) nombre,cat.id id,cat.libelle libelle')
+            ->innerJoin('a.categorie', 'cat')
+            ->groupBy('id,libelle')
+            ->orderBy('nombre', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getData($mac, $type, $id, $quartier): ?NombreClick
     {
 

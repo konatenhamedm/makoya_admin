@@ -102,7 +102,7 @@ class PrestataireType extends AbstractType
                         ]),
                     ])
                     ->add(
-                        'logo',
+                        'photo',
                         FichierType::class,
                         [
                             /*   'label' => 'Fichier', */
@@ -160,7 +160,7 @@ class PrestataireType extends AbstractType
                         ]),
                     ])
                     ->add(
-                        'logo',
+                        'photo',
                         FichierType::class,
                         [
                             'label' => 'Fichier',

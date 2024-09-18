@@ -6,20 +6,24 @@ use App\Repository\ServicePrestataireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: ServicePrestataireRepository::class)]
-#[ORM\Table(name:'param_service_prestataire')]
+#[ORM\Table(name: 'param_service_prestataire')]
 class ServicePrestataire
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Group(["groupe_commentaire"])]
     private ?string $libelle = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: PrestataireService::class)]

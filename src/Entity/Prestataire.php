@@ -6,6 +6,8 @@ use App\Repository\PrestataireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: PrestataireRepository::class)]
 #[ORM\Table(name: 'user_front_prestataire')]
@@ -14,18 +16,18 @@ class Prestataire extends UserFront
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Group(["groupe_commentaire"])]
     private ?string $denominationSociale = null;
 
 
-    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $logo = null;
 
 
     #[ORM\Column(length: 255)]
+    #[Group(["groupe_commentaire"])]
     private ?string $contactPrincipal = null;
 
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: PrestataireService::class, orphanRemoval: true, cascade: ['persist'])]
@@ -48,6 +50,7 @@ class Prestataire extends UserFront
     private Collection $signalers;
 
     #[ORM\Column(length: 5, nullable: true)]
+    #[Group(["groupe_commentaire"])]
     private ?string $statut = null;
 
     public function __construct()
@@ -76,17 +79,6 @@ class Prestataire extends UserFront
         return $this;
     }
 
-    public function getLogo(): ?Fichier
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(?Fichier $logo): static
-    {
-        $this->logo = $logo;
-
-        return $this;
-    }
 
     public function getContactPrincipal(): ?string
     {

@@ -82,7 +82,8 @@ class AuthenticationSuccessListener extends ApiInterface
                 'name' =>    $user->getDenominationSociale(),
                 "type" => $type,
                 "email" => $userData->getEmail(),
-                'image' => 'http://localhost:8000/uploads/' . $userData->getLogo()->getPath() . '/' . $userData->getLogo()->getAlt()
+                'image' => 'http://localhost:8000/uploads/' . $userData->getPhoto()->getPath() . '/' . $userData->getPhoto()->getAlt()
+
             ];
             $event->setData($data);
         }

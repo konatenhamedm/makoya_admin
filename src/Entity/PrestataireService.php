@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Nullable;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: PrestataireServiceRepository::class)]
 #[ORM\Table(name: 'gestion_prestataire_service')]
@@ -17,15 +19,19 @@ class PrestataireService
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'prestataireServices')]
+    #[Group(["groupe_commentaire"])]
     private ?Prestataire $prestataire = null;
 
     #[ORM\ManyToOne(inversedBy: 'prestataireServices')]
+    //#[Group(["groupe_commentaire"])]
     private ?Categorie $categorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'prestataireServices')]
+    #[Group(["groupe_commentaire"])]
     private ?ServicePrestataire $service = null;
 
     #[ORM\ManyToOne(inversedBy: 'prestataireServices')]
@@ -35,9 +41,11 @@ class PrestataireService
 
     #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: true)]
+    #[Group(["groupe_commentaire"])]
     private ?Fichier $image = null;
 
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?bool $etat = null;
 
     #[ORM\Column(nullable: true)]
@@ -49,8 +57,7 @@ class PrestataireService
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Favorie::class)]
     private Collection $favories;
 
-    #[ORM\OneToMany(mappedBy: 'service', targetEntity: Note::class)]
-    private Collection $notes;
+
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Commentaire::class)]
     private Collection $commentaires;
@@ -67,7 +74,6 @@ class PrestataireService
         $this->countVisite = 0;
         $this->setCountVisite(0);
         $this->favories = new ArrayCollection();
-        $this->notes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->nombreClicks = new ArrayCollection();
@@ -204,35 +210,7 @@ class PrestataireService
         return $this;
     }
 
-    /**
-     * @return Collection<int, Note>
-     */
-    public function getNotes(): Collection
-    {
-        return $this->notes;
-    }
 
-    public function addNote(Note $note): static
-    {
-        if (!$this->notes->contains($note)) {
-            $this->notes->add($note);
-            $note->setService($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): static
-    {
-        if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getService() === $this) {
-                $note->setService(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Commentaire>

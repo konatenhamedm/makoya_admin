@@ -5,6 +5,7 @@ namespace App\Controller\Apis;
 use App\Controller\ApiInterface;
 use App\Entity\Commentaire;
 use App\Entity\PrestataireService;
+use App\Entity\ServicePrestataire;
 use App\Entity\Quartier;
 use App\Entity\SousCategorie;
 use App\Repository\CategorieRepository;
@@ -64,14 +65,9 @@ class ApiServicePrestataireController extends ApiInterface
 
             $i++;
         }
-
-
         $response = [
             "service" => $tabService,
-
         ];
-
-
         return $this->json([
             'data' => $response,
 

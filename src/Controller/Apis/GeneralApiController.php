@@ -27,6 +27,8 @@ use function Symfony\Component\String\toString;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OAA;
+
 
 #[Route('/api/general')]
 class GeneralApiController extends ApiInterface
@@ -150,7 +152,7 @@ class GeneralApiController extends ApiInterface
      * @OA\Tag(name="PrestataireService")
      * @Security(name="Bearer")
      */
-    public function getService($id, PrestataireServiceRepository $prestataireServiceRepository, SousCategorie $sousCategorie, NoteRepository $noteRepository, QuartierRepository $quartierRepository, UserFrontRepository $utilisateurSimpleRepository): Response
+    public function getService($id, PrestataireServiceRepository $prestataireServiceRepository, CommentaireRepository $commentaireRepository, SousCategorie $sousCategorie, NoteRepository $noteRepository, QuartierRepository $quartierRepository, UserFrontRepository $utilisateurSimpleRepository): Response
     {
         $services = $prestataireServiceRepository->getServices($id);
 
@@ -165,7 +167,7 @@ class GeneralApiController extends ApiInterface
         foreach ($services as $value) {
 
             $tabService[$k]['id'] = $value['id'];
-            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
+            $tabService[$k]['note'] = $commentaireRepository->noteService($value['id']);
             $tabService[$k]['countVisite'] = $value['countVisite'];
             //    . $utilisateur->getPhoto()->getFileNamePath()
             $tabService[$k]['image'] = [
@@ -218,7 +220,7 @@ class GeneralApiController extends ApiInterface
      * @OA\Tag(name="PrestataireService")
      * @Security(name="Bearer")
      */
-    public function getServiceBySearch($idCategorie, $idVille, $search = "", PrestataireServiceRepository $prestataireServiceRepository,  NoteRepository $noteRepository, QuartierRepository $quartierRepository, UserFrontRepository $utilisateurSimpleRepository): Response
+    public function getServiceBySearch($idCategorie, $idVille, $search = "", CommentaireRepository $commentaireRepository, PrestataireServiceRepository $prestataireServiceRepository,  NoteRepository $noteRepository, QuartierRepository $quartierRepository, UserFrontRepository $utilisateurSimpleRepository): Response
     {
         $services = $prestataireServiceRepository->getServicesBySearch($idCategorie,  $search, $idVille);
 
@@ -234,7 +236,7 @@ class GeneralApiController extends ApiInterface
         foreach ($services as $value) {
 
             $tabService[$k]['id'] = $value['id'];
-            $tabService[$k]['note'] = $noteRepository->noteService($value['id']);
+            $tabService[$k]['note'] =  $commentaireRepository->noteService($value['id']);
             $tabService[$k]['countVisite'] = $value['countVisite'];
             //    . $utilisateur->getPhoto()->getFileNamePath()
             $tabService[$k]['image'] = [
@@ -370,7 +372,7 @@ class GeneralApiController extends ApiInterface
      *     description="Returns the rewards of an user",
      *     @OA\JsonContent(
      *        type="array",
-     *        @OA\Items(ref=@Model(type=Quartier::class, groups={"full"}))
+     *        @OA\Items(ref=@Model(type=PrestataireService::class, groups={"full"}))
      *     )
      * )
      * @OA\Tag(name="PrestataireService")
@@ -456,6 +458,7 @@ class GeneralApiController extends ApiInterface
                         'quartier' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' .  $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getNom(),
                         'quartierService' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom() . ' - ' . $value['service'],
                         'ville' => $quartierRepository->find($utilisateurSimpleRepository->find($value['pId'])->getQuartier())->getCommune()->getNom(),
+                        'username' => $value['username'],
                     ];
                     $tabServiceAll[$j]['service'] = [
                         'id' =>  $value['serId'],
@@ -477,5 +480,36 @@ class GeneralApiController extends ApiInterface
 
         ];
         return $this->response($response);
+    }
+
+
+    #[Route('/retour_experience2', methods: ['GET'])]
+    /**
+     * Retourne la liste des retours
+     * 
+     */
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the rewards of an user',
+        content: new OAA\JsonContent(
+            type: 'array',
+            items: new OAA\Items(ref: new Model(type: PrestataireService::class, groups: ['full']))
+        )
+    )]
+    #[OA\Tag(name: 'locataires')]
+    //#[Security(name: 'Bearer')]
+    public function retourExperience2(CommentaireRepository $commentaireRepository)
+    {
+        try {
+            $commentaires = $commentaireRepository->findBy([], [],  7);
+            // dd($commentaires);
+            $response = $this->responseNew($commentaires, 'groupe_commentaire');
+        } catch (\Throwable $th) {
+            //throw $th;
+            $this->setMessage("erreur");
+            $response = $this->response('[]');
+        }
+
+        return $response;
     }
 }

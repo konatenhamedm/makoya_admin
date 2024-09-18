@@ -4,6 +4,9 @@ namespace App\Controller\Apis;
 
 use App\Controller\ApiInterface;
 use App\Entity\PubliciteEncart;
+use App\Entity\PubliciteCategorie;
+use App\Entity\ServicePrestataire;
+use App\Entity\Publicite;
 use App\Repository\PubliciteEncartRepository;
 use App\Repository\PubliciteImageRepository;
 use Symfony\Component\HttpFoundation\Request;

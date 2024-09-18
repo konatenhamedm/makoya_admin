@@ -6,6 +6,8 @@ use App\Repository\QuartierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 #[ORM\Entity(repositoryClass: QuartierRepository::class)]
 #[ORM\Table(name: 'decoupage_quartier')]
@@ -31,17 +33,17 @@ class Quartier
     #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: NombreClick::class)]
     private Collection $nombreClicks;
 
-    #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Pharmacie::class)]
-    private Collection $pharmacies;
 
     #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Sponsoring::class)]
     private Collection $sponsorings;
+
+    #[Group(["groupe_commentaire"])]
+    private ?string $villeQuartier = null;
 
     public function __construct()
     {
         $this->userFronts = new ArrayCollection();
         $this->nombreClicks = new ArrayCollection();
-        $this->pharmacies = new ArrayCollection();
         $this->sponsorings = new ArrayCollection();
     }
 
@@ -149,35 +151,6 @@ class Quartier
         return $this;
     }
 
-    /**
-     * @return Collection<int, Pharmacie>
-     */
-    public function getPharmacies(): Collection
-    {
-        return $this->pharmacies;
-    }
-
-    public function addPharmacy(Pharmacie $pharmacy): static
-    {
-        if (!$this->pharmacies->contains($pharmacy)) {
-            $this->pharmacies->add($pharmacy);
-            $pharmacy->setQuartier($this);
-        }
-
-        return $this;
-    }
-
-    public function removePharmacy(Pharmacie $pharmacy): static
-    {
-        if ($this->pharmacies->removeElement($pharmacy)) {
-            // set the owning side to null (unless already changed)
-            if ($pharmacy->getQuartier() === $this) {
-                $pharmacy->setQuartier(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Sponsoring>
@@ -207,5 +180,13 @@ class Quartier
         }
 
         return $this;
+    }
+
+    /**
+     * Get the value of villeQuartier
+     */
+    public function getVilleQuartier()
+    {
+        return   $this->getCommune()->getNom() . ' - ' . $this->getNom();
     }
 }

@@ -29,12 +29,6 @@ class UtilisateurSimple extends UserFront
     private ?Civilite $genre = null;
 
 
-    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Fichier $photo = null;
-
-
-
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Reclamation::class)]
     private Collection $reclamations;
 
@@ -100,17 +94,6 @@ class UtilisateurSimple extends UserFront
         return $this;
     }
 
-    public function getPhoto(): ?Fichier
-    {
-        return $this->photo;
-    }
-
-    public function setPhoto(?Fichier  $photo): static
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
 
 
     /**

@@ -35,15 +35,13 @@ class PharmacieController extends BaseController
         $table = $dataTableFactory->create()
             ->add('code', TextColumn::class, ['label' => 'Code'])
             ->add('libelle', TextColumn::class, ['label' => 'Libelle'])
-            ->add('quartier', TextColumn::class, ['label' => 'Quartier', 'field' => 'c.nom'])
-            ->add('ville', TextColumn::class, ['label' => 'Ville', 'field' => 'co.nom'])
+            ->add('commune', TextColumn::class, ['label' => 'Commune', 'field' => 'c.nom'])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => Pharmacie::class,
                 'query' => function (QueryBuilder $qb) {
-                    $qb->select('f,c,co')
+                    $qb->select('f,c')
                         ->from(Pharmacie::class, 'f')
-                        ->innerJoin('f.quartier', 'c')
-                        ->leftJoin('c.commune', 'co');
+                        ->innerJoin('f.commune', 'c');
                 }
             ])
             ->setName('dt_app_pharmacie_pharmacie');
@@ -151,9 +149,15 @@ class PharmacieController extends BaseController
     #[Route('/new', name: 'app_pharmacie_pharmacie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
         $pharmacie = new Pharmacie();
         $form = $this->createForm(PharmacieType::class, $pharmacie, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_pharmacie_pharmacie_new')
         ]);
         $form->handleRequest($request);
@@ -213,9 +217,15 @@ class PharmacieController extends BaseController
     #[Route('/{id}/edit', name: 'app_pharmacie_pharmacie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pharmacie $pharmacie, EntityManagerInterface $entityManager, FormError $formError): Response
     {
+        $validationGroups = ['Default', 'FileRequired', 'oui'];
 
         $form = $this->createForm(PharmacieType::class, $pharmacie, [
             'method' => 'POST',
+            'doc_options' => [
+                'uploadDir' => $this->getUploadDir(self::UPLOAD_PATH, true),
+                'attrs' => ['class' => 'filestyle'],
+            ],
+            'validation_groups' => $validationGroups,
             'action' => $this->generateUrl('app_pharmacie_pharmacie_edit', [
                 'id' => $pharmacie->getId()
             ])

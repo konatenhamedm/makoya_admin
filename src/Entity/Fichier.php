@@ -78,6 +78,8 @@ class Fichier
 
     private $filePrefix = '';
 
+    #[Group(["fichier", "groupe_commentaire"])]
+    private ?string $fullName = null;
 
     /**
      * @var mixed
@@ -87,6 +89,14 @@ class Fichier
     public function getFile(): ?string
     {
         return $this->file;
+    }
+
+    /**
+     * Get the value of fullName
+     */
+    public function getFullName()
+    {
+        return  $this->getPath() . '/' . $this->getFileName();
     }
 
     public function __construct()

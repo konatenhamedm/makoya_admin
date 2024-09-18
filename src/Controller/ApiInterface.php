@@ -206,18 +206,21 @@ class ApiInterface extends AbstractController
 
     public function responseNew($data = [], $group, $headers = [])
     {
-        if ($data) {
-            //dd('');
-            $context = [AbstractNormalizer::GROUPS => $group];
-            $json = $this->serializer->serialize($data, 'json', $context);
-            $response = new JsonResponse(['code' => 200,   'message' => $this->getMessage(), 'data' => json_decode($json)]);
-        } else {
-            //dd('');
-            $response = new JsonResponse(['code' => 200,  'message' => $this->getMessage(), 'data' => json_decode('[]')]);;
+        try {
+            if ($data) {
+                $context = [AbstractNormalizer::GROUPS => $group];
+                $json = $this->serializer->serialize($data, 'json', $context);
+                $response = new JsonResponse(['code' => 200, 'message' => $this->getMessage(), 'data' => json_decode($json)], 200, $headers);
+            } else {
+                $response = new JsonResponse(['code' => 200, 'message' => $this->getMessage(), 'data' => []], 200, $headers);
+            }
+        } catch (\Exception $e) {
+            $response = new JsonResponse(['code' => 500, 'message' => $e->getMessage(), 'data' => []], 500, $headers);
         }
 
         return $response;
     }
+
 
 
     public function sendNotification($data = [])

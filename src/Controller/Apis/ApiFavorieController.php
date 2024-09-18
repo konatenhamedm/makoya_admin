@@ -137,6 +137,31 @@ class ApiFavorieController extends ApiInterface
         return $response;
     }
 
+    #[Route('/existe/{user}/{service}', name: 'api_favorie_existe', methods: ['GET'])]
+    /**
+     * Permet de créer une favorie.
+     *
+     * @OA\Tag(name="Favorie")
+     * @Security(name="Bearer")
+     */
+    public function verificationIfFavorieExisteUser(FavorieRepository $favorieRepository, UserFrontRepository $userFrontRepository, $user, $service): Response
+    {
+
+        $favorie = $favorieRepository->findOneBy(array('utilisateur' => $userFrontRepository->findOneByEmail($user), 'service' => $service));
+
+        if ($favorie == null) {
+            $response = $this->response(false);
+        } else {
+            if ($favorie->isEtat() == true) {
+                $response = $this->response(true);
+            } else {
+                $response = $this->response(false);
+            }
+        }
+
+        return $response;
+    }
+
 
     #[Route('/update/{user}/{service}', name: 'api_favorie_update', methods: ['POST'])]
     /**

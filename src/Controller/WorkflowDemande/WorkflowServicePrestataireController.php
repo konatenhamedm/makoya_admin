@@ -197,10 +197,12 @@ class WorkflowServicePrestataireController extends BaseController
             if ($form->isValid()) {
                 if ($form->getClickedButton()->getName() === 'passer') {
                     //dd('sdsd');
-                    $workflow->apply($workflowServicePrestataire, 'passer');
-
-
-                    $workflowServicePrestataireRepository->save($workflowServicePrestataire, true);
+                    // $workflow->apply($workflowServicePrestataire, 'passer');
+                    //$workflowServicePrestataireRepository->save($workflowServicePrestataire, true);
+                    if ($workflow->can($workflowServicePrestataire, 'passer')) {
+                        $workflow->apply($workflowServicePrestataire, 'passer');
+                        $workflowServicePrestataireRepository->save($workflowServicePrestataire, true);
+                    }
                 } elseif ($form->getClickedButton()->getName() === 'rejeter') {
                     $workflow->apply($workflowServicePrestataire, 'rejeter');
 

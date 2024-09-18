@@ -12,6 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups as Group;
+
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -26,10 +28,12 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Group(["groupe_commentaire"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: 'Veuillez renseigner un pseudo')]
+    #[Group(["groupe_commentaire"])]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -46,6 +50,7 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'userFronts')]
+    #[Group(["groupe_commentaire"])]
     private ?Quartier $quartier = null;
 
     #[ORM\Column(length: 255)]
@@ -63,8 +68,6 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Favorie::class)]
     private Collection $favories;
 
-    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Note::class)]
-    private Collection $notes;
 
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Commentaire::class)]
     private Collection $commentaires;
@@ -91,6 +94,10 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     #[Gedmo\Blameable(on: 'create')]
     private ?Utilisateur $userAdd = null;
 
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: "EAGER")]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Group(["groupe_commentaire"])]
+    private ?Fichier $photo = null;
 
 
 
@@ -98,7 +105,6 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->publicitePrestataires = new ArrayCollection();
         $this->favories = new ArrayCollection();
-        $this->notes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->signalers = new ArrayCollection();
         $this->dateCreation = new \DateTime();
@@ -117,6 +123,19 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->id;
     }
+
+    public function getPhoto(): ?Fichier
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?Fichier  $photo): static
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
 
     public function getUsername(): ?string
     {
@@ -303,35 +322,7 @@ class UserFront implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Note>
-     */
-    public function getNotes(): Collection
-    {
-        return $this->notes;
-    }
 
-    public function addNote(Note $note): static
-    {
-        if (!$this->notes->contains($note)) {
-            $this->notes->add($note);
-            $note->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): static
-    {
-        if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getUtilisateur() === $this) {
-                $note->setUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Commentaire>
